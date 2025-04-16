@@ -21,7 +21,7 @@ Repository for the TQS group Project - **EcoCharger** 2024/2025
 ```
 .
 ├── ChargeUnity/                -- Main project folder
-│   ├── docker-compose.yml      -- Docker compose file
+│   ├── docker-compose.yml      -- Docker-compose file
 │   ├──frontend/                -- Frontend source codes
 │       ├── Dockerfile.frontend -- Dockerfile for the frontend
 │   ├──backend/                 -- Backend source code
