@@ -27,11 +27,12 @@ jobs:
 
       - name: Build and run tests
         run: mvn clean verify
+        working-directory: ./backend
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.2.0
         with:
-          projectBaseDir: .
+          projectBaseDir: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_SCANNER_OPTS: >
