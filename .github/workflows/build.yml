@@ -25,6 +25,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Write test application.properties
+        run: |
+          mkdir -p backend/src/test/resources
+          cat <<EOF > backend/src/test/resources/application.properties
+          spring.datasource.url=${{ secrets.SPRING_DATASOURCE_URL }}
+          spring.datasource.username=${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          spring.datasource.password=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          spring.jpa.hibernate.ddl-auto=create-drop
+          spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+          springdoc.swagger-ui.enabled=false
+          springdoc.api-docs.enabled=false
+          EOF
+
       - name: Build and run tests
         run: mvn clean verify
         working-directory: ./backend
