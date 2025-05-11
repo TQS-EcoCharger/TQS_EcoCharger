@@ -25,6 +25,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      # --- Build Docker images ---
+      - name: Build Docker images
+        run: docker compose build
+        working-directory: .
+
+      # --- Start all Docker containers ---
+      - name: Start Docker containers
+        run: docker compose up -d
+        working-directory: .
+
+      # --- (Optional) Wait for services to be ready ---
+      - name: Wait for containers to be ready
+        run: sleep 20  # Replace with health checks or wait-for-it if needed
+
       - name: Build and run tests
         run: mvn clean verify
         working-directory: ./backend
@@ -40,3 +54,9 @@ jobs:
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.java.binaries=target/classes
+
+      # --- (Optional) Stop containers after build ---
+      - name: Stop Docker containers
+        if: always()
+        run: docker compose down
+        working-directory: ./backend
