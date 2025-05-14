@@ -1,5 +1,6 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,7 @@ class AuthenticationServiceTest {
     private AuthenticationService authService;
 
     @Test
-    @Story("ET-49")
+    @DisplayName("ET-49: Should login successfully")
     void testSuccessfulLogin() {
         AuthResultDTO result = authService.authenticate("john@example.com", "123456");
         assertThat(result.isSuccess()).isTrue();
@@ -26,7 +27,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    @Story("ET-49")
+    @DisplayName("ET-49: Should fail login with wrong password")
     void testWrongPassword() {
         AuthResultDTO result = authService.authenticate("john@example.com", "wrongpass");
         assertThat(result.isSuccess()).isFalse();
@@ -34,7 +35,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    @Story("ET-49")
+    @DisplayName("ET-49: Should fail login with wrong email")
     void testDisabledUser() {
         AuthResultDTO result = authService.authenticate("bob@example.com", "bobpass");
         assertThat(result.isSuccess()).isFalse();
@@ -42,7 +43,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    @Story("ET-49")
+    @DisplayName("ET-49: Should fail login with non-existent user")
     void testNonExistentUser() {
         AuthResultDTO result = authService.authenticate("nobody@example.com", "nopass");
         assertThat(result.isSuccess()).isFalse();
