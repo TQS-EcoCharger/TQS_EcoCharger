@@ -53,13 +53,14 @@ jobs:
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
 
-      - name: Import results to Xray
+      - name: Upload results to Xray
         uses: mikepenz/xray-action@v2.4.5
         with:
-          username: ${{ secrets.XRAY_CLIENT_ID }}
-          password: ${{ secrets.XRAY_CLIENT_SECRET }}
           xrayCloud: true
-          testFormat: "junit"
-          testPaths: "backend/target/surefire-reports/TEST-*.xml"
-          projectKey: 'ET'  
+          clientId: ${{ secrets.XRAY_CLIENT_ID }}
+          clientSecret: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: 'junit'
+          projectKey: 'ET'
+          testPaths: './backend/target/surefire-reports'
+
 
