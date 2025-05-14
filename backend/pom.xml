@@ -30,6 +30,7 @@
         <java.version>17</java.version>
         <sonar.organization>tqs-ecocharger</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        
     </properties>
     
     <dependencies>
@@ -127,6 +128,7 @@
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                 </configuration>
             </plugin>
 
