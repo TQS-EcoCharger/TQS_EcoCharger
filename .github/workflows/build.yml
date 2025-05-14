@@ -62,3 +62,22 @@ jobs:
           testPaths: "**/test/*.xml"
           projectKey: "ET"
 
+  test-frontend-styling:
+    name: Test Frontend Styling
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
