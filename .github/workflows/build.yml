@@ -54,7 +54,7 @@ jobs:
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
 
       - name: Upload test results to Xray
-        uses: ropog/xray-action@v3
+        uses: ropog/xray-action@v1.2.3
         with:
           xrayCloud: true
           clientId: ${{ secrets.XRAY_CLIENT_ID }}
