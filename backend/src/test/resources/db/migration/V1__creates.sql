@@ -6,3 +6,7 @@ CREATE TABLE users (
     enabled BOOLEAN NOT NULL
 );
 
+
+
+
+
