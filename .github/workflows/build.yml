@@ -36,14 +36,17 @@ jobs:
         run: |
           mkdir -p backend/src/test/resources
           cat <<EOF > backend/src/test/resources/application.properties
-          spring.datasource.url=${{ secrets.SPRING_DATASOURCE_URL }}
-          spring.datasource.username=${{ secrets.SPRING_DATASOURCE_USERNAME }}
-          spring.datasource.password=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
-          spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-          spring.jpa.hibernate.ddl-auto=create-drop
-          spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
-          springdoc.swagger-ui.enabled=false
-          springdoc.api-docs.enabled=false
+          spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+          spring.datasource.driver-class-name=org.h2.Driver
+          spring.datasource.username=sa
+          spring.datasource.password=
+          spring.jpa.hibernate.ddl-auto=none
+          spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+          spring.flyway.enabled=true
+          spring.flyway.locations=classpath:db/migration
+          spring.flyway.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+          spring.flyway.user=sa
+          spring.flyway.password=
           EOF
 
       - name: Build and analyze with SonarCloud
