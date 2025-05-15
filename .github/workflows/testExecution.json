@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "project": {
+      "key": "ET"
+    },
+    "summary": "Automated Test Execution",
+    "description": "Test execution created via GitHub Actions",
+    "issuetype": {
+      "name": "Test Execution"
+    }
+  }
+}
