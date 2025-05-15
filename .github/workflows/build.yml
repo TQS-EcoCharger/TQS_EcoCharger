@@ -66,10 +66,8 @@ jobs:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
           REVISION: ${{ github.ref_name }}
-          TEST_ENVIRONMENT: java-17
         run: |
           mvn \
             -Dxray.clientId=${XRAY_CLIENT_ID} \
             -Dxray.clientSecret=${XRAY_CLIENT_SECRET} \
-            -Dxray.testEnvironment="${TEST_ENVIRONMENT}" \
             app.getxray:xray-maven-plugin:0.8.0:import-results
