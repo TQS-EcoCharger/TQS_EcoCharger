@@ -55,6 +55,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
+          
+      - name: Run tests
+        working-directory: ./backend
+        run: mvn test
       - name: Import results to Xray
         uses: mikepenz/xray-action@v3
         with:
