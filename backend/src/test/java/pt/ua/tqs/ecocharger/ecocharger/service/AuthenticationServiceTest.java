@@ -31,7 +31,6 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    @XrayTest(key = "")
     @DisplayName("ET-49: Should fail login with wrong password")
     @Requirement("ET-49")
     void testWrongPassword() {
@@ -41,7 +40,6 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    @XrayTest(key = "") 
     @DisplayName("ET-49: Should fail login with wrong email")
     @Requirement("ET-49")
     void testDisabledUser() {

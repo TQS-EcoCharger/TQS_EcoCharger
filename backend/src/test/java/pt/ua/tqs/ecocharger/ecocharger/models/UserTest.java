@@ -6,9 +6,12 @@ import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
+
 public class UserTest {
 
     @Test
+    @DisplayName("Test User constructor and getters")
     @Requirement("ET-49")
     void testUserConstructorAndGetters() {
         User user = new User(1L, "john@example.com", "password123", "John Doe", true);
@@ -20,6 +23,7 @@ public class UserTest {
         assertTrue(user.isEnabled());
     }
     @Test
+    @DisplayName("Test User setters")
     @Requirement("ET-49")
     void testUserSetters() {
         User user = new User();
@@ -37,6 +41,7 @@ public class UserTest {
     }
 
     @Test
+    @DisplayName("Test User toString method")
     @Requirement("ET-49")
     void testUserEquality() {
         User user1 = new User(1L, "a@b.com", "pass", "Name", true);
