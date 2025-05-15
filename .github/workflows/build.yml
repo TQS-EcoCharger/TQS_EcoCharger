@@ -59,6 +59,15 @@ jobs:
       - name: Run tests
         working-directory: ./backend
         run: mvn test
+
+      - name: Debug test report
+        working-directory: ./backend
+        run: |
+          echo "Listing test output:"
+          ls -l target/
+          echo "Showing contents:"
+          head -n 20 target/TEST-junit-jupiter.xml || echo "Report not found!"
+
       - name: Push results to Xray on Jira Cloud
         if: always()
         working-directory: ./backend
@@ -70,4 +79,5 @@ jobs:
           mvn \
             -Dxray.clientId=${XRAY_CLIENT_ID} \
             -Dxray.clientSecret=${XRAY_CLIENT_SECRET} \
+            -Dxray.revision=${REVISION} \
             app.getxray:xray-maven-plugin:0.8.0:import-results
