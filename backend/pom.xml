@@ -185,7 +185,7 @@
 				<version>${xray-maven-plugin.version}</version>
 				<configuration>
 					<cloud>true</cloud>
-					<projectKey>ST</projectKey>
+					<projectKey>ET</projectKey>
 					<reportFormat>junit</reportFormat>
                     <reportFile>target/TEST-junit-jupiter.xml</reportFile>
 				</configuration>

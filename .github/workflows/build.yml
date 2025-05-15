@@ -71,4 +71,4 @@ jobs:
             -Dxray.clientId=${XRAY_CLIENT_ID} \
             -Dxray.clientSecret=${XRAY_CLIENT_SECRET} \
             -Dxray.testEnvironment="${TEST_ENVIRONMENT}" \
-            xray:import-results
+            app.getxray:xray-maven-plugin:0.8.0:import-results
