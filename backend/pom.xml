@@ -184,17 +184,17 @@
                 </annotationProcessorPaths>
             </configuration>
             </plugin>
-			<plugin>
-				<groupId>app.getxray</groupId>
-				<artifactId>xray-maven-plugin</artifactId>
-				<version>${xray-maven-plugin.version}</version>
-				<configuration>
-					<cloud>true</cloud>
-					<projectKey>ET</projectKey>
-					<reportFormat>junit</reportFormat>
-                    <reportFile>target/TEST-junit-jupiter.xml</reportFile>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>app.getxray</groupId>
+                <artifactId>xray-maven-plugin</artifactId>
+                <version>${xray-maven-plugin.version}</version>
+                <configuration>
+                    <cloud>true</cloud>
+                    <projectKey>ET</projectKey>
+                    <reportFormat>junit</reportFormat>
+                    <reportFile>target/TEST-junicjupiter.xml</reportFile> 
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
