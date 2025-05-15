@@ -59,12 +59,16 @@ jobs:
       - name: Run tests
         working-directory: ./backend
         run: mvn test
-      - name: Import results to Xray
-        uses: mikepenz/xray-action@v3
-        with:
-          xrayCloud: true
-          username: ${{ secrets.XRAY_CLIENT_ID }}
-          password: ${{ secrets.XRAY_CLIENT_SECRET }}
-          testFormat: junit
-          testPaths: backend/target/TEST-junit-jupiter.xml
-          projectKey: ET  # <-- Needed for auto-creation of tests
+      - name: Push results to Xray on Jira Cloud
+        if: always()
+        env:
+          XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
+          XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
+          REVISION: ${{ github.ref_name }}
+          TEST_ENVIRONMENT: java-${{ matrix.java }}
+        run: |
+          mvn \
+            -Dxray.clientId=${XRAY_CLIENT_ID} \
+            -Dxray.clientSecret=${XRAY_CLIENT_SECRET} \
+            -Dxray.testEnvironment="${TEST_ENVIRONMENT}" \
+            xray:import-results
