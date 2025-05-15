@@ -55,7 +55,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
-          
+
       - name: "Import results to Xray"
         uses: mikepenz/xray-action@v3
         with:
@@ -64,4 +64,6 @@ jobs:
           testFormat: "junit"
           testPaths: "backend/target/surefire-reports/*.xml"
           testExecutionJson: "testExecution.json"
+
+
 
