@@ -63,8 +63,8 @@ jobs:
         if: always()
         working-directory: ./backend
         env:
-          XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
-          XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
+          XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
+          XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
           REVISION: ${{ github.ref_name }}
           TEST_ENVIRONMENT: java-${{ matrix.java }}
         run: |
