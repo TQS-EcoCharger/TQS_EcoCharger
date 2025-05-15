@@ -55,7 +55,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
-
       - name: Import results to Xray
         uses: mikepenz/xray-action@v3
         with:
@@ -64,6 +63,4 @@ jobs:
           password: ${{ secrets.XRAY_CLIENT_SECRET }}
           testFormat: junit
           testPaths: backend/target/TEST-junit-jupiter.xml
-          testExecutionKey: "XRAY-TESTEXEC-KEY"   # Optional, to associate with a test execution
-          projectKey: "ET"                        # Needed for auto-creation of tests
-          importToSameExecution: true            
+          projectKey: ET  # <-- Needed for auto-creation of tests
