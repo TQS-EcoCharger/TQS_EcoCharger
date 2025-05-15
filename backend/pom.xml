@@ -123,6 +123,12 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
     </dependencies>
+    <dependency>
+        <groupId>app.getxray</groupId>
+        <artifactId>xray-junit-extensions</artifactId>
+        <version>0.10.0</version>
+        <scope>test</scope>
+    </dependency>
 
     <build>
         <plugins>

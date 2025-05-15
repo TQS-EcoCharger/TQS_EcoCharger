@@ -4,7 +4,7 @@
       "key": "ET"
     },
     "summary": "Automated Test Execution",
-    "description": "Test execution created via GitHub Actions",
+    "description": "Test execution created via Jenkins",
     "issuetype": {
       "name": "Test Execution"
     }
