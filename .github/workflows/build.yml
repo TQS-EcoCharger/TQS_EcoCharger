@@ -66,7 +66,7 @@ jobs:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
           REVISION: ${{ github.ref_name }}
-          TEST_ENVIRONMENT: java-${{ matrix.java }}
+          TEST_ENVIRONMENT: java-17
         run: |
           mvn \
             -Dxray.clientId=${XRAY_CLIENT_ID} \
