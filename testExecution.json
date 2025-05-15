@@ -1,12 +1,8 @@
 {
   "fields": {
-    "project": {
-      "key": "ET"
-    },
-    "summary": "Automated Test Execution",
-    "description": "Test execution created via Jenkins",
-    "issuetype": {
-      "name": "Test Execution"
-    }
+    "project": { "key": "ET" },
+    "summary": "CI Test Execution",
+    "description": "Triggered via GitHub Actions",
+    "issuetype": { "name": "Test Execution" }
   }
 }

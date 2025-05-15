@@ -125,8 +125,14 @@
         <dependency>
             <groupId>app.getxray</groupId>
             <artifactId>xray-junit-extensions</artifactId>
-            <version>0.10.0</version>
+            <version>0.8.0</version> <!-- You can upgrade to 0.10.0 or latest -->
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>app.getxray</groupId>
+            <artifactId>xray-maven-plugin</artifactId>
+            <version>0.7.5</version>
         </dependency>
 
     </dependencies>
