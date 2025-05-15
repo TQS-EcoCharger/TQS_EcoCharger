@@ -69,15 +69,12 @@ jobs:
           head -n 20 target/TEST-junit-jupiter.xml || echo "Report not found!"
 
       - name: Push results to Xray on Jira Cloud
-        if: always()
         working-directory: ./backend
         env:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
-          REVISION: ${{ github.ref_name }}
         run: |
           mvn \
             -Dxray.clientId=${XRAY_CLIENT_ID} \
             -Dxray.clientSecret=${XRAY_CLIENT_SECRET} \
-            -Dxray.revision=${REVISION} \
             app.getxray:xray-maven-plugin:0.8.0:import-results
