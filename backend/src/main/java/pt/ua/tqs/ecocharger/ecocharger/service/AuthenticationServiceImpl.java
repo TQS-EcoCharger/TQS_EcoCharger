@@ -1,14 +1,12 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
+import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
 
 import java.util.Optional;
 
@@ -23,19 +21,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if (userOpt.isEmpty()) {
-            return new AuthResultDTO(false, "User not found");
+            return new AuthResultDTO(false, "User not found", null);
         }
 
         User user = userOpt.get();
 
         if (!user.isEnabled()) {
-            return new AuthResultDTO(false, "User is disabled");
+            return new AuthResultDTO(false, "User is disabled", null);
         }
 
         if (!user.getPassword().equals(password)) {
-            return new AuthResultDTO(false, "Invalid password");
+            return new AuthResultDTO(false, "Invalid password", null);
         }
 
-        return new AuthResultDTO(true, "Login successful");
+        String token = JwtUtil.generateToken(user.getEmail());
+
+        return new AuthResultDTO(true, "Login successful", token);
     }
 }

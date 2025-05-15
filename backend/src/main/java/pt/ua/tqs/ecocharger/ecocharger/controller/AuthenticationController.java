@@ -27,6 +27,6 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
         }
 
-        return ResponseEntity.ok(result.getMessage());
+        return ResponseEntity.ok(result);
     }
 }

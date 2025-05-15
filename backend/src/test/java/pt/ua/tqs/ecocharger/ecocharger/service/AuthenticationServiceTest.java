@@ -1,15 +1,11 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
-import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
-import io.qameta.allure.Story;
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
 
@@ -22,12 +18,13 @@ class AuthenticationServiceTest {
     private AuthenticationService authService;
 
     @Test
-    @DisplayName("ET-49: Should login successfully")
+    @DisplayName("ET-49: Should login successfully and receive JWT")
     @Requirement("ET-49")
     void testSuccessfulLogin() {
         AuthResultDTO result = authService.authenticate("john@example.com", "123456");
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.getMessage()).isEqualTo("Login successful");
+        assertThat(result.getToken()).isNotNull();
     }
 
     @Test
@@ -37,15 +34,17 @@ class AuthenticationServiceTest {
         AuthResultDTO result = authService.authenticate("john@example.com", "wrongpass");
         assertThat(result.isSuccess()).isFalse();
         assertThat(result.getMessage()).isEqualTo("Invalid password");
+        assertThat(result.getToken()).isNull();
     }
 
     @Test
-    @DisplayName("ET-49: Should fail login with wrong email")
+    @DisplayName("ET-49: Should fail login with disabled user")
     @Requirement("ET-49")
     void testDisabledUser() {
         AuthResultDTO result = authService.authenticate("bob@example.com", "bobpass");
         assertThat(result.isSuccess()).isFalse();
         assertThat(result.getMessage()).isEqualTo("User is disabled");
+        assertThat(result.getToken()).isNull();
     }
 
     @Test
@@ -55,5 +54,6 @@ class AuthenticationServiceTest {
         AuthResultDTO result = authService.authenticate("nobody@example.com", "nopass");
         assertThat(result.isSuccess()).isFalse();
         assertThat(result.getMessage()).isEqualTo("User not found");
+        assertThat(result.getToken()).isNull();
     }
 }

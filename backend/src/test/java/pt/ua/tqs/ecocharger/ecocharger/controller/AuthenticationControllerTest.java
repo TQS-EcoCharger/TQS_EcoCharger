@@ -8,12 +8,13 @@ import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.web.servlet.MockMvc;
 
-import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
-
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -23,35 +24,43 @@ class AuthenticationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Autowired
     private AuthenticationService authService;
 
+    @TestConfiguration
+    static class MockServiceConfig {
+        @Bean
+        @Primary
+        public AuthenticationService authService() {
+            return mock(AuthenticationService.class);
+        }
+    }
+
     @Test
-    @Requirement("ET-49")
-    @DisplayName("Login success returns 200 OK")
+    @DisplayName("Login success returns 200 OK and token in JSON")
     void testLoginSuccess() throws Exception {
         Mockito.when(authService.authenticate("john@example.com", "123456"))
-                .thenReturn(new AuthResultDTO(true, "Login successful"));
+                .thenReturn(new AuthResultDTO(true, "Login successful", "token123"));
 
         mockMvc.perform(post("/api/auth/login")
                         .param("email", "john@example.com")
                         .param("password", "123456"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Login successful"));
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Login successful"))
+                .andExpect(jsonPath("$.token").value("token123"));
     }
 
     @Test
-    @Requirement("ET-49")
-    @DisplayName("Login failure returns 401 Unauthorized")
+    @DisplayName("Login failure returns 401 Unauthorized and message only")
     void testLoginFailure() throws Exception {
         Mockito.when(authService.authenticate("john@example.com", "wrongpass"))
-                .thenReturn(new AuthResultDTO(false, "Invalid password"));
+                .thenReturn(new AuthResultDTO(false, "Invalid password", null));
 
         mockMvc.perform(post("/api/auth/login")
                         .param("email", "john@example.com")
                         .param("password", "wrongpass"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string("Invalid password"));
+                .andExpect(content().string(containsString("Invalid password")));
     }
 }
-
