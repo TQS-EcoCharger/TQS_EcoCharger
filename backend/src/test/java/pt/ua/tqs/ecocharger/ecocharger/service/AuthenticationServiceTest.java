@@ -21,9 +21,9 @@ class AuthenticationServiceTest {
     @Autowired
     private AuthenticationService authService;
 
+    @XrayTest(key = "ET-49")
     @Test
     @DisplayName("ET-49: Should login successfully")
-    @XrayTest(key = "ET-49")
     @Requirement("ET-49")
     void testSuccessfulLogin() {
         AuthResultDTO result = authService.authenticate("john@example.com", "123456");
@@ -31,30 +31,30 @@ class AuthenticationServiceTest {
         assertThat(result.getMessage()).isEqualTo("Login successful");
     }
 
+    @XrayTest(key = "ET-49")
     @Test
     @DisplayName("ET-49: Should fail login with wrong password")
     @Requirement("ET-49")
-    @XrayTest(key = "ET-49")
     void testWrongPassword() {
         AuthResultDTO result = authService.authenticate("john@example.com", "wrongpass");
         assertThat(result.isSuccess()).isFalse();
         assertThat(result.getMessage()).isEqualTo("Invalid password");
     }
 
+    @XrayTest(key = "ET-49")
     @Test
     @DisplayName("ET-49: Should fail login with wrong email")
     @Requirement("ET-49")
-    @XrayTest(key = "ET-49")
     void testDisabledUser() {
         AuthResultDTO result = authService.authenticate("bob@example.com", "bobpass");
         assertThat(result.isSuccess()).isFalse();
         assertThat(result.getMessage()).isEqualTo("User is disabled");
     }
 
+    @XrayTest(key = "ET-49")
     @Test
     @DisplayName("ET-49: Should fail login with non-existent user")
     @Requirement("ET-49")
-    @XrayTest(key = "ET-49")
     void testNonExistentUser() {
         AuthResultDTO result = authService.authenticate("nobody@example.com", "nopass");
         assertThat(result.isSuccess()).isFalse();

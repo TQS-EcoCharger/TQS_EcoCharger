@@ -125,10 +125,9 @@
         <dependency>
             <groupId>app.getxray</groupId>
             <artifactId>xray-junit-extensions</artifactId>
-            <version>0.8.0</version> <!-- You can upgrade to 0.10.0 or latest -->
+            <version>0.10.0</version> <!-- Use the latest available -->
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>app.getxray</groupId>
             <artifactId>xray-maven-plugin</artifactId>
@@ -157,6 +156,12 @@
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>app.getxray.xray.junit.customjunitxml.EnhancedLegacyXmlReportGeneratingListener</value>
+                        </property>
+                    </properties>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                 </configuration>
             </plugin>
