@@ -298,6 +298,11 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
+        <pluginRepository>
+            <id>xray-releases</id>
+            <name>Xray Releases</name>
+            <url>https://xray-maven.xpand-it.com/artifactory/releases</url>
+        </pluginRepository>
     </pluginRepositories>
 
 </project>
