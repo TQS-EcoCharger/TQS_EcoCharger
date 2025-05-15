@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,6 +27,7 @@ class AuthenticationControllerTest {
     private AuthenticationService authService;
 
     @Test
+    @Requirement("ET-49")
     @DisplayName("Login success returns 200 OK")
     void testLoginSuccess() throws Exception {
         Mockito.when(authService.authenticate("john@example.com", "123456"))
@@ -38,6 +41,7 @@ class AuthenticationControllerTest {
     }
 
     @Test
+    @Requirement("ET-49")
     @DisplayName("Login failure returns 401 Unauthorized")
     void testLoginFailure() throws Exception {
         Mockito.when(authService.authenticate("john@example.com", "wrongpass"))

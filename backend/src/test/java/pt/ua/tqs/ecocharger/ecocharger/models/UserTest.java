@@ -1,11 +1,15 @@
 package pt.ua.tqs.ecocharger.ecocharger.models;
 
 import org.junit.jupiter.api.Test;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
     @Test
+    @Requirement("ET-49")
     void testUserConstructorAndGetters() {
         User user = new User(1L, "john@example.com", "password123", "John Doe", true);
 
@@ -16,6 +20,7 @@ public class UserTest {
         assertTrue(user.isEnabled());
     }
     @Test
+    @Requirement("ET-49")
     void testUserSetters() {
         User user = new User();
         user.setId(2L);
@@ -32,6 +37,7 @@ public class UserTest {
     }
 
     @Test
+    @Requirement("ET-49")
     void testUserEquality() {
         User user1 = new User(1L, "a@b.com", "pass", "Name", true);
         User user2 = new User(1L, "a@b.com", "pass", "Name", true);
