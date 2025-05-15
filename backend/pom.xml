@@ -151,19 +151,24 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
-				<configuration>
-					<argLine>${surefire.jacoco.args}</argLine>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/*IT.java</exclude>
-					</excludes>
-
-					<testFailureIgnore>false</testFailureIgnore>
-					<disableXmlReport>true</disableXmlReport>
-					<useFile>false</useFile>
-				</configuration>
+                <configuration>
+                <argLine>${surefire.jacoco.args}</argLine>
+                <includes>
+                    <include>**/*Test.java</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*IT.java</exclude>
+                </excludes>
+                <testFailureIgnore>false</testFailureIgnore>
+                <disableXmlReport>true</disableXmlReport>
+                <useFile>false</useFile>
+                <systemProperties>
+                    <property>
+                    <name>listener</name>
+                    <value>app.getxray.xray.junit.customjunitxml.EnhancedLegacyXmlReportGeneratingListener</value>
+                    </property>
+                </systemProperties>
+                </configuration>
 			</plugin>
             <plugin>
             <groupId>org.apache.maven.plugins</groupId>
