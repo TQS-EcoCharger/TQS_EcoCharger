@@ -56,12 +56,12 @@ jobs:
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
 
-      - name: Import test results to Xray
+      - name: Import results to Xray
         uses: mikepenz/xray-action@v3
         with:
+          xrayCloud: true
           username: ${{ secrets.XRAY_CLIENT_ID }}
           password: ${{ secrets.XRAY_CLIENT_SECRET }}
-          testFormat: "junit"
-          testPaths: "backend/target/TEST-junit-jupiter.xml"
-          testExecutionJson: ".github/testExecution.json"
-
+          testFormat: junit
+          testPaths: backend/target/TEST-junit-jupiter.xml
+          
