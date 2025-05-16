@@ -94,7 +94,7 @@ jobs:
           EOF
 
       - name: Start containers with Docker Compose
-        run: docker-compose -f docker-compose.yml up -d --build
+        run: docker compose -f docker-compose.yml up -d --build
 
       - name: Wait for containers to be healthy
         run: |
@@ -117,7 +117,7 @@ jobs:
               echo "Timeout while waiting for healthy containers:"
               echo "$UNHEALTHY"
               docker ps
-              docker-compose logs
+              docker compose logs
               exit 1
             fi
 
