@@ -33,9 +33,23 @@
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<xray-junit-extensions.version>0.7.3</xray-junit-extensions.version>
 		<xray-maven-plugin.version>0.8.0</xray-maven-plugin.version>
+        <cucumber.version>7.21.1</cucumber.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-bom</artifactId>
+                <version>7.21.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>  
+        </dependencies>
+    </dependencyManagement>
     
     <dependencies>
+
         <!-- Spring Boot starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -94,21 +108,13 @@
 
         <dependency>
             <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-spring</artifactId>
-            <version>7.14.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
             <version>7.14.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite-api</artifactId>
-            <version>1.10.2</version>
+            <artifactId>junit-platform-suite</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
