@@ -58,15 +58,10 @@
                 <groupId>app.getxray</groupId>
                 <artifactId>xray-maven-plugin</artifactId>
                 <version>${xray-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>upload-unit-results</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>import-results</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <configuration>
+                    <reportFormat>junit</reportFormat>
+                    <reportFile>target/TEST-junit-jupiter.xml</reportFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -99,15 +94,7 @@
                     <reportFormat>cucumber</reportFormat>
                     <reportFile>target/cucumber-report.json</reportFile>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>upload-cucumber-results</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>import-results</goal>
-                        </goals>
-                    </execution>
-                </executions>
+
             </plugin>
         </plugins>
     </build>
