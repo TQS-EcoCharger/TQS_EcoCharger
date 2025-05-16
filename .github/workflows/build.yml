@@ -96,7 +96,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=ChargeUnity_TQS_ChargeUnity \
+            -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
+            -Dsonar.organization=tqs-ecocharger \
             -Dsonar.java.binaries=target/classes
 
       - name: Verify test reports
