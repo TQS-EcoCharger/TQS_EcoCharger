@@ -32,6 +32,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Clean package of backend without tests
+        working-directory: ./backend
+        run: mvn clean package -DskipTests
+
       - name: Write .env file
         run: |
           cat <<EOF > .env
