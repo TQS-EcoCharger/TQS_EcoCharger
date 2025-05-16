@@ -1,6 +1,9 @@
 package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -16,12 +19,25 @@ public class LoginSteps {
     private WebDriver driver;
     private WebDriverWait wait;
 
+    @Before
+    public void setup() {
+        WebDriverManager.firefoxdriver().setup();
+
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+
+        driver = new FirefoxDriver(options);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
     @Given("I am on the login page")
     public void i_am_on_the_login_page() {
         FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--headless"); 
-        options.addArguments("--width=1920");
-        options.addArguments("--height=1080");
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
 
         driver = new FirefoxDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));

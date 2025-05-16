@@ -36,24 +36,59 @@
         <cucumber.version>7.21.1</cucumber.version>
     </properties>
 
-    <profiles>
+
+<profiles>
     <profile>
-        <id>exclude-functional-tests</id>
+        <id>cucumber-tests</id>
         <build>
-        <plugins>
-            <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-                <excludes>
-                <exclude>**/functional/**</exclude>
-                </excludes>
-            </configuration>
-            </plugin>
-        </plugins>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <includes>
+                            <include>**/CucumberTest.java</include>
+                        </includes>
+                        <systemProperties>
+                            <!-- Disable Xray listener for Cucumber tests -->
+                            <property>
+                                <name>listener</name>
+                                <value></value>
+                            </property>
+                        </systemProperties>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>app.getxray</groupId>
+                    <artifactId>xray-maven-plugin</artifactId>
+                    <configuration>
+                        <reportFormat>cucumber</reportFormat>
+                        <reportFile>target/cucumber-report.json</reportFile>
+                    </configuration>
+                </plugin>
+            </plugins>
         </build>
     </profile>
-    </profiles>
+    <profile>
+        <id>unit-tests</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/CucumberTest.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
 
     <dependencyManagement>
         <dependencies>
@@ -278,17 +313,31 @@
                 </annotationProcessorPaths>
             </configuration>
             </plugin>
-			<plugin>
-				<groupId>app.getxray</groupId>
-				<artifactId>xray-maven-plugin</artifactId>
-				<version>${xray-maven-plugin.version}</version>
-				<configuration>
-					<cloud>true</cloud>
-					<projectKey>ET</projectKey>
-					<reportFormat>junit</reportFormat>
-                    <reportFile>target/TEST-junit-jupiter.xml</reportFile>
-				</configuration>
-			</plugin>
+        <plugin>
+            <groupId>app.getxray</groupId>
+            <artifactId>xray-maven-plugin</artifactId>
+            <version>${xray-maven-plugin.version}</version>
+            <configuration>
+                <cloud>true</cloud>
+                <projectKey>ET</projectKey>
+                <reportFormat>junit</reportFormat>
+                <reportFile>target/TEST-junit-jupiter.xml</reportFile>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>upload-cucumber-results</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>import-results</goal>
+                    </goals>
+                    <configuration>
+                        <reportFormat>cucumber</reportFormat>
+                        <reportFile>target/cucumber-report.json</reportFile>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
