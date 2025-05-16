@@ -85,23 +85,23 @@ jobs:
           springdoc.swagger-ui.path=/swagger-ui-custom.html
           springdoc.api-docs.path=/api-docs
           EOF
-
-      - name: Build and analyze with SonarCloud (no functional tests)
+      - name: Build and analyze with SonarCloud (unit tests only)
         working-directory: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B verify -Pexclude-functional-tests \
+          # Explicitly activate unit-tests profile and deactivate cucumber-tests
+          mvn -B verify -Punit-tests -P!cucumber-tests \
             org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
+            -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
+            -Dsonar.exclusions=**/functional/**
 
-      - name: Debug test report
+      - name: Verify test reports
         working-directory: ./backend
         run: |
-          echo "Listing test output:"
-          ls -l target/
-          echo "Showing contents:"
-          head -n 20 target/TEST-junit-jupiter.xml || echo "Report not found!"
+          echo "Test reports generated:"
+          ls -l target/surefire-reports/ || echo "No surefire reports found"
+          ls -l target/TEST-*.xml || echo "No test reports found"
 
       - name: Push unit test results to Xray on Jira Cloud
         working-directory: ./backend
@@ -111,12 +111,16 @@ jobs:
         run: |
           # Only proceed if JUnit report exists
           if [ -f "target/TEST-junit-jupiter.xml" ]; then
-            mvn -Pexclude-functional-tests \
+            echo "Uploading JUnit test results to Xray"
+            mvn -Punit-tests -P!cucumber-tests \
               -Dxray.clientId=$XRAY_CLIENT_ID \
               -Dxray.clientSecret=$XRAY_CLIENT_SECRET \
               -Dxray.reportFormat=junit \
               -Dxray.reportFile=target/TEST-junit-jupiter.xml \
               app.getxray:xray-maven-plugin:import-results
           else
-            echo "No JUnit test report found, skipping Xray upload"
+            echo "No JUnit test report found at target/TEST-junit-jupiter.xml"
+            echo "Available test reports:"
+            ls -l target/TEST-* || echo "No test reports found"
+            exit 0  # This is not a failure case for unit-test-only runs
           fi
