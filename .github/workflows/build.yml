@@ -86,12 +86,11 @@ jobs:
           springdoc.api-docs.path=/api-docs
           EOF
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
-          path: ./backend/target/ 
-          
+
+      - name: Run unit tests
+        working-directory: ./backend
+        run: mvn clean test 
+
       - name: Run SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
