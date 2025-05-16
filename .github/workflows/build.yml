@@ -88,11 +88,11 @@ jobs:
 
 
       - name: Create Jacoco report
-        working-directory: ./backend
+        working-directory: backend
         run: mvn verify  
-        
+
       - name: Check Jacoco Coverage Report
-        working-directory: ./backend/target/site/jacoco
+        working-directory: backend/target/site/jacoco
         run: ls -l jacoco.xml || echo "Jacoco report missing!"
 
 
