@@ -223,6 +223,7 @@
                 <argLine>${surefire.jacoco.args}</argLine>
                 <includes>
                     <include>**/*Test.java</include>
+                    <include>**/*Test*.java</include>
                 </includes>
                 <excludes>
                     <exclude>**/*IT.java</exclude>
