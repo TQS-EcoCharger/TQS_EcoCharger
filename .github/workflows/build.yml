@@ -92,6 +92,7 @@ jobs:
         run: mvn clean test 
 
       - name: Run SonarQube analysis
+        working-directory: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
