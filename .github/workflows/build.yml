@@ -87,9 +87,14 @@ jobs:
           EOF
 
 
-      - name: Run unit tests
+      - name: Create Jacoco report
         working-directory: ./backend
-        run: mvn clean test 
+        run: mvn verify  
+        
+      - name: Check Jacoco Coverage Report
+        working-directory: ./backend/target/site/jacoco
+        run: ls -l jacoco.xml || echo "Jacoco report missing!"
+
 
 
       - name: Run SonarQube analysis
@@ -100,7 +105,8 @@ jobs:
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
             -Dsonar.organization=tqs-ecocharger \
-            -Dsonar.java.binaries=target/classes
+            -Dsonar.java.binaries=target/classes \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Verify test reports
         working-directory: ./backend
