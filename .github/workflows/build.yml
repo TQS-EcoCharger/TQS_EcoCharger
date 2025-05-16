@@ -90,11 +90,14 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          # Explicitly activate unit-tests profile and deactivate cucumber-tests
+          # Run Sonar analysis with authentication and test filtering
           mvn -B verify -Punit-tests -P!cucumber-tests \
             org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
-            -Dsonar.exclusions=**/functional/**
+            -Dsonar.organization=tqs-ecocharger \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.exclusions=**/functional/** \
+
 
 
       - name: Verify test reports
