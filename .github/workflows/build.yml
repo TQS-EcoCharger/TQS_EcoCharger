@@ -91,6 +91,7 @@ jobs:
         working-directory: ./backend
         run: mvn clean test 
 
+
       - name: Run SonarQube analysis
         working-directory: ./backend
         env:
