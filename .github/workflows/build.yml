@@ -112,4 +112,8 @@ jobs:
           mvn \
             -Dxray.clientId=$XRAY_CLIENT_ID \
             -Dxray.clientSecret=$XRAY_CLIENT_SECRET \
-            app.getxray:xray-maven-plugin:0.8.0:import-results
+            -Dxray.cloud=true \
+            -Dxray.projectKey=ET \
+            -Dxray.reportFormat=junit \
+            -Dxray.reportFile=target/TEST-junit-jupiter.xml \
+            app.getxray:xray-maven-plugin:import-results
