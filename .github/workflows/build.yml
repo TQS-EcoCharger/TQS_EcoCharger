@@ -32,6 +32,21 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Write .env file
+        run: |
+          cat <<EOF > .env
+            MYSQL_ROOT_PASSWORD=ecocharger
+            MYSQL_DATABASE=ecocharger
+            MYSQL_USER=ecocharger
+            MYSQL_PASSWORD=ecocharger
+
+
+            SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ecocharger
+            SPRING_DATASOURCE_USERNAME=ecocharger
+            SPRING_DATASOURCE_PASSWORD=ecocharger
+          EOF
+
+
       - name: Write test application.properties
         run: |
           mkdir -p backend/src/test/resources
