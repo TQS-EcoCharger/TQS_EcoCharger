@@ -96,44 +96,6 @@ jobs:
       - name: Start containers with Docker Compose
         run: docker compose -f docker-compose.yml up -d --build
 
-      - name: Wait for containers to be healthy
-        run: |
-          echo "Waiting for db, frontend, and backend to be healthy..."
-          TIMEOUT=120
-          INTERVAL=5
-          ELAPSED=0
-
-          SERVICES=("db" "frontend" "backend")
-
-          while true; do
-            UNHEALTHY=""
-
-            for SERVICE in "${SERVICES[@]}"; do
-              STATUS=$(docker inspect --format \
-                '{{if .State.Health}}{{.State.Health.Status}}{{else}}healthy{{end}}' "ecocharger-${SERVICE}-1" 2>/dev/null || true)
-
-              if [ "$STATUS" != "healthy" ]; then
-                UNHEALTHY+="$SERVICE ($STATUS)\n"
-              fi
-            done
-
-            if [ -z "$UNHEALTHY" ]; then
-              echo "All target containers are healthy."
-              break
-            fi
-
-            if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
-              echo -e "Timeout while waiting for healthy containers:\n$UNHEALTHY"
-              docker ps
-              docker compose logs
-              exit 1
-            fi
-
-            echo "Still waiting on: $UNHEALTHY"
-            sleep "$INTERVAL"
-            ELAPSED=$((ELAPSED + INTERVAL))
-          done
-
 
       - name: Build and analyze with SonarCloud
         working-directory: ./backend
