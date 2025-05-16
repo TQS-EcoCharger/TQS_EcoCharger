@@ -100,10 +100,25 @@ jobs:
 
       - name: Install Chrome, jq and ChromeDriver (matched)
         run: |
+          set -e
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable jq unzip wget
+
           CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-          CHROMEDRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r ".channels.Stable.downloads.chromedriver[] | select(.platform == \"linux64\") | .url" | grep "$CHROME_VERSION" | head -n1)
+          echo "Detected Chrome version: $CHROME_VERSION"
+
+          CHROMEDRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | \
+            jq -r --arg version "$CHROME_VERSION" '
+              .channels.Stable.downloads.chromedriver[] 
+              | select(.platform == "linux64" and .url | test($version)) 
+              | .url' | head -n1)
+
+          if [ -z "$CHROMEDRIVER_URL" ]; then
+            echo "❌ Failed to find matching ChromeDriver for Chrome $CHROME_VERSION"
+            exit 1
+          fi
+
+          echo "✅ Downloading ChromeDriver from $CHROMEDRIVER_URL"
           wget "$CHROMEDRIVER_URL" -O chromedriver.zip
           unzip chromedriver.zip
           sudo mv chromedriver /usr/bin/chromedriver
