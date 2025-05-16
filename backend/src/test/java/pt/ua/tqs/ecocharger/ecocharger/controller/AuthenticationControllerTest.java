@@ -3,6 +3,8 @@ package pt.ua.tqs.ecocharger.ecocharger.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
 
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthenticationController.class)
+@Import(SecurityDisableConfig.class)
 class AuthenticationControllerTest {
 
     @Autowired

@@ -1,9 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import styles from "../css/LoginPage.module.css";
 import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
+import CONFIG from "../../config";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await axios.post(`${CONFIG.API_URL}auth/login`, null, {
+        params: {
+          email,
+          password,
+        },
+    });
+      console.log("Login successful:", response.data);
+      localStorage.setItem("token", response.data.token);
+      navigate("/home");
+    } catch (err) {
+      console.error("Login failed:", err.response?.data || err.message);
+      setError(err.response?.data || "Login failed. Please try again.");
+    }
+  };
+
   return (
     <div className={styles.container}>
       <motion.div
@@ -22,33 +50,36 @@ const LoginPage = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
           />
           <h2 className={styles.title}>Welcome Back</h2>
-          <form className={styles.form}>
-            <div className={styles.inputGroup}>
-              <label htmlFor="email" className={styles.label}>
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                placeholder="you@example.com"
-                className={styles.input}
-              />
-            </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="password" className={styles.label}>
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                placeholder="••••••••"
-                className={styles.input}
-              />
-            </div>
-            <button type="submit" className={styles.button}>
-              Login
-            </button>
-          </form>
+            <form className={styles.form} onSubmit={handleSubmit} id="login-form">
+              <div className={styles.inputGroup}>
+                <label htmlFor="email" className={styles.label}>Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="you@example.com"
+                  className={styles.input}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label htmlFor="password" className={styles.label}>Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className={styles.input}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              {error && <p className={styles.error} id="login-error">{error}</p>}
+              <button type="submit" className={styles.button} id="login-button">
+                Login
+              </button>
+            </form>
         </div>
       </motion.div>
     </div>
