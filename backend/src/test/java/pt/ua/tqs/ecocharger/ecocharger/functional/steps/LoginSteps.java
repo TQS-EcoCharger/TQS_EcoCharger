@@ -19,6 +19,7 @@ public class LoginSteps {
     @Given("I am on the login page")
     public void i_am_on_the_login_page() {
         FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless"); 
         options.addArguments("--width=1920");
         options.addArguments("--height=1080");
 

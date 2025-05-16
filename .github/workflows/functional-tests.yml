@@ -97,6 +97,18 @@ jobs:
       - name: Start containers
         run: docker compose -f docker-compose.yml up -d --build
 
+      - name: Wait for frontend to be healthy
+        run: |
+          echo "Waiting for frontend to respond..."
+          for i in {1..30}; do
+            if curl -sSf http://localhost:5000 > /dev/null; then
+              echo "Frontend is up."
+              break
+            fi
+            echo "Waiting..."
+            sleep 2
+          done
+          
       - name: Run functional tests (Firefox)
         working-directory: ./backend
         run: mvn test -Dcucumber.filter.tags="@firefox"
