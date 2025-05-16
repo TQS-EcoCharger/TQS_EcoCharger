@@ -89,13 +89,7 @@ jobs:
 
       - name: Create Jacoco report
         working-directory: backend
-        run: mvn verify  
-
-      - name: Check Jacoco Coverage Report
-        working-directory: backend/target/site/jacoco
-        run: ls -l jacoco.xml || echo "Jacoco report missing!"
-
-
+        run: mvn clean test -Punit-tests jacoco:report
 
       - name: Run SonarQube analysis
         working-directory: ./backend
