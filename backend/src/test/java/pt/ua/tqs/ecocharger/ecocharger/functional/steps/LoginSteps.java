@@ -2,15 +2,14 @@ package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 
 import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Duration;
-import java.util.UUID;
 
 public class LoginSteps {
 
@@ -19,21 +18,11 @@ public class LoginSteps {
 
     @Given("I am on the login page")
     public void i_am_on_the_login_page() {
-        ChromeOptions options = new ChromeOptions();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--width=1920");
+        options.addArguments("--height=1080");
 
-        // Headless and CI-compatible arguments
-        options.addArguments("--headless=new"); // use "--headless" for Chrome <109
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--window-size=1920,1080");
-        options.addArguments("--remote-debugging-port=9222");
-
-        // Use unique temporary directory to avoid profile conflicts
-        String userDataDir = "/tmp/chrome-user-data-" + UUID.randomUUID();
-        options.addArguments("--user-data-dir=" + userDataDir);
-
-        driver = new ChromeDriver(options);
+        driver = new FirefoxDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.get("http://localhost:5000/");
 

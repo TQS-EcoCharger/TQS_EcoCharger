@@ -1,4 +1,4 @@
-name: Test and Analyze Spring Boot Project
+name: Test and Analyze Spring Boot Project (Unit Only)
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-analyze:
-    name: Build and Analyze with SonarCloud
+    name: Build and Analyze (Skip Functional Tests)
     runs-on: ubuntu-latest
 
     steps:
@@ -39,39 +39,32 @@ jobs:
       - name: Write .env file
         run: |
           cat <<EOF > .env
-            MYSQL_ROOT_PASSWORD=ecocharger
-            MYSQL_DATABASE=ecocharger
-            MYSQL_USER=ecocharger
-            MYSQL_PASSWORD=ecocharger
-
-
-            SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ecocharger
-            SPRING_DATASOURCE_USERNAME=ecocharger
-            SPRING_DATASOURCE_PASSWORD=ecocharger
+          SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ecocharger
+          SPRING_DATASOURCE_USERNAME=ecocharger
+          SPRING_DATASOURCE_PASSWORD=ecocharger
           EOF
-
 
       - name: Write test application.properties
         run: |
           mkdir -p backend/src/test/resources
           cat <<EOF > backend/src/test/resources/application.properties
-            spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-            spring.datasource.driver-class-name=org.h2.Driver
-            spring.datasource.username=sa
-            spring.datasource.password=
-            spring.sql.init.mode=never
-            spring.flyway.enabled=true
-            spring.flyway.locations=classpath:db/migration
-            spring.flyway.clean-disabled=false
-            spring.flyway.baseline-on-migrate=true
-            spring.flyway.check-location=false
-            spring.jpa.hibernate.ddl-auto=none
-            spring.jpa.defer-datasource-initialization=false
-            spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration+
-            spring.security.enabled=false
+          spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+          spring.datasource.driver-class-name=org.h2.Driver
+          spring.datasource.username=sa
+          spring.datasource.password=
+          spring.sql.init.mode=never
+          spring.flyway.enabled=true
+          spring.flyway.locations=classpath:db/migration
+          spring.flyway.clean-disabled=false
+          spring.flyway.baseline-on-migrate=true
+          spring.flyway.check-location=false
+          spring.jpa.hibernate.ddl-auto=none
+          spring.jpa.defer-datasource-initialization=false
+          spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration+
+          spring.security.enabled=false
           EOF
 
-      - name: Write test application.properties
+      - name: Write runtime application.properties
         run: |
           mkdir -p backend/src/main/resources
           cat <<EOF > backend/src/main/resources/application.properties
@@ -93,48 +86,14 @@ jobs:
           springdoc.api-docs.path=/api-docs
           EOF
 
-      - name: Start containers with Docker Compose
-        run: docker compose -f docker-compose.yml up -d --build
-
-
-
-      - name: Install Chrome, jq and ChromeDriver (matched)
-        run: |
-          set -e
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable jq unzip wget
-
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-          echo "Detected Chrome version: $CHROME_VERSION"
-
-          DRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r --arg ver "$CHROME_VERSION" '
-            .channels.Stable.version as $stableVer |
-            .channels.Stable.downloads.chromedriver[] 
-            | select(.platform == "linux64") 
-            | select($stableVer | test("^"+$ver)) 
-            | .url' | head -n1)
-
-          if [ -z "$DRIVER_URL" ]; then
-            echo "❌ No exact matching ChromeDriver found for version $CHROME_VERSION"
-            echo "🔁 Falling back to latest stable ChromeDriver for linux64"
-            DRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '
-              .channels.Stable.downloads.chromedriver[] 
-              | select(.platform == "linux64") 
-              | .url' | head -n1)
-          fi
-
-          echo "✅ Downloading ChromeDriver from $DRIVER_URL"
-          wget "$DRIVER_URL" -O chromedriver.zip
-          unzip chromedriver.zip
-          sudo mv chromedriver /usr/bin/chromedriver
-          sudo chmod +x /usr/bin/chromedriver
-
-      - name: Build and analyze with SonarCloud
+      - name: Build and analyze with SonarCloud (no functional tests)
         working-directory: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
+          mvn -B verify -Pexclude-functional-tests \
+            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
 
       - name: Debug test report
         working-directory: ./backend
@@ -144,13 +103,13 @@ jobs:
           echo "Showing contents:"
           head -n 20 target/TEST-junit-jupiter.xml || echo "Report not found!"
 
-      - name: Push results to Xray on Jira Cloud
+      - name: Push unit test results to Xray on Jira Cloud
         working-directory: ./backend
         env:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
         run: |
-          mvn \
+          mvn -Pexclude-functional-tests \
             -Dxray.clientId=$XRAY_CLIENT_ID \
             -Dxray.clientSecret=$XRAY_CLIENT_SECRET \
             app.getxray:xray-maven-plugin:0.8.0:import-results

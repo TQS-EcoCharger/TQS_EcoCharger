@@ -1,0 +1,60 @@
+name: Run Selenium Tests with Firefox
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  selenium-firefox-tests:
+    name: Run Functional Tests (Firefox)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Install Firefox and GeckoDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox wget unzip jq
+          
+          GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
+          wget "$GECKO_URL" -O geckodriver.tar.gz
+          tar -xzf geckodriver.tar.gz
+          sudo mv geckodriver /usr/bin/geckodriver
+          sudo chmod +x /usr/bin/geckodriver
+
+      - name: Build backend
+        working-directory: ./backend
+        run: mvn clean package -DskipTests
+
+      - name: Start containers
+        run: docker compose -f docker-compose.yml up -d --build
+
+      - name: Run functional tests (Firefox)
+        working-directory: ./backend
+        run: mvn test -Dcucumber.filter.tags="@firefox"
+
+      - name: Debug test report
+        working-directory: ./backend
+        run: |
+          echo "Listing test output:"
+          ls -l target/
+          echo "Showing contents:"
+          head -n 20 target/TEST-junit-jupiter.xml || echo "Report not found!"
