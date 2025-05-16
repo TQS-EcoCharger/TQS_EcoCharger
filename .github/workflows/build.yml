@@ -103,24 +103,13 @@ jobs:
           ls -l target/surefire-reports/ || echo "No surefire reports found"
           ls -l target/TEST-*.xml || echo "No test reports found"
 
-      - name: Push unit test results to Xray on Jira Cloud
+      - name: Push results to Xray on Jira Cloud
         working-directory: ./backend
         env:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
         run: |
-          # Only proceed if JUnit report exists
-          if [ -f "target/TEST-junit-jupiter.xml" ]; then
-            echo "Uploading JUnit test results to Xray"
-            mvn -Punit-tests -P!cucumber-tests \
-              -Dxray.clientId=$XRAY_CLIENT_ID \
-              -Dxray.clientSecret=$XRAY_CLIENT_SECRET \
-              -Dxray.reportFormat=junit \
-              -Dxray.reportFile=target/TEST-junit-jupiter.xml \
-              app.getxray:xray-maven-plugin:import-results
-          else
-            echo "No JUnit test report found at target/TEST-junit-jupiter.xml"
-            echo "Available test reports:"
-            ls -l target/TEST-* || echo "No test reports found"
-            exit 0  # This is not a failure case for unit-test-only runs
-          fi
+          mvn \
+            -Dxray.clientId=$XRAY_CLIENT_ID \
+            -Dxray.clientSecret=$XRAY_CLIENT_SECRET \
+            app.getxray:xray-maven-plugin:0.8.0:import-results
