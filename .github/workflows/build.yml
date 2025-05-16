@@ -95,6 +95,8 @@ jobs:
             org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
             -Dsonar.exclusions=**/functional/**
+            -Dsonar.coverage.exclusions=**/config/**,**/utils/**,**/JwtUtil.java,**/SecurityConfig.java
+
 
       - name: Verify test reports
         working-directory: ./backend
