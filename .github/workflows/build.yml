@@ -85,18 +85,12 @@ jobs:
           springdoc.swagger-ui.path=/swagger-ui-custom.html
           springdoc.api-docs.path=/api-docs
           EOF
-      - name: Build and analyze with SonarCloud (unit tests only)
+      - name: Build and analyze with SonarCloud
         working-directory: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          # Run Sonar analysis with authentication and test filtering
-          mvn -B verify -Punit-tests -P!cucumber-tests \
-            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
-            -Dsonar.organization=tqs-ecocharger \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.exclusions=**/functional/** \
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
 
 
 
