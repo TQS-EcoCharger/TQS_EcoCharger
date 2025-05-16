@@ -107,19 +107,24 @@ jobs:
           CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
           echo "Detected Chrome version: $CHROME_VERSION"
 
-          CHROMEDRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | \
-            jq -r --arg version "$CHROME_VERSION" '
-              .channels.Stable.downloads.chromedriver[] 
-              | select(.platform == "linux64" and .url | test($version)) 
-              | .url' | head -n1)
+          DRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r --arg ver "$CHROME_VERSION" '
+            .channels.Stable.version as $stableVer |
+            .channels.Stable.downloads.chromedriver[] 
+            | select(.platform == "linux64") 
+            | select($stableVer | test("^"+$ver)) 
+            | .url' | head -n1)
 
-          if [ -z "$CHROMEDRIVER_URL" ]; then
-            echo "❌ Failed to find matching ChromeDriver for Chrome $CHROME_VERSION"
-            exit 1
+          if [ -z "$DRIVER_URL" ]; then
+            echo "❌ No exact matching ChromeDriver found for version $CHROME_VERSION"
+            echo "🔁 Falling back to latest stable ChromeDriver for linux64"
+            DRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '
+              .channels.Stable.downloads.chromedriver[] 
+              | select(.platform == "linux64") 
+              | .url' | head -n1)
           fi
 
-          echo "✅ Downloading ChromeDriver from $CHROMEDRIVER_URL"
-          wget "$CHROMEDRIVER_URL" -O chromedriver.zip
+          echo "✅ Downloading ChromeDriver from $DRIVER_URL"
+          wget "$DRIVER_URL" -O chromedriver.zip
           unzip chromedriver.zip
           sudo mv chromedriver /usr/bin/chromedriver
           sudo chmod +x /usr/bin/chromedriver
