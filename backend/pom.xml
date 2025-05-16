@@ -341,30 +341,7 @@
                 </annotationProcessorPaths>
             </configuration>
             </plugin>
-        <plugin>
-            <groupId>app.getxray</groupId>
-            <artifactId>xray-maven-plugin</artifactId>
-            <version>${xray-maven-plugin.version}</version>
-            <configuration>
-                <cloud>true</cloud>
-                <projectKey>ET</projectKey>
-                <reportFormat>junit</reportFormat>
-                <reportFile>target/TEST-junit-jupiter.xml</reportFile>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>upload-cucumber-results</id>
-                    <phase>verify</phase>
-                    <goals>
-                        <goal>import-results</goal>
-                    </goals>
-                    <configuration>
-                        <reportFormat>cucumber</reportFormat>
-                        <reportFile>target/cucumber-report.json</reportFile>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+
         
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
