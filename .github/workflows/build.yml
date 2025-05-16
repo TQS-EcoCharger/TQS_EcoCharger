@@ -76,7 +76,7 @@ jobs:
 
       - name: Start containers with Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d --build
+          docker compose -f docker-compose.yml up -d --build
 
       - name: Wait for containers to be healthy
         run: |
