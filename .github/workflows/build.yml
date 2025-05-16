@@ -94,25 +94,38 @@ jobs:
           EOF
 
       - name: Start containers with Docker Compose
-        run: |
-          docker compose -f docker-compose.yml up -d --build
+        run: docker-compose -f docker-compose.yml up -d --build
 
       - name: Wait for containers to be healthy
         run: |
           echo "Waiting for containers to be healthy..."
           TIMEOUT=120
+          INTERVAL=5
           ELAPSED=0
-          while [[ "$(docker inspect --format='{{json .State.Health.Status}}' $(docker ps -q))" != *"healthy"* ]]; do
-            sleep 5
-            ELAPSED=$((ELAPSED+5))
-            if [ "$ELAPSED" -gt "$TIMEOUT" ]; then
-              echo "Timeout while waiting for containers to become healthy"
+
+          while true; do
+            # Check all running containers
+            UNHEALTHY=$(docker ps -q | xargs -n1 -I{} docker inspect --format \
+              '{{if .State.Health}}{{.Name}} {{.State.Health.Status}}{{else}}healthy{{end}}' {} | grep -v ' healthy' || true)
+
+            if [ -z "$UNHEALTHY" ]; then
+              echo "All containers are healthy."
+              break
+            fi
+
+            if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
+              echo "Timeout while waiting for healthy containers:"
+              echo "$UNHEALTHY"
               docker ps
               docker-compose logs
               exit 1
             fi
+
+            echo "Still waiting... ($ELAPSED sec)"
+            sleep $INTERVAL
+            ELAPSED=$((ELAPSED + INTERVAL))
           done
-          echo "All containers are healthy
+
 
       - name: Build and analyze with SonarCloud
         working-directory: ./backend
