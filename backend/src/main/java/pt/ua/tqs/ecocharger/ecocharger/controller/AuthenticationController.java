@@ -12,21 +12,21 @@ import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    private final AuthenticationService authService;
+  private final AuthenticationService authService;
 
-    @Autowired
-    public AuthenticationController(AuthenticationService authService) {
-        this.authService = authService;
+  @Autowired
+  public AuthenticationController(AuthenticationService authService) {
+    this.authService = authService;
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+    AuthResultDTO result = authService.authenticate(email, password);
+
+    if (!result.isSuccess()) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
-        AuthResultDTO result = authService.authenticate(email, password);
-
-        if (!result.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
-        }
-
-        return ResponseEntity.ok(result);
-    }
+    return ResponseEntity.ok(result);
+  }
 }

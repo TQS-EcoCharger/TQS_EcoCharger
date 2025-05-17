@@ -25,46 +25,46 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SecurityDisableConfig.class)
 class AuthenticationControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private AuthenticationService authService;
+  @Autowired private AuthenticationService authService;
 
-    @TestConfiguration
-    static class MockServiceConfig {
-        @Bean
-        @Primary
-        public AuthenticationService authService() {
-            return mock(AuthenticationService.class);
-        }
+  @TestConfiguration
+  static class MockServiceConfig {
+    @Bean
+    @Primary
+    public AuthenticationService authService() {
+      return mock(AuthenticationService.class);
     }
+  }
 
-    @Test
-    @DisplayName("Login success returns 200 OK and token in JSON")
-    void testLoginSuccess() throws Exception {
-        Mockito.when(authService.authenticate("john@example.com", "123456"))
-                .thenReturn(new AuthResultDTO(true, "Login successful", "token123"));
+  @Test
+  @DisplayName("Login success returns 200 OK and token in JSON")
+  void testLoginSuccess() throws Exception {
+    Mockito.when(authService.authenticate("john@example.com", "123456"))
+        .thenReturn(new AuthResultDTO(true, "Login successful", "token123"));
 
-        mockMvc.perform(post("/api/auth/login")
-                        .param("email", "john@example.com")
-                        .param("password", "123456"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("Login successful"))
-                .andExpect(jsonPath("$.token").value("token123"));
-    }
+    mockMvc
+        .perform(
+            post("/api/auth/login").param("email", "john@example.com").param("password", "123456"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.message").value("Login successful"))
+        .andExpect(jsonPath("$.token").value("token123"));
+  }
 
-    @Test
-    @DisplayName("Login failure returns 401 Unauthorized and message only")
-    void testLoginFailure() throws Exception {
-        Mockito.when(authService.authenticate("john@example.com", "wrongpass"))
-                .thenReturn(new AuthResultDTO(false, "Invalid password", null));
+  @Test
+  @DisplayName("Login failure returns 401 Unauthorized and message only")
+  void testLoginFailure() throws Exception {
+    Mockito.when(authService.authenticate("john@example.com", "wrongpass"))
+        .thenReturn(new AuthResultDTO(false, "Invalid password", null));
 
-        mockMvc.perform(post("/api/auth/login")
-                        .param("email", "john@example.com")
-                        .param("password", "wrongpass"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().string(containsString("Invalid password")));
-    }
+    mockMvc
+        .perform(
+            post("/api/auth/login")
+                .param("email", "john@example.com")
+                .param("password", "wrongpass"))
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString("Invalid password")));
+  }
 }
