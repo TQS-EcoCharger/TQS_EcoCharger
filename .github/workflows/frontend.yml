@@ -1,4 +1,4 @@
-name: Test Frontend Styling
+name: Enforce Coding Styling
 
 on:
   workflow_dispatch:
@@ -30,3 +30,11 @@ jobs:
       - name: Run ESLint
         working-directory: ./frontend
         run: npm run lint
+
+  format-backend:
+    name: Format Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Google Java Format
+      working-directory: -/backend
+      uses: axel-op/googlejavaformat-action@v4.0.0
