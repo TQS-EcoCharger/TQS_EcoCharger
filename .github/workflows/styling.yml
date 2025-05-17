@@ -1,20 +1,53 @@
-format-backend:
-  name: Format Backend
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+name: Enforce Coding Styling
 
-    - name: Google Java Format
-      uses: axel-op/googlejavaformat-action@v4.0.0
-      with:
-        args: "--skip-sorting-imports --replace"
-        files: "./backend"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
-    - name: Commit and push changes
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git add .
-        git diff-index --quiet HEAD || git commit -m "Apply Google Java Format"
-        git push
+jobs:
+  test-eslint:
+    name: Test ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+  format-backend:
+    name: Format Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Google Java Format
+        uses: axel-op/googlejavaformat-action@v4.0.0
+        with:
+          args: "--skip-sorting-imports --replace"
+          files: "./backend"
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Apply Google Java Format"
+          git push
