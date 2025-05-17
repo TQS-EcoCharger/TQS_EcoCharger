@@ -35,8 +35,13 @@ jobs:
     name: Format Backend
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Google Java Format
-        working-directory: -/backend
         uses: axel-op/googlejavaformat-action@v4.0.0
         with:
           args: "--skip-sorting-imports --replace"
+          files: "./backend"
