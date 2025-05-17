@@ -44,7 +44,6 @@ jobs:
         uses: axel-op/googlejavaformat-action@v4
         with:
           args: "--skip-sorting-imports --replace"
-          files: "./backend"
 
       - name: Show git diff
         run: git --no-pager diff
