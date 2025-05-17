@@ -1,0 +1,68 @@
+name: Enforce Coding Styling
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test-eslint:
+    name: Test ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+  format-backend:
+    name: Format Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Google Java Format
+        uses: axel-op/googlejavaformat-action@v4
+        with:
+          args: "--skip-sorting-imports --replace"
+          skip-commit: true
+
+      - name: Show git diff
+        run: git --no-pager diff
+
+      - name: Commit and push changes if needed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          branch_name="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "Apply Google Java Format"
+            git push origin HEAD:$branch_name
+          else
+            echo "No formatting changes to commit."
+          fi
+
