@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "project": { "key": "ET" },
+    "summary": "CI Test Execution",
+    "description": "Triggered via GitHub Actions",
+    "issuetype": { "name": "Test Execution" }
+  }
+}
