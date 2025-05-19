@@ -37,4 +37,36 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     return new AuthResultDTO(true, "Login successful", token);
   }
+
+  @Override
+  public AuthResultDTO register(String email, String password, String name) {
+    Optional<User> existingUserOpt = userRepository.findByEmail(email);
+    if (existingUserOpt.isPresent()) {
+      return new AuthResultDTO(false, "Email already in use", null);
+    }
+
+    if (password.length() < 6) {
+      return new AuthResultDTO(false, "Password must be at least 6 characters", null);
+    }
+
+    if (name.length() < 3) {
+      return new AuthResultDTO(false, "Name must be at least 3 characters", null);
+    }
+
+    if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+      return new AuthResultDTO(false, "Invalid email format", null);
+    }
+
+    User user = new User();
+    user.setEmail(email);
+    user.setPassword(password);
+    user.setName(name);
+    user.setEnabled(true);
+
+    userRepository.save(user);
+
+    String token = JwtUtil.generateToken(user.getEmail());
+
+    return new AuthResultDTO(true, "Registration successful", token);
+  }
 }
