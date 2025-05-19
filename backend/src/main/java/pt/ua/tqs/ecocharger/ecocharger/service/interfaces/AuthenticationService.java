@@ -1,6 +1,5 @@
 package pt.ua.tqs.ecocharger.ecocharger.service.interfaces;
 
-
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 
 public interface AuthenticationService {
