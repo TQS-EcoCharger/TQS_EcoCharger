@@ -25,27 +25,34 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-      .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-      .csrf(csrf -> csrf
-          /*
-           * The endpoints described in the regex below are not protected by CSRF. This is because they are publicly
-           * accessible endpoints. When adding endpoints that do not require CSRF protection, add them to the regex.
-           */
-          .ignoringRequestMatchers(new RequestMatcher() {
-            private final Pattern pattern = Pattern.compile("^/api/auth/.*|^/api/suggestions.*|^/actuator/health/.*");
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(
+            csrf ->
+                csrf
+                    /*
+                     * The endpoints described in the regex below are not protected by CSRF. This is because they are publicly
+                     * accessible endpoints. When adding endpoints that do not require CSRF protection, add them to the regex.
+                     */
+                    .ignoringRequestMatchers(
+                    new RequestMatcher() {
+                      private final Pattern pattern =
+                          Pattern.compile("^/api/auth/.*|^/api/suggestions.*|^/actuator/health/.*");
 
-            @Override
-            public boolean matches(HttpServletRequest request) {
-              return pattern.matcher(request.getRequestURI()).matches();
-            }
-          })
-      )
-      .authorizeHttpRequests(auth -> auth
-          .requestMatchers("/api/auth/**").permitAll()
-          .requestMatchers("/api/suggestions").permitAll()
-          .requestMatchers("/actuator/health/**").permitAll()
-          .anyRequest().authenticated());
+                      @Override
+                      public boolean matches(HttpServletRequest request) {
+                        return pattern.matcher(request.getRequestURI()).matches();
+                      }
+                    }))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/api/auth/**")
+                    .permitAll()
+                    .requestMatchers("/api/suggestions")
+                    .permitAll()
+                    .requestMatchers("/actuator/health/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated());
 
     return http.build();
   }

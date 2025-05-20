@@ -105,6 +105,4 @@ class AuthenticationServiceTest {
     assertThat(result.getMessage()).isEqualTo("Invalid email format");
     assertThat(result.getToken()).isNull();
   }
-
-
 }

@@ -80,10 +80,7 @@ class AuthenticationControllerTest {
     String requestBody =
         "{ \"email\": \" mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
     mockMvc
-        .perform(
-            post("/api/auth/register")
-                .content(requestBody)
-                .contentType("application/json"))
+        .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Registration successful"))
@@ -99,10 +96,7 @@ class AuthenticationControllerTest {
     String requestBody =
         "{ \"email\": \" peter@example.com\", \"password\": \"123456\", \"name\": \"Peter\" }";
     mockMvc
-        .perform(
-            post("/api/auth/register")
-                .content(requestBody)
-                .contentType("application/json"))
+        .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Email already in use")));
   }
@@ -116,10 +110,7 @@ class AuthenticationControllerTest {
     String requestBody =
         "{ \"email\": \" andrew@example.com\", \"password\": \"123\", \"name\": \"Andrew\" }";
     mockMvc
-        .perform(
-            post("/api/auth/register")
-                .content(requestBody)
-                .contentType("application/json"))
+        .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Password must be at least 6 characters")));
   }
@@ -133,10 +124,7 @@ class AuthenticationControllerTest {
     String requestBody =
         "{ \"email\": \" invalid-email\", \"password\": \"123456\", \"name\": \"Invalid\" }";
     mockMvc
-        .perform(
-            post("/api/auth/register")
-                .content(requestBody)
-                .contentType("application/json"))
+        .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Invalid email format")));
   }
@@ -150,10 +138,7 @@ class AuthenticationControllerTest {
     String requestBody =
         "{ \"email\": \" john@example.com\", \"password\": \"123456\", \"name\": \"\" }";
     mockMvc
-        .perform(
-            post("/api/auth/register")
-                .content(requestBody)
-                .contentType("application/json"))
+        .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Name must be at least 3 characters")));
   }
