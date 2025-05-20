@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.web.servlet.MockMvc;
 
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -66,5 +68,93 @@ class AuthenticationControllerTest {
                 .param("password", "wrongpass"))
         .andExpect(status().isUnauthorized())
         .andExpect(content().string(containsString("Invalid password")));
+  }
+
+  @Test
+  @DisplayName("Register success returns 200 OK and token in JSON")
+  @Requirement("ET-52")
+  void testRegisterSuccess() throws Exception {
+    Mockito.when(authService.register("mariah@example.com", "123456", "Mariah"))
+        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123"));
+
+    String requestBody =
+        "{ \"email\": \" mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
+    mockMvc
+        .perform(
+            post("/api/auth/register")
+                .content(requestBody)
+                .contentType("application/json"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.message").value("Registration successful"))
+        .andExpect(jsonPath("$.token").value("token123"));
+  }
+
+  @Test
+  @DisplayName("Registering with existing email returns 400 Bad Request and message only")
+  @Requirement("ET-52")
+  void testRegisterExistingEmail() throws Exception {
+    Mockito.when(authService.register("peter@example.com", "123456", "Peter"))
+        .thenReturn(new AuthResultDTO(false, "Email already in use", null));
+    String requestBody =
+        "{ \"email\": \" peter@example.com\", \"password\": \"123456\", \"name\": \"Peter\" }";
+    mockMvc
+        .perform(
+            post("/api/auth/register")
+                .content(requestBody)
+                .contentType("application/json"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Email already in use")));
+  }
+
+  @Test
+  @DisplayName("Registering with short password returns 400 Bad Request and message only")
+  @Requirement("ET-52")
+  void testRegisterShortPassword() throws Exception {
+    Mockito.when(authService.register("andrew@example.com", "123", "Andrew"))
+        .thenReturn(new AuthResultDTO(false, "Password must be at least 6 characters", null));
+    String requestBody =
+        "{ \"email\": \" andrew@example.com\", \"password\": \"123\", \"name\": \"Andrew\" }";
+    mockMvc
+        .perform(
+            post("/api/auth/register")
+                .content(requestBody)
+                .contentType("application/json"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Password must be at least 6 characters")));
+  }
+
+  @Test
+  @DisplayName("Registering with invalid email returns 400 Bad Request and message only")
+  @Requirement("ET-52")
+  void testRegisterInvalidEmail() throws Exception {
+    Mockito.when(authService.register("invalid-email", "123456", "Invalid"))
+        .thenReturn(new AuthResultDTO(false, "Invalid email format", null));
+    String requestBody =
+        "{ \"email\": \" invalid-email\", \"password\": \"123456\", \"name\": \"Invalid\" }";
+    mockMvc
+        .perform(
+            post("/api/auth/register")
+                .content(requestBody)
+                .contentType("application/json"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Invalid email format")));
+  }
+
+  @Test
+  @DisplayName("Registering with invalid name returns 400 Bad Request and message only")
+  @Requirement("ET-52")
+  void testRegisterInvalidName() throws Exception {
+    Mockito.when(authService.register("john@example.com", "123456", ""))
+        .thenReturn(new AuthResultDTO(false, "Name must be at least 3 characters", null));
+    String requestBody =
+        "{ \"email\": \" john@example.com\", \"password\": \"123456\", \"name\": \"\" }";
+    mockMvc
+        .perform(
+            post("/api/auth/register")
+                .content(requestBody)
+                .contentType("application/json"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Name must be at least 3 characters")));
   }
 }
