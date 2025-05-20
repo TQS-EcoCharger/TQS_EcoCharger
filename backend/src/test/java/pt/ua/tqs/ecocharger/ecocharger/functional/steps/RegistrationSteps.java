@@ -22,26 +22,19 @@ import io.cucumber.java.en.When;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class RegistrationSteps {
-  private WebDriver driver;
-  private WebDriverWait wait;
-
+    private WebDriver driver;
+    private WebDriverWait wait;
 
     @Before
     public void setup() {
-        WebDriverManager.firefoxdriver().setup();
-
-        FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--headless");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-
-        driver = new FirefoxDriver(options);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverSingleton.initialize();
+        driver = WebDriverSingleton.getDriver();
+        wait = WebDriverSingleton.getWait();
     }
 
     @After
     public void cleanUp() {
-        driver.quit();
+        WebDriverSingleton.quit();
     }
 
     @Given("I am on the registration page")
@@ -53,15 +46,14 @@ public class RegistrationSteps {
     @When("I fill in the registration form with:")
     public void i_fill_in_the_registration_form_with(io.cucumber.datatable.DataTable dataTable) {
         List<Map<String, String>> users = dataTable.asMaps(String.class, String.class);
-    
+
         for (Map<String, String> userData : users) {
             WebElement nameField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("name")));
             WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
             WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
             WebElement confirmPasswordField = wait.until(ExpectedConditions
-                .visibilityOfElementLocated(By.id("confirmPassword")));
-    
-    
+                    .visibilityOfElementLocated(By.id("confirmPassword")));
+
             nameField.clear();
             nameField.sendKeys(userData.get("name"));
             emailField.clear();
@@ -72,7 +64,6 @@ public class RegistrationSteps {
             confirmPasswordField.sendKeys(userData.get("confirmPassword"));
         }
     }
-    
 
     @Given("I submit the form")
     public void i_submit_the_form() {
@@ -100,7 +91,7 @@ public class RegistrationSteps {
 
         String currentUrl = driver.getCurrentUrl();
         assertTrue(currentUrl.endsWith("/register"), "Expected to be on /register but was on " + currentUrl);
-    
+
         driver.quit();
     }
 }
