@@ -1,8 +1,8 @@
 package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 
+import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -21,15 +21,14 @@ public class LoginSteps {
 
   @Before
   public void setup() {
-    WebDriverManager.firefoxdriver().setup();
+    WebDriverSingleton.initialize();
+    driver = WebDriverSingleton.getDriver();
+    wait = WebDriverSingleton.getWait();
+  }
 
-    FirefoxOptions options = new FirefoxOptions();
-    options.addArguments("--headless");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
-
-    driver = new FirefoxDriver(options);
-    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+  @After
+  public void cleanUp() {
+    WebDriverSingleton.quit();
   }
 
   @Given("I am on the login page")
@@ -65,7 +64,5 @@ public class LoginSteps {
 
     String currentUrl = driver.getCurrentUrl();
     assertTrue(currentUrl.endsWith("/home"), "Expected to be on /home but was on " + currentUrl);
-
-    driver.quit();
   }
 }

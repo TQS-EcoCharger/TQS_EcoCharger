@@ -55,4 +55,54 @@ class AuthenticationServiceTest {
     assertThat(result.getMessage()).isEqualTo("User not found");
     assertThat(result.getToken()).isNull();
   }
+
+  @Test
+  @DisplayName("ET-52: Should register successfully and receive JWT")
+  @Requirement("ET-52")
+  void testSuccessfulRegistration() {
+    AuthResultDTO result = authService.register("new_guy@example.com", "123456", "New Guy");
+    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getMessage()).isEqualTo("Registration successful");
+    assertThat(result.getToken()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("ET-52: Should fail registration with existing email")
+  @Requirement("ET-52")
+  void testExistingEmail() {
+    AuthResultDTO result = authService.register("john@example.com", "123456", "John Doe");
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getMessage()).isEqualTo("Email already in use");
+    assertThat(result.getToken()).isNull();
+  }
+
+  @Test
+  @DisplayName("ET-52: Should fail registration with short password")
+  @Requirement("ET-52")
+  void testShortPassword() {
+    AuthResultDTO result = authService.register("new_guy1@example.com", "123", "New Guy");
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getMessage()).isEqualTo("Password must be at least 6 characters");
+    assertThat(result.getToken()).isNull();
+  }
+
+  @Test
+  @DisplayName("ET-52: Should fail registration with short name")
+  @Requirement("ET-52")
+  void testEmptyName() {
+    AuthResultDTO result = authService.register("new_guy2@example.com", "123456", "ab");
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getMessage()).isEqualTo("Name must be at least 3 characters");
+    assertThat(result.getToken()).isNull();
+  }
+
+  @Test
+  @DisplayName("ET-52: Should fail registration with invalid email format")
+  @Requirement("ET-52")
+  void testInvalidEmailFormat() {
+    AuthResultDTO result = authService.register("invalid-email", "123456", "New Guy");
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getMessage()).isEqualTo("Invalid email format");
+    assertThat(result.getToken()).isNull();
+  }
 }

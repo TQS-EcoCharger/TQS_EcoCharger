@@ -79,6 +79,12 @@ const LoginPage = () => {
               <button type="submit" className={styles.button} id="login-button">
                 Login
               </button>
+              <p className={styles.footerText}>
+                Don't have an account?{" "}
+                <a href="/register" className={styles.link}>
+                  Register
+                </a>
+              </p>
             </form>
         </div>
       </motion.div>
