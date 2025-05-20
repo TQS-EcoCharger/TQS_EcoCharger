@@ -41,6 +41,12 @@ public class ChargingStationController {
         chargingStationService.deleteStation(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping
+    public ResponseEntity<List<ChargingStation>> getAllStations() {
+        List<ChargingStation> stations = chargingStationService.getAllStations();
+        return ResponseEntity.ok(stations);
+    }
     
     
 }

@@ -20,7 +20,7 @@ public class ChargingStation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="city_name",nullable = false, unique = true)
+    @Column(name="municipality",nullable = false)
     private String cityName;
 
     @Column(name = "address",nullable = false)
@@ -32,17 +32,38 @@ public class ChargingStation {
     @Column(name = "longitude",nullable = false)
     private double longitude;
 
+    @Column(name = "streetNumber", nullable = false)
+    private String streetNumber;
+
+    @Column(name = "streetName", nullable = false)
+    private String streetName;
+
+    @Column(name = "countryCode", nullable = false)
+    private String countryCode;
+
+    @Column(name = "country", nullable = false)
+    private String country;
+
+    @Column(name = "veicleType", nullable = false)
+    private List<String> veicleType;
+
     @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChargingPoint> chargingPoints = new ArrayList<>();
 
     public ChargingStation() {
     }
 
-    public ChargingStation(String cityName, String address, double latitude, double longitude) {
+    public ChargingStation(String cityName, String address, double latitude, double longitude, String streetNumber,
+            String streetName, String countryCode, String country, List<String> veicleType) {
         this.cityName = cityName;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.streetNumber = streetNumber;
+        this.streetName = streetName;
+        this.countryCode = countryCode;
+        this.country = country;
+        this.veicleType = veicleType;
     }
 
     public Long getId() {
@@ -85,6 +106,46 @@ public class ChargingStation {
         this.longitude = longitude;
     }
 
+    public String getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public List<String> getVeicleType() {
+        return veicleType;
+    }
+
+    public void setVeicleType(List<String> veicleType) {
+        this.veicleType = veicleType;
+    }
+
     public List<ChargingPoint> getChargingPoints() {
         return chargingPoints;
     }
@@ -93,11 +154,14 @@ public class ChargingStation {
         this.chargingPoints = chargingPoints;
     }
 
+
     @Override
     public String toString() {
-        return "ChargingStation: id=" + id + ", cityName=" + cityName + ", address=" + address + ", latitude="
-                + latitude + ", longitude=" + longitude + ", chargingPoints=" + chargingPoints;
+        return "ChargingStation [id=" + id + ", cityName=" + cityName + ", address=" + address + ", latitude="
+                + latitude + ", longitude=" + longitude + ", streetNumber=" + streetNumber + ", streetName="
+                + streetName + ", countryCode=" + countryCode + ", country=" + country + ", veicleType=" + veicleType
+                + ", chargingPoints=" + chargingPoints + "]";
     }
 
-
+    
 }

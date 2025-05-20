@@ -1,5 +1,9 @@
 package pt.ua.tqs.ecocharger.ecocharger.models;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +21,7 @@ public class ChargingPoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "station_id", nullable = false)
     private ChargingStation chargingStation;
@@ -24,12 +29,20 @@ public class ChargingPoint {
     @Column(name = "available", nullable = false)
     private boolean available;
 
+    @Column(name = "brand", nullable = false)
+    private String brand;
+
+    @Column(name = "connectors", nullable = false)
+    private List<Connectors> connectors;
+    
     public ChargingPoint() {
     }
 
-    public ChargingPoint(ChargingStation chargingStation, boolean available) {
+    public ChargingPoint(ChargingStation chargingStation, boolean available, String brand, List<Connectors> connectors) {
         this.chargingStation = chargingStation;
         this.available = available;
+        this.brand = brand;
+        this.connectors = connectors;
     }
 
     public Long getId() {
@@ -56,14 +69,28 @@ public class ChargingPoint {
         this.available = available;
     }
 
-    @Override
-    public String toString() {
-        return "ChargingPoint: id=" + id + ", chargingStation=" + chargingStation + ", available=" + available;
+    public String getBrand() {
+        return brand;
     }
 
-    
-    
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
+    public List<Connectors> getConnectors() {
+        return connectors;
+    }
+
+    public void setConnectors(List<Connectors> connectors) {
+        this.connectors = connectors;
+    }
+
+    @Override
+    public String toString() {
+        return "ChargingPoint [id=" + id + ", chargingStation=" + chargingStation + ", available=" + available
+                + ", brand=" + brand + ", connectors=" + connectors + "]";
+    }
+    
 }
 
 

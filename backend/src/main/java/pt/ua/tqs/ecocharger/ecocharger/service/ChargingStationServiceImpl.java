@@ -45,6 +45,11 @@ public class ChargingStationServiceImpl implements ChargingStationService {
             throw new RuntimeException("Station not found");
         }
     }
+
+    @Override
+    public List<ChargingStation> getAllStations() {
+        return chargingStationRepository.findAll();
+    }
     
   
 

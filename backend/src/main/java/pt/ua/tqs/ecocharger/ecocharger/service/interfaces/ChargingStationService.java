@@ -7,4 +7,5 @@ public interface ChargingStationService {
     ChargingStation createStation(ChargingStation station);
     List<ChargingStation> getAllStationsByCityName(String cityName);
     void deleteStation(Long id);
+    List<ChargingStation> getAllStations();
 }
