@@ -22,7 +22,7 @@ export default function HomePage() {
       .then((res) => {
         const stationsData = res.data.map(station => ({
           id: station.id,
-          cityName: station.cityName,     
+          municipality: station.municipality,
           address: station.address,
           latitude: station.latitude,
           longitude: station.longitude,
@@ -31,7 +31,7 @@ export default function HomePage() {
         setStations(stationsData);
       })
       .catch((error) => {
-        console.error('Error fetching stations:', error);
+        console.error('Erro ao buscar estações:', error);
       });
   }, []);
 
@@ -39,8 +39,8 @@ export default function HomePage() {
     <div className={styles.container}>
       <h1 className={styles.title}>Mapa de Estações de Carregamento</h1>
       <MapContainer
-        center={[40.5, -8.5]}
-        zoom={7}
+        center={[40.641, -8.653]} // centro em Aveiro
+        zoom={14}
         className={styles.map}
       >
         <TileLayer
@@ -53,8 +53,12 @@ export default function HomePage() {
             position={[station.latitude, station.longitude]}
           >
             <Popup>
-              <strong>{station.cityName}</strong><br />
-              {station.address}
+              <strong>{station.municipality}</strong><br />
+              {station.address}<br />
+              <small>
+                Lat: {station.latitude.toFixed(5)}<br />
+                Lon: {station.longitude.toFixed(5)}
+              </small>
             </Popup>
           </Marker>
         ))}

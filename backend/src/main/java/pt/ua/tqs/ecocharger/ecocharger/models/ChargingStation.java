@@ -32,34 +32,31 @@ public class ChargingStation {
     @Column(name = "longitude",nullable = false)
     private double longitude;
 
-    @Column(name = "streetNumber", nullable = false)
-    private String streetNumber;
-
-    @Column(name = "streetName", nullable = false)
+    @Column(name = "streetname", nullable = false)
     private String streetName;
 
-    @Column(name = "countryCode", nullable = false)
+    @Column(name = "countrycode", nullable = false)
     private String countryCode;
 
     @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "veicleType", nullable = false)
-    private List<String> veicleType;
+    @Column(name = "veicletype", nullable = false)
+    private String veicleType;
 
     @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChargingPoint> chargingPoints = new ArrayList<>();
 
+
     public ChargingStation() {
     }
 
-    public ChargingStation(String cityName, String address, double latitude, double longitude, String streetNumber,
-            String streetName, String countryCode, String country, List<String> veicleType) {
+    public ChargingStation(String cityName, String address, double latitude, double longitude,
+            String streetName, String countryCode, String country, String veicleType) {
         this.cityName = cityName;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.streetNumber = streetNumber;
         this.streetName = streetName;
         this.countryCode = countryCode;
         this.country = country;
@@ -106,14 +103,6 @@ public class ChargingStation {
         this.longitude = longitude;
     }
 
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
     public String getStreetName() {
         return streetName;
     }
@@ -138,11 +127,11 @@ public class ChargingStation {
         this.country = country;
     }
 
-    public List<String> getVeicleType() {
+    public String getVeicleType() {
         return veicleType;
     }
 
-    public void setVeicleType(List<String> veicleType) {
+    public void setVeicleType(String veicleType) {
         this.veicleType = veicleType;
     }
 
@@ -158,7 +147,7 @@ public class ChargingStation {
     @Override
     public String toString() {
         return "ChargingStation [id=" + id + ", cityName=" + cityName + ", address=" + address + ", latitude="
-                + latitude + ", longitude=" + longitude + ", streetNumber=" + streetNumber + ", streetName="
+                + latitude + ", longitude=" + longitude + ", streetName="
                 + streetName + ", countryCode=" + countryCode + ", country=" + country + ", veicleType=" + veicleType
                 + ", chargingPoints=" + chargingPoints + "]";
     }

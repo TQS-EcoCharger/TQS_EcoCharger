@@ -1,22 +1,53 @@
 package pt.ua.tqs.ecocharger.ecocharger.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "connectors")
 public class Connectors {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "connector_type", nullable = false)
     private String connectorType;
+
+    @Column(name = "rated_power_kw", nullable = false)
     private int ratedPowerKW;
-    private int voltageV;
-    private int currentA;
+
+    @Column(name = "voltage_v")
+    private Integer voltageV;
+
+    @Column(name = "current_a")
+    private Integer currentA;
+
+    @Column(name = "current_type", nullable = false)
     private String currentType;
 
-    public Connectors() {
-    }
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "charging_point_id")
+    private ChargingPoint chargingPoint;
 
-    public Connectors(String connectorType, int ratedPowerKW, int voltageV, int currentA, String currentType) {
+    public Connectors() {}
+
+    public Connectors(String connectorType, int ratedPowerKW, Integer voltageV, Integer currentA, String currentType) {
         this.connectorType = connectorType;
         this.ratedPowerKW = ratedPowerKW;
         this.voltageV = voltageV;
         this.currentA = currentA;
         this.currentType = currentType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getConnectorType() {
@@ -35,19 +66,19 @@ public class Connectors {
         this.ratedPowerKW = ratedPowerKW;
     }
 
-    public int getVoltageV() {
+    public Integer getVoltageV() {
         return voltageV;
     }
 
-    public void setVoltageV(int voltageV) {
+    public void setVoltageV(Integer voltageV) {
         this.voltageV = voltageV;
     }
 
-    public int getCurrentA() {
+    public Integer getCurrentA() {
         return currentA;
     }
 
-    public void setCurrentA(int currentA) {
+    public void setCurrentA(Integer currentA) {
         this.currentA = currentA;
     }
 
@@ -59,12 +90,19 @@ public class Connectors {
         this.currentType = currentType;
     }
 
-    @Override
-    public String toString() {
-        return "Connectors [connectorType=" + connectorType + ", ratedPowerKW=" + ratedPowerKW + ", voltageV="
-                + voltageV + ", currentA=" + currentA + ", currentType=" + currentType + "]";
+    public ChargingPoint getChargingPoint() {
+        return chargingPoint;
     }
 
+    public void setChargingPoint(ChargingPoint chargingPoint) {
+        this.chargingPoint = chargingPoint;
+    }
 
-    
+    @Override
+    public String toString() {
+        return "Connectors [id=" + id + ", connectorType=" + connectorType + ", ratedPowerKW=" + ratedPowerKW
+                + ", voltageV=" + voltageV + ", currentA=" + currentA + ", currentType=" + currentType
+                + ", chargingPoint=" + chargingPoint + "]";
+    }
+
 }

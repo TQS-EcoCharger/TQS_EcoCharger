@@ -2,57 +2,104 @@ INSERT INTO users (email, password, name, enabled) VALUES
 ('afonso@gmail.com', 'pass', 'Afonso Ferreira', true);
 
 -- CHARGING STATIONS (IDs 1–20)
+INSERT INTO charging_stations (
+    id, municipality, address, latitude, longitude,
+    streetName, countryCode, country, veicleType
+) VALUES
+(1, 'Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739,
+ 'Rua do Batalhão de Caçadores 10', 'PT', 'Portugal', 'Car,Truck'),
 
--- Coimbra
-INSERT INTO charging_stations (id, city_name, address, latitude, longitude) VALUES
-(1, 'Coimbra', 'Av. Sá da Bandeira 1', 40.205, -8.413),
-(2, 'Coimbra', 'Rua do Brasil 12', 40.206, -8.407),
-(3, 'Coimbra', 'Praça da República 5', 40.209, -8.421),
-(4, 'Coimbra', 'Rua da Sofia 22', 40.204, -8.428),
-(5, 'Coimbra', 'Av. Fernão de Magalhães 30', 40.213, -8.429),
-(6, 'Coimbra', 'Rua Direita 44', 40.210, -8.412),
-(7, 'Coimbra', 'Rua do Loreto 3', 40.208, -8.416),
-(8, 'Coimbra', 'Av. Dias da Silva 100', 40.207, -8.405),
-(9, 'Coimbra', 'Rua Oliveira Matos 8', 40.202, -8.418),
-(10, 'Coimbra', 'Rua da Alegria 99', 40.206, -8.424);
+(2, 'Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
+ 'Rua Batalhão Caçadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
 
--- Aveiro
-INSERT INTO charging_stations (id, city_name, address, latitude, longitude) VALUES
-(11, 'Aveiro', 'Av. Dr. Lourenço Peixinho 1', 40.640, -8.653),
-(12, 'Aveiro', 'Rua dos Combatentes 14', 40.642, -8.655),
-(13, 'Aveiro', 'Rua de Viseu 18', 40.643, -8.649),
-(14, 'Aveiro', 'Rua da Estação 10', 40.644, -8.651),
-(15, 'Aveiro', 'Rua das Pombas 23', 40.646, -8.657),
-(16, 'Aveiro', 'Rua das Agras 50', 40.645, -8.654),
-(17, 'Aveiro', 'Rua Nova 7', 40.647, -8.648),
-(18, 'Aveiro', 'Rua dos Marnotos 35', 40.641, -8.652),
-(19, 'Aveiro', 'Rua da Escola 70', 40.639, -8.650),
-(20, 'Aveiro', 'Av. das Pontes 5', 40.638, -8.656);
+(3, 'Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
+ 'Rua Batalhýo Caýadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
 
--- CHARGING POINTS (3–5 por estação, todos indisponíveis)
+(4, 'Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682,
+ 'Rua Príncipe Perfeito', 'PT', 'Portugal', 'Car,Truck'),
 
--- Coimbra
-INSERT INTO charging_points (station_id, available) VALUES
-(1, false), (1, false), (1, false),
-(2, false), (2, false), (2, false), (2, false),
-(3, false), (3, false), (3, false),
-(4, false), (4, false), (4, false), (4, false), (4, false),
-(5, false), (5, false), (5, false),
-(6, false), (6, false), (6, false), (6, false),
-(7, false), (7, false), (7, false),
-(8, false), (8, false), (8, false), (8, false),
-(9, false), (9, false), (9, false),
-(10, false), (10, false), (10, false), (10, false);
+(5, 'Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208,
+ 'Praça Marquês de Pombal', 'PT', 'Portugal', 'Car,Truck'),
 
--- Aveiro
-INSERT INTO charging_points (station_id, available) VALUES
-(11, false), (11, false), (11, false),
-(12, false), (12, false), (12, false), (12, false),
-(13, false), (13, false), (13, false),
-(14, false), (14, false), (14, false), (14, false), (14, false),
-(15, false), (15, false), (15, false),
-(16, false), (16, false), (16, false), (16, false),
-(17, false), (17, false), (17, false),
-(18, false), (18, false), (18, false), (18, false),
-(19, false), (19, false), (19, false),
-(20, false), (20, false), (20, false), (20, false);
+(6, 'Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503,
+ 'Largo do Rossio', 'PT', 'Portugal', 'Car,Truck'),
+
+(7, 'Aveiro', 'Rua Doutor Alberto Souto -, 3800-148 Aveiro', 40.64375, -8.64861,
+ 'Rua Doutor Alberto Souto -', 'PT', 'Portugal', 'Car,Truck'),
+
+(8, 'Aveiro', 'Rua Doutor Alberto Soares Machado, 3800-146 Aveiro', 40.643751, -8.648611,
+ 'Rua Doutor Alberto Soares Machado', 'PT', 'Portugal', 'Car,Truck'),
+
+(9, 'Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023,
+ 'Cais da Fonte Nova', 'PT', 'Portugal', 'Car,Truck'),
+
+(10, 'Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514,
+ 'Avenida da Universidade', 'PT', 'Portugal', 'Car,Truck');
+
+
+-- Station 1: Atlante
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (1, 1, true, 'Atlante');
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (2, 1, true, 'Atlante');
+
+-- Station 2: Mobi.E
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (3, 2, true, 'Mobi.E');
+
+-- Station 3: Mobi.E
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (4, 3, false, 'Mobi.E');
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (5, 3, true, 'Mobi.E');
+
+-- Station 4: EDP Comercial
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (6, 4, true, 'EDP');
+
+-- Station 5: EDP Comercial
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (7, 5, true, 'EDP');
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (8, 5, true, 'EDP');
+
+-- Station 6: AVR-90002
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (9, 6, true, 'AVR-90002');
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (10, 6, false, 'AVR-90002');
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (11, 6, true, 'AVR-90002');
+
+-- Station 7: Mobi.E
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (12, 7, true, 'Mobi.E');
+
+-- Station 8: Galp Power
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (13, 8, true, 'Galp electric');
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (14, 8, false, 'Galp electric');
+
+-- Station 9: Powerdot
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (15, 9, true, 'Powerdot');
+
+-- Station 10: Atlante
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (16, 10, true, 'Atlante');
+INSERT INTO charging_points (id, station_id, available, brand) VALUES (17, 10, true, 'Atlante');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (1, 1, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (2, 1, 'Chademo', 50, 400, 125, 'DC');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (3, 2, 'Chademo', 50, 400, 125, 'DC');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (4, 3, 'IEC62196Type2CCS', 60, 400, 150, 'DC');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (5, 4, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (6, 5, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (7, 6, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (8, 7, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (9, 8, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (10, 9, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
