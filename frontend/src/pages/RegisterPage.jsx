@@ -6,7 +6,7 @@ import styles from "../css/LoginPage.module.css";
 import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
 import CONFIG from "../../config";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -16,13 +16,6 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/home");
-    }
-  }, [navigate]);
 
   const validateEmail = (value) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -105,7 +98,7 @@ const RegisterPage = () => {
                 required
               />
               {!isEmailValid && (
-                <small className={styles.error}>Invalid email format</small>
+                <small className={styles.error} id="invalid-email">Invalid email format</small>
               )}
             </div>
             <div className={styles.inputGroup}>
@@ -138,9 +131,9 @@ const RegisterPage = () => {
             </button>
             <p className={styles.footerText}>
               Already have an account?{" "}
-              <a href="/" className={styles.link}>
+              <Link to="/" className={styles.link}>
                 Login
-              </a>
+              </Link>
             </p>
           </form>
         </div>

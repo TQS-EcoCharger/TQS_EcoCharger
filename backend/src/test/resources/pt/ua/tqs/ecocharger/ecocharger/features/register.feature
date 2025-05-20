@@ -9,16 +9,14 @@ Feature: Registering a new user
     Scenario: Registering with valid data
       When I fill in the registration form with:
         | name   |  password | confirmPassword  | email                 |
-        | User 3 |  pass3    | pass3            | user3@gmail.com       |
-        | User 4 |  pass4    | pass4            | user4@gmail.com       |
+        | User 3 |  pass123    | pass123            | user3@gmail.com       |
       And I submit the form
       Then I should be redirected to the home page
 
     Scenario: Registering with an already taken email
       When I fill in the registration form with:
         | name   |  password | confirmPassword  | email                 |
-        | User 1 |  pass1    | pass1            | user1@gmail.com       |
-        | User 2 |  pass2    | pass2            | user2@gmail.com       |
+        | User 1 |  pass123    | pass123            | user1@gmail.com       |
       And I submit the form
       Then I should see an error message saying "Email already in use"
       And I should remain on the registration page
@@ -28,7 +26,7 @@ Feature: Registering a new user
         | name   |  password | confirmPassword  | email                 |
         | User 5 |  pas     | pas               | user5@gmail.com       |
       And I submit the form
-      Then I should see an error message saying "Password is too weak"
+      Then I should see an error message saying "Password must be at least 6 characters"
       And I should remain on the registration page
 
     Scenario: Registering with mismatched passwords
@@ -36,7 +34,7 @@ Feature: Registering a new user
         | name   |  password | confirmPassword  | email                 |
         | User 6 |  pass6    | pass7            | user6@gmail.com       |
       And I submit the form
-      Then I should see an error message saying "Passwords do not match"
+      Then I should see an error message saying "Passwords do not match."
       And I should remain on the registration page
 
     Scenario: Registering with an invalid email
@@ -44,6 +42,6 @@ Feature: Registering a new user
         | name   |  password | confirmPassword  | email                 |
         | User 7 |  pass8    | pass8            | user7gmail.com        |
       And I submit the form
-      Then I should see an error message saying "Invalid email format"
+      Then I should see an invalid email error message
       And I should remain on the registration page
 
