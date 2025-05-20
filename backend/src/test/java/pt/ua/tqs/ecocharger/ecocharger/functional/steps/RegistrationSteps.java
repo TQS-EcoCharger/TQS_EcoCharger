@@ -94,7 +94,5 @@ public class RegistrationSteps {
     String currentUrl = driver.getCurrentUrl();
     assertTrue(
         currentUrl.endsWith("/register"), "Expected to be on /register but was on " + currentUrl);
-
-    driver.quit();
   }
 }

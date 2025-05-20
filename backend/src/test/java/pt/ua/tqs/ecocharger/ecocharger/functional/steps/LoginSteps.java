@@ -64,7 +64,5 @@ public class LoginSteps {
 
     String currentUrl = driver.getCurrentUrl();
     assertTrue(currentUrl.endsWith("/home"), "Expected to be on /home but was on " + currentUrl);
-
-    driver.quit();
   }
 }
