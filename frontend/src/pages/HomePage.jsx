@@ -15,6 +15,8 @@ L.Icon.Default.mergeOptions({
 
 export default function HomePage() {
   const [stations, setStations] = useState([]);
+  const [selectedStation, setSelectedStation] = useState(null);
+
 
   useEffect(() => {
     axios
@@ -26,6 +28,7 @@ export default function HomePage() {
           address: station.address,
           latitude: station.latitude,
           longitude: station.longitude,
+          chargingPoints: station.chargingPoints || [],
         }));
 
         setStations(stationsData);
@@ -35,34 +38,51 @@ export default function HomePage() {
       });
   }, []);
 
-  return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Mapa de Estações de Carregamento</h1>
-      <MapContainer
-        center={[40.641, -8.653]} // centro em Aveiro
-        zoom={14}
-        className={styles.map}
-      >
-        <TileLayer
-          attribution='&copy; OpenStreetMap'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {stations.map(station => (
-          <Marker
-            key={station.id}
-            position={[station.latitude, station.longitude]}
-          >
-            <Popup>
-              <strong>{station.municipality}</strong><br />
-              {station.address}<br />
-              <small>
-                Lat: {station.latitude.toFixed(5)}<br />
-                Lon: {station.longitude.toFixed(5)}
-              </small>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+return (
+  <div className={styles.wrapper}>
+    <div className={styles.sidebar}>
+      <h2>Detalhes da Estação</h2>
+      {selectedStation ? (
+        <>
+          <p><strong>{selectedStation.cityName}</strong></p>
+          <p>{selectedStation.address}</p>
+          <h3>Pontos de Carregamento:</h3>
+          <ul>
+            {selectedStation.chargingPoints.map((point) => (
+              <li key={point.id}>
+                {point.brand} - {point.available ? 'Disponível' : 'Indisponível'}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>Selecione uma estação no mapa</p>
+      )}
     </div>
-  );
+
+    <MapContainer
+      center={[40.641, -8.653]}
+      zoom={14}
+      className={styles.map}
+    >
+      <TileLayer
+        attribution='&copy; OpenStreetMap'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {stations.map((station) => (
+        <Marker
+          key={station.id}
+          position={[station.latitude, station.longitude]}
+          eventHandlers={{
+            click: () => {
+              setSelectedStation(station);
+            },
+          }}
+        >
+          <Popup>{station.cityName}</Popup>
+        </Marker>
+      ))}
+    </MapContainer>
+  </div>
+);
 }
