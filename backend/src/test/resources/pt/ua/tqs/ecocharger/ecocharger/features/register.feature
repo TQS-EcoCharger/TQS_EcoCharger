@@ -16,7 +16,7 @@ Feature: Registering a new user
     Scenario: Registering with an already taken email
       When I fill in the registration form with:
         | name   |  password | confirmPassword  | email                 |
-        | User 1 |  pass123    | pass123            | user1@gmail.com       |
+        | User 1 |  pass123    | pass123            | afonso@gmail.com  |
       And I submit the form
       Then I should see an error message saying "Email already in use"
       And I should remain on the registration page
