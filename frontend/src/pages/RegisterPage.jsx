@@ -1,6 +1,6 @@
 /* Done with the help of ChatGPT */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styles from "../css/LoginPage.module.css";
 import { motion } from "framer-motion";
