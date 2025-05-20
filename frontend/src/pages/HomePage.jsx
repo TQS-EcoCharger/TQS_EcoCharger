@@ -5,7 +5,9 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import CONFIG from '../config';
+import Sidebar from '../components/Sidebar';
 
+// Configuração dos ícones padrão do Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -16,7 +18,6 @@ L.Icon.Default.mergeOptions({
 export default function HomePage() {
   const [stations, setStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
-
 
   useEffect(() => {
     axios
@@ -30,7 +31,6 @@ export default function HomePage() {
           longitude: station.longitude,
           chargingPoints: station.chargingPoints || [],
         }));
-
         setStations(stationsData);
       })
       .catch((error) => {
@@ -38,51 +38,53 @@ export default function HomePage() {
       });
   }, []);
 
-return (
-  <div className={styles.wrapper}>
-    <div className={styles.sidebar}>
-      <h2>Detalhes da Estação</h2>
-      {selectedStation ? (
-        <>
-          <p><strong>{selectedStation.cityName}</strong></p>
-          <p>{selectedStation.address}</p>
-          <h3>Pontos de Carregamento:</h3>
-          <ul>
-            {selectedStation.chargingPoints.map((point) => (
-              <li key={point.id}>
-                {point.brand} - {point.available ? 'Disponível' : 'Indisponível'}
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <p>Selecione uma estação no mapa</p>
-      )}
-    </div>
+  return (
+    <div className={styles.page}>
+      <Sidebar />
 
-    <MapContainer
-      center={[40.641, -8.653]}
-      zoom={14}
-      className={styles.map}
-    >
-      <TileLayer
-        attribution='&copy; OpenStreetMap'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {stations.map((station) => (
-        <Marker
-          key={station.id}
-          position={[station.latitude, station.longitude]}
-          eventHandlers={{
-            click: () => {
-              setSelectedStation(station);
-            },
-          }}
+      <div className={styles.wrapper}>
+        <div className={styles.stationDetails}>
+          <h2>Detalhes da Estação</h2>
+          {selectedStation ? (
+            <>
+              <p><strong>{selectedStation.municipality}</strong></p>
+              <p>{selectedStation.address}</p>
+              <h3>Pontos de Carregamento:</h3>
+              <ul>
+                {selectedStation.chargingPoints.map((point) => (
+                  <li key={point.id}>
+                    {point.brand} - {point.available ? 'Disponível' : 'Indisponível'}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p>Selecione uma estação no mapa</p>
+          )}
+        </div>
+
+        <MapContainer
+          center={[40.641, -8.653]}
+          zoom={14}
+          className={styles.map}
         >
-          <Popup>{station.cityName}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
-  </div>
-);
+          <TileLayer
+            attribution='&copy; OpenStreetMap contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {stations.map((station) => (
+            <Marker
+              key={station.id}
+              position={[station.latitude, station.longitude]}
+              eventHandlers={{
+                click: () => setSelectedStation(station),
+              }}
+            >
+              <Popup>{station.municipality}</Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
+    </div>
+  );
 }
