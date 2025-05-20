@@ -34,13 +34,16 @@ public class AuthenticationController {
 
   @PostMapping("/register")
   public ResponseEntity<Object> register(@RequestBody Map<String, String> user) {
-    String email = user.get("email").strip();
-    String password = user.get("password").strip();
-    String name = user.get("name").strip();
+    String email = user.get("email");
+    String password = user.get("password");
+    String name = user.get("name");
     if (email == null || password == null || name == null) {
       AuthResultDTO result = new AuthResultDTO(false, "Missing required fields", null);
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getMessage());
     }
+    email = email.strip();
+    password = password.strip();
+    name = name.strip();
     AuthResultDTO result = authService.register(email, password, name);
 
     if (!result.isSuccess()) {
