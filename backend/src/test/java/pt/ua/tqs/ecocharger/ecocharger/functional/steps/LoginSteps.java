@@ -3,7 +3,6 @@ package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -22,15 +21,15 @@ public class LoginSteps {
 
   @Before
   public void setup() {
-      WebDriverSingleton.initialize();
-      driver = WebDriverSingleton.getDriver();
-      wait = WebDriverSingleton.getWait();
+    WebDriverSingleton.initialize();
+    driver = WebDriverSingleton.getDriver();
+    wait = WebDriverSingleton.getWait();
   }
 
   @After
-public void cleanUp() {
+  public void cleanUp() {
     WebDriverSingleton.quit();
-}
+  }
 
   @Given("I am on the login page")
   public void i_am_on_the_login_page() {
