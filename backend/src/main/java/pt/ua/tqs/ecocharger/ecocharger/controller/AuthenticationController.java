@@ -33,7 +33,7 @@ public class AuthenticationController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody Map<String, String> user) {
+  public ResponseEntity<Object> register(@RequestBody Map<String, String> user) {
     String email = user.get("email").strip();
     String password = user.get("password").strip();
     String name = user.get("name").strip();

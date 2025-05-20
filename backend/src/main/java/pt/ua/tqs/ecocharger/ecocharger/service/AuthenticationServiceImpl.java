@@ -53,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       return new AuthResultDTO(false, "Name must be at least 3 characters", null);
     }
 
-    if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+    if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
       return new AuthResultDTO(false, "Invalid email format", null);
     }
 

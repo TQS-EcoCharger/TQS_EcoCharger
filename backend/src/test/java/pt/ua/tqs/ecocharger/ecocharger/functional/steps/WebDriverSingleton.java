@@ -6,7 +6,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class WebDriverSingleton {
   private static WebDriver driver;
