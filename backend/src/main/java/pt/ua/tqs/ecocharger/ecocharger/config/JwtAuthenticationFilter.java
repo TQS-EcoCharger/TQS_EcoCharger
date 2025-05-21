@@ -30,16 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Value("${jwt.secret}")
   private String jwtSecret;
 
-  @Lazy
-  @Autowired
-  private UserRepository userRepository;
+  @Lazy @Autowired private UserRepository userRepository;
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      FilterChain filterChain
-  ) throws ServletException, IOException {
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
     String token = extractTokenFromHeader(request);
 
@@ -48,14 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
         DecodedJWT decodedJWT = JWT.require(algorithm).build().verify(token);
 
-        String email = decodedJWT.getClaim("sub").asString(); 
+        String email = decodedJWT.getClaim("sub").asString();
 
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isPresent()) {
           User user = userOpt.get();
 
           UsernamePasswordAuthenticationToken authentication =
-              new UsernamePasswordAuthenticationToken(user, null, List.of()); 
+              new UsernamePasswordAuthenticationToken(user, null, List.of());
 
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }

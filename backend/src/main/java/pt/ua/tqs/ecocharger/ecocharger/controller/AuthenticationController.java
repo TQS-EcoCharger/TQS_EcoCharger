@@ -27,12 +27,11 @@ public class AuthenticationController {
     AuthResultDTO result = authService.authenticate(request.getEmail(), request.getPassword());
 
     if (!result.isSuccess()) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
     }
 
     return ResponseEntity.ok(result);
   }
-
 
   @PostMapping("/register")
   public ResponseEntity<Object> register(@RequestBody Map<String, String> user) {

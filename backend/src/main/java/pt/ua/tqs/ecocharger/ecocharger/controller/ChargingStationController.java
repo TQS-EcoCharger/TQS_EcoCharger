@@ -18,35 +18,33 @@ import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingStationService
 @RequestMapping("/api/v1/chargingStations")
 public class ChargingStationController {
 
-    private final ChargingStationService chargingStationService;
+  private final ChargingStationService chargingStationService;
 
-    public ChargingStationController(ChargingStationService chargingStationService) {
-        this.chargingStationService = chargingStationService;
-    }
+  public ChargingStationController(ChargingStationService chargingStationService) {
+    this.chargingStationService = chargingStationService;
+  }
 
-    @PostMapping
-    public ResponseEntity<ChargingStation> createStation(@RequestBody ChargingStation station) {
-        ChargingStation savedStation = chargingStationService.createStation(station);
-        return ResponseEntity.ok(savedStation);
-    }
+  @PostMapping
+  public ResponseEntity<ChargingStation> createStation(@RequestBody ChargingStation station) {
+    ChargingStation savedStation = chargingStationService.createStation(station);
+    return ResponseEntity.ok(savedStation);
+  }
 
-    @GetMapping("/city/{cityName}")
-    public ResponseEntity<List<ChargingStation>> getStationsByCity(@PathVariable String cityName) {
-        List<ChargingStation> stations = chargingStationService.getAllStationsByCityName(cityName);
-        return ResponseEntity.ok(stations);
-    }
+  @GetMapping("/city/{cityName}")
+  public ResponseEntity<List<ChargingStation>> getStationsByCity(@PathVariable String cityName) {
+    List<ChargingStation> stations = chargingStationService.getAllStationsByCityName(cityName);
+    return ResponseEntity.ok(stations);
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStation(@PathVariable Long id) {
-        chargingStationService.deleteStation(id);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteStation(@PathVariable Long id) {
+    chargingStationService.deleteStation(id);
+    return ResponseEntity.noContent().build();
+  }
 
-    @GetMapping
-    public ResponseEntity<List<ChargingStation>> getAllStations() {
-        List<ChargingStation> stations = chargingStationService.getAllStations();
-        return ResponseEntity.ok(stations);
-    }
-    
-    
+  @GetMapping
+  public ResponseEntity<List<ChargingStation>> getAllStations() {
+    List<ChargingStation> stations = chargingStationService.getAllStations();
+    return ResponseEntity.ok(stations);
+  }
 }

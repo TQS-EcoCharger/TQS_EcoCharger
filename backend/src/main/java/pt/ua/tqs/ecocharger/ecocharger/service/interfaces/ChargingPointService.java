@@ -5,9 +5,13 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import java.util.List;
 
 public interface ChargingPointService {
-    ChargingPoint createPoint(ChargingPoint point, ChargingStation station);
-    List<ChargingPoint> getAllPoints();
-    List<ChargingPoint>  getAvailablePoints( ChargingStation station);
-    List<ChargingPoint> getPointsByStationId(Long stationId);
-    void deletePoint(Long id);
+  ChargingPoint createPoint(ChargingPoint point, ChargingStation station);
+
+  List<ChargingPoint> getAllPoints();
+
+  List<ChargingPoint> getAvailablePoints(ChargingStation station);
+
+  List<ChargingPoint> getPointsByStationId(Long stationId);
+
+  void deletePoint(Long id);
 }

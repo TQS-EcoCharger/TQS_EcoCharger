@@ -11,9 +11,11 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 
 @Repository
-public interface ChargingPointRepository  extends JpaRepository<ChargingPoint, Long> {
-    Optional<List<ChargingPoint>> findByAvailable(boolean available);
-    Optional<List<ChargingPoint>> findByChargingStationId(Long stationId);
-    @Query("SELECT cp FROM ChargingPoint cp WHERE cp.chargingStation = ?1 AND cp.available = true")
-    Optional<List<ChargingPoint>> findAvailablePointsByChargingStation(ChargingStation stationId);
+public interface ChargingPointRepository extends JpaRepository<ChargingPoint, Long> {
+  Optional<List<ChargingPoint>> findByAvailable(boolean available);
+
+  Optional<List<ChargingPoint>> findByChargingStationId(Long stationId);
+
+  @Query("SELECT cp FROM ChargingPoint cp WHERE cp.chargingStation = ?1 AND cp.available = true")
+  Optional<List<ChargingPoint>> findAvailablePointsByChargingStation(ChargingStation stationId);
 }
