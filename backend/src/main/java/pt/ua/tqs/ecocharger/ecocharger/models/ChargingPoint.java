@@ -38,6 +38,11 @@ public class ChargingPoint {
     @OneToMany(mappedBy = "chargingPoint", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Connectors> connectors = new ArrayList<>();
 
+    @Column(name = "price_per_kwh") 
+    private double pricePerKWh;
+
+    @Column(name = "price_per_minute")
+    private double pricePerMinute;
 
     
     public ChargingPoint() {
@@ -88,6 +93,22 @@ public class ChargingPoint {
 
     public void setConnectors(List<Connectors> connectors) {
         this.connectors = connectors;
+    }
+
+    public double getPricePerKWh() {
+        return pricePerKWh;
+    }
+
+    public void setPricePerKWh(double pricePerKWh) {
+        this.pricePerKWh = pricePerKWh;
+    }
+
+    public double getPricePerMinute() {
+        return pricePerMinute;
+    }
+
+    public void setPricePerMinute(double pricePerMinute) {
+        this.pricePerMinute = pricePerMinute;
     }
 
     @Override

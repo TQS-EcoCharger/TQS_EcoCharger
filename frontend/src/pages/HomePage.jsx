@@ -7,12 +7,25 @@ import L from 'leaflet';
 import CONFIG from '../config';
 import Sidebar from '../components/Sidebar';
 
-// Configuração dos ícones padrão do Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+import { FiZap, FiPower } from 'react-icons/fi';
+import { FaRoad } from 'react-icons/fa';
+import { FaCity } from 'react-icons/fa';
+import { FaCar } from 'react-icons/fa';
+import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
+import { TbBatteryCharging2 } from 'react-icons/tb';
+import { GiElectric } from 'react-icons/gi';
+
+import Chargingicon from '../../public/ChargingStation.png';
+
+// Configuração do ícone Leaflet
+const customIcon = new L.Icon({
+  iconUrl: Chargingicon,
+  iconSize: [40, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -40],
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  shadowSize: [41, 41],
+  shadowAnchor: [13, 41],
 });
 
 export default function HomePage() {
@@ -25,12 +38,16 @@ export default function HomePage() {
       .then((res) => {
         const stationsData = res.data.map(station => ({
           id: station.id,
-          municipality: station.municipality,
+          municipality: station.cityName,
           address: station.address,
           latitude: station.latitude,
           longitude: station.longitude,
-          chargingPoints: station.chargingPoints || [],
+          chargingPoints: (station.chargingPoints || []).map(cp => ({
+            ...cp,
+            connectors: cp.connectors || [],
+          })),
         }));
+        console.log('Estações:', stationsData);
         setStations(stationsData);
       })
       .catch((error) => {
@@ -46,21 +63,50 @@ export default function HomePage() {
         <div className={styles.stationDetails}>
           <h2>Detalhes da Estação</h2>
           {selectedStation ? (
-            <>
-              <p><strong>{selectedStation.municipality}</strong></p>
-              <p>{selectedStation.address}</p>
-              <h3>Pontos de Carregamento:</h3>
-              <ul>
-                {selectedStation.chargingPoints.map((point) => (
-                  <li key={point.id}>
-                    {point.brand} - {point.available ? 'Disponível' : 'Indisponível'}
-                  </li>
-                ))}
-              </ul>
-            </>
+              <div className={styles.cardScrollable}>
+                <div className={styles.cardContent}>
+                  <div className={styles.stationInfo}>
+                    <p><strong><FaCity /> Município:</strong> {selectedStation.municipality}</p>
+                    <p><strong><FaRoad /> Morada:</strong> {selectedStation.address}</p>
+                  </div>
+
+                  <h3 className={styles.sectionTitle}>Pontos de Carregamento</h3>
+                  {selectedStation.chargingPoints.map((point) => (
+                    <div key={point.id} className={styles.chargingCard}>
+                      <div className={styles.chargingHeader}>
+                        <BsPlug className={styles.icon} />
+                        <span><strong>{point.brand}</strong></span>
+                        {point.available ? (
+                          <BsCheckCircle className={styles.available} title="Disponível" />
+                        ) : (
+                          <BsXCircle className={styles.unavailable} title="Indisponível" />
+                        )}
+                      </div>
+                      {point.connectors.length > 0 ? (
+                        <div className={styles.connectorList}>
+                          {point.connectors.map((connector) => (
+                            <div key={connector.id} className={styles.connectorItem}>
+                              <span><FiZap className={styles.iconSmall} /> <strong>Tipo:</strong> {connector.connectorType}</span>
+                              <span><FiPower className={styles.iconSmall} /> <strong>Potência:</strong> {connector.ratedPowerKW} kW</span>
+                              <span><TbBatteryCharging2 className={styles.iconSmall} /> <strong>Voltagem:</strong> {connector.voltageV} V</span>
+                              <span><GiElectric className={styles.iconSmall} /> <strong>Corrente:</strong> {connector.currentA} A</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p style={{ fontStyle: 'italic', color: '#666', paddingLeft: '8px' }}>
+                          Nenhum conector disponível.
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <button className={styles.reserveBtn}>Reservar</button>
+              </div>
           ) : (
             <p>Selecione uma estação no mapa</p>
           )}
+
         </div>
 
         <MapContainer
@@ -76,11 +122,18 @@ export default function HomePage() {
             <Marker
               key={station.id}
               position={[station.latitude, station.longitude]}
+              icon={customIcon}
               eventHandlers={{
                 click: () => setSelectedStation(station),
               }}
             >
-              <Popup>{station.municipality}</Popup>
+              <Popup>
+                <div className={styles.popupContent}>
+                  <p><FaCity className={styles.popupIcon} /> <strong>Município:</strong> {station.municipality}</p>
+                  <p><strong>Latitude:</strong>{station.latitude}</p>
+                  <p><strong>Longitude:</strong>{station.longitude}</p>
+                </div>
+              </Popup>
             </Marker>
           ))}
         </MapContainer>
