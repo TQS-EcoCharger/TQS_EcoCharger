@@ -48,19 +48,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
         DecodedJWT decodedJWT = JWT.require(algorithm).build().verify(token);
 
-        String email = decodedJWT.getClaim("sub").asString(); // JWT padrão usa "sub" como identificador
+        String email = decodedJWT.getClaim("sub").asString(); 
 
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isPresent()) {
           User user = userOpt.get();
 
           UsernamePasswordAuthenticationToken authentication =
-              new UsernamePasswordAuthenticationToken(user, null, List.of()); // adicionar roles aqui se necessário
+              new UsernamePasswordAuthenticationToken(user, null, List.of()); 
 
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }
       } catch (Exception e) {
-        // log de erro ou ignorar token inválido
         System.out.println("Token inválido: " + e.getMessage());
       }
     }
