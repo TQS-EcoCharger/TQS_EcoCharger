@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingStationRepository;
 
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ChargingStationServiceImplTest {
@@ -29,6 +32,7 @@ public class ChargingStationServiceImplTest {
     }
 
     @Test
+    @Requirement("ET-82")
     void testCreateStation_NewStation() {
         ChargingStation station = new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
 
@@ -42,6 +46,7 @@ public class ChargingStationServiceImplTest {
     }
 
     @Test
+    @Requirement("ET-82")
     void testCreateStation_ExistingStation() {
         ChargingStation existingStation = new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
 
@@ -54,6 +59,7 @@ public class ChargingStationServiceImplTest {
     }
 
     @Test
+    @Requirement("ET-82")
     void testGetAllStationsByCityName() {
         ChargingStation s1 = new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
         ChargingStation s2 = new ChargingStation("Lisboa", "Rua B", 38.0, -9.0, "Rua B", "PT", "Portugal", "Hybrid");
@@ -67,6 +73,7 @@ public class ChargingStationServiceImplTest {
     }
 
     @Test
+    @Requirement("ET-82")
     void testDeleteStation_Exists() {
         ChargingStation station = new ChargingStation("Porto", "Rua C", 41.0, -8.5, "Rua C", "PT", "Portugal", "Electric");
         station.setId(1L);
@@ -79,6 +86,7 @@ public class ChargingStationServiceImplTest {
     }
 
     @Test
+    @Requirement("ET-82")
     void testDeleteStation_NotFound() {
         when(chargingStationRepository.findById(2L)).thenReturn(Optional.empty());
 
@@ -91,6 +99,7 @@ public class ChargingStationServiceImplTest {
     }
 
     @Test
+    @Requirement("ET-82")
     void testGetAllStations() {
         ChargingStation s1 = new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
         ChargingStation s2 = new ChargingStation("Lisboa", "Rua B", 38.0, -9.0, "Rua B", "PT", "Portugal", "Hybrid");
