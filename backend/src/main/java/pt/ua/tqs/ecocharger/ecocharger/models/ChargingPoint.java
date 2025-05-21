@@ -39,10 +39,10 @@ public class ChargingPoint {
     private List<Connectors> connectors = new ArrayList<>();
 
     @Column(name = "price_per_kwh") 
-    private double pricePerKWh;
+    private Double pricePerKWh;
 
     @Column(name = "price_per_minute")
-    private double pricePerMinute;
+    private Double pricePerMinute;
 
     
     public ChargingPoint() {
@@ -95,19 +95,19 @@ public class ChargingPoint {
         this.connectors = connectors;
     }
 
-    public double getPricePerKWh() {
+    public Double getPricePerKWh() {
         return pricePerKWh;
     }
 
-    public void setPricePerKWh(double pricePerKWh) {
+    public void setPricePerKWh(Double pricePerKWh) {
         this.pricePerKWh = pricePerKWh;
     }
 
-    public double getPricePerMinute() {
+    public Double getPricePerMinute() {
         return pricePerMinute;
     }
 
-    public void setPricePerMinute(double pricePerMinute) {
+    public void setPricePerMinute(Double pricePerMinute) {
         this.pricePerMinute = pricePerMinute;
     }
 

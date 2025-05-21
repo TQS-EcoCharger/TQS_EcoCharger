@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import CONFIG from '../config';
 import Sidebar from '../components/Sidebar';
+import { useNavigate } from 'react-router-dom';
 
 import { FiZap, FiPower } from 'react-icons/fi';
 import { FaRoad } from 'react-icons/fa';
@@ -31,29 +32,45 @@ const customIcon = new L.Icon({
 export default function HomePage() {
   const [stations, setStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get(`${CONFIG.API_URL}v1/chargingStations`, { withCredentials: true })
-      .then((res) => {
-        const stationsData = res.data.map(station => ({
-          id: station.id,
-          municipality: station.cityName,
-          address: station.address,
-          latitude: station.latitude,
-          longitude: station.longitude,
-          chargingPoints: (station.chargingPoints || []).map(cp => ({
-            ...cp,
-            connectors: cp.connectors || [],
-          })),
-        }));
-        console.log('Estações:', stationsData);
-        setStations(stationsData);
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar estações:', error);
-      });
-  }, []);
+ useEffect(() => {
+  if (!token) {
+    console.warn("Nenhum token encontrado. Redirecionando para login...");
+    navigate("/");
+    return;
+  }
+
+  axios
+    .get(`${CONFIG.API_URL}v1/chargingStations`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      const stationsData = res.data.map((station) => ({
+        id: station.id,
+        municipality: station.cityName,
+        address: station.address,
+        latitude: station.latitude,
+        longitude: station.longitude,
+        chargingPoints: (station.chargingPoints || []).map((cp) => ({
+          ...cp,
+          connectors: cp.connectors || [],
+        })),
+      }));
+      setStations(stationsData);
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar estações:", error.response || error.message);
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/"); // token inválido ou expirado
+      }
+    });
+}, []);
+
 
   return (
     <div className={styles.page}>

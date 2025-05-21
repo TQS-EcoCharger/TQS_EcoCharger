@@ -11,18 +11,17 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  const token = localStorage.getItem("token");
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await axios.post(`${CONFIG.API_URL}auth/login`, null, {
-        params: {
-          email,
-          password,
-        },
-    });
+     const response = await axios.post(`${CONFIG.API_URL}auth/login`, {
+        email,
+        password,
+      });
+
       console.log("Login successful:", response.data);
       localStorage.setItem("token", response.data.token);
       navigate("/home");
