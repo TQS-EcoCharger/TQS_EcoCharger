@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
+import pt.ua.tqs.ecocharger.ecocharger.dto.LoginRequest;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
 
 @RestController
@@ -22,15 +23,16 @@ public class AuthenticationController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
-    AuthResultDTO result = authService.authenticate(email, password);
+  public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    AuthResultDTO result = authService.authenticate(request.getEmail(), request.getPassword());
 
     if (!result.isSuccess()) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result.getMessage());
     }
 
     return ResponseEntity.ok(result);
   }
+
 
   @PostMapping("/register")
   public ResponseEntity<Object> register(@RequestBody Map<String, String> user) {
