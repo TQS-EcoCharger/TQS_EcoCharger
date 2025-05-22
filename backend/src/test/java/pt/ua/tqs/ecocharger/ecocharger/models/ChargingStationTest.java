@@ -28,7 +28,7 @@ public class ChargingStationTest {
         assertEquals("Central St", station.getStreetName());
         assertEquals("PT", station.getCountryCode());
         assertEquals("Portugal", station.getCountry());
-        assertEquals("Electric", station.getVeicleType());
+        assertEquals("Electric", station.getVehicleType());
         assertNotNull(station.getChargingPoints());
         assertTrue(station.getChargingPoints().isEmpty());
     }
@@ -46,7 +46,7 @@ public class ChargingStationTest {
         station.setStreetName("Liberdade");
         station.setCountryCode("PT");
         station.setCountry("Portugal");
-        station.setVeicleType("Hybrid");
+        station.setVehicleType("Hybrid");
 
         List<ChargingPoint> points = new ArrayList<>();
         station.setChargingPoints(points);
@@ -59,7 +59,7 @@ public class ChargingStationTest {
         assertEquals("Liberdade", station.getStreetName());
         assertEquals("PT", station.getCountryCode());
         assertEquals("Portugal", station.getCountry());
-        assertEquals("Hybrid", station.getVeicleType());
+        assertEquals("Hybrid", station.getVehicleType());
         assertEquals(points, station.getChargingPoints());
     }
 
@@ -77,6 +77,6 @@ public class ChargingStationTest {
         assertTrue(result.contains("cityName=Porto"));
         assertTrue(result.contains("address=Rua das Flores"));
         assertTrue(result.contains("country=Portugal"));
-        assertTrue(result.contains("veicleType=Electric"));
+        assertTrue(result.contains("vehicleType=Electric"));
     }
 }

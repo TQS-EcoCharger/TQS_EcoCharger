@@ -69,7 +69,7 @@ export default function HomePage() {
         navigate("/"); // token inválido ou expirado
       }
     });
-}, []);
+}, [navigate, token]);
 
 
   return (

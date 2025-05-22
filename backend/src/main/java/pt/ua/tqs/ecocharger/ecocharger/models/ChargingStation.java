@@ -41,8 +41,8 @@ public class ChargingStation {
     @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "veicletype", nullable = false)
-    private String veicleType;
+    @Column(name = "vehicletype", nullable = false)
+    private String vehicleType;
 
     @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChargingPoint> chargingPoints = new ArrayList<>();
@@ -52,7 +52,7 @@ public class ChargingStation {
     }
 
     public ChargingStation(String cityName, String address, double latitude, double longitude,
-            String streetName, String countryCode, String country, String veicleType) {
+            String streetName, String countryCode, String country, String vehicleType) {
         this.cityName = cityName;
         this.address = address;
         this.latitude = latitude;
@@ -60,7 +60,7 @@ public class ChargingStation {
         this.streetName = streetName;
         this.countryCode = countryCode;
         this.country = country;
-        this.veicleType = veicleType;
+        this.vehicleType = vehicleType;
     }
 
     public Long getId() {
@@ -127,12 +127,12 @@ public class ChargingStation {
         this.country = country;
     }
 
-    public String getVeicleType() {
-        return veicleType;
+    public String getVehicleType() {
+        return vehicleType;
     }
 
-    public void setVeicleType(String veicleType) {
-        this.veicleType = veicleType;
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public List<ChargingPoint> getChargingPoints() {
@@ -148,7 +148,7 @@ public class ChargingStation {
     public String toString() {
         return "ChargingStation [id=" + id + ", cityName=" + cityName + ", address=" + address + ", latitude="
                 + latitude + ", longitude=" + longitude + ", streetName="
-                + streetName + ", countryCode=" + countryCode + ", country=" + country + ", veicleType=" + veicleType
+                + streetName + ", countryCode=" + countryCode + ", country=" + country + ", vehicleType=" + vehicleType
                 + ", chargingPoints=" + chargingPoints + "]";
     }
 

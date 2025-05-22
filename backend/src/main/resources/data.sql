@@ -4,7 +4,7 @@ INSERT INTO users (email, password, name, enabled) VALUES
 -- CHARGING STATIONS (IDs 1–20)
 INSERT INTO charging_stations (
     id, municipality, address, latitude, longitude,
-    streetName, countryCode, country, veicleType
+    streetName, countryCode, country, vehicleType
 ) VALUES
 (1, 'Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739,
  'Rua do Batalhão de Caçadores 10', 'PT', 'Portugal', 'Car,Truck'),

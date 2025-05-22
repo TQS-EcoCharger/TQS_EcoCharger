@@ -11,7 +11,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
