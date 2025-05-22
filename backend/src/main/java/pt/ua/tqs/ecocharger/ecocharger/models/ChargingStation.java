@@ -3,6 +3,9 @@ package pt.ua.tqs.ecocharger.ecocharger.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +17,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "charging_stations")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChargingStation {
 
   @Id
@@ -47,7 +53,6 @@ public class ChargingStation {
   @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ChargingPoint> chargingPoints = new ArrayList<>();
 
-  public ChargingStation() {}
 
   public ChargingStation(
       String cityName,
@@ -66,110 +71,5 @@ public class ChargingStation {
     this.countryCode = countryCode;
     this.country = country;
     this.vehicleType = vehicleType;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getCityName() {
-    return cityName;
-  }
-
-  public void setCityName(String cityName) {
-    this.cityName = cityName;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public double getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(double longitude) {
-    this.longitude = longitude;
-  }
-
-  public String getStreetName() {
-    return streetName;
-  }
-
-  public void setStreetName(String streetName) {
-    this.streetName = streetName;
-  }
-
-  public String getCountryCode() {
-    return countryCode;
-  }
-
-  public void setCountryCode(String countryCode) {
-    this.countryCode = countryCode;
-  }
-
-  public String getCountry() {
-    return country;
-  }
-
-  public void setCountry(String country) {
-    this.country = country;
-  }
-
-  public String getVehicleType() {
-    return vehicleType;
-  }
-
-  public void setVehicleType(String vehicleType) {
-    this.vehicleType = vehicleType;
-  }
-
-  public List<ChargingPoint> getChargingPoints() {
-    return chargingPoints;
-  }
-
-  public void setChargingPoints(List<ChargingPoint> chargingPoints) {
-    this.chargingPoints = chargingPoints;
-  }
-
-  @Override
-  public String toString() {
-    return "ChargingStation [id="
-        + id
-        + ", cityName="
-        + cityName
-        + ", address="
-        + address
-        + ", latitude="
-        + latitude
-        + ", longitude="
-        + longitude
-        + ", streetName="
-        + streetName
-        + ", countryCode="
-        + countryCode
-        + ", country="
-        + country
-        + ", vehicleType="
-        + vehicleType
-        + ", chargingPoints="
-        + chargingPoints
-        + "]";
   }
 }

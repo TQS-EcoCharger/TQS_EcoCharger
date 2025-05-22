@@ -15,9 +15,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "charging_points")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChargingPoint {
 
   @Id
@@ -44,87 +50,10 @@ public class ChargingPoint {
   @Column(name = "price_per_minute")
   private Double pricePerMinute;
 
-  public ChargingPoint() {}
-
-  public ChargingPoint(
-      ChargingStation chargingStation,
-      boolean available,
-      String brand,
-      List<Connectors> connectors) {
+  public ChargingPoint(ChargingStation chargingStation, boolean available, String brand, List<Connectors> connectors) {
     this.chargingStation = chargingStation;
     this.available = available;
     this.brand = brand;
     this.connectors = connectors;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public ChargingStation getChargingStation() {
-    return chargingStation;
-  }
-
-  public void setChargingStation(ChargingStation chargingStation) {
-    this.chargingStation = chargingStation;
-  }
-
-  public boolean isAvailable() {
-    return available;
-  }
-
-  public void setAvailable(boolean available) {
-    this.available = available;
-  }
-
-  public String getBrand() {
-    return brand;
-  }
-
-  public void setBrand(String brand) {
-    this.brand = brand;
-  }
-
-  public List<Connectors> getConnectors() {
-    return connectors;
-  }
-
-  public void setConnectors(List<Connectors> connectors) {
-    this.connectors = connectors;
-  }
-
-  public Double getPricePerKWh() {
-    return pricePerKWh;
-  }
-
-  public void setPricePerKWh(Double pricePerKWh) {
-    this.pricePerKWh = pricePerKWh;
-  }
-
-  public Double getPricePerMinute() {
-    return pricePerMinute;
-  }
-
-  public void setPricePerMinute(Double pricePerMinute) {
-    this.pricePerMinute = pricePerMinute;
-  }
-
-  @Override
-  public String toString() {
-    return "ChargingPoint [id="
-        + id
-        + ", chargingStation="
-        + chargingStation
-        + ", available="
-        + available
-        + ", brand="
-        + brand
-        + ", connectors="
-        + connectors
-        + "]";
   }
 }

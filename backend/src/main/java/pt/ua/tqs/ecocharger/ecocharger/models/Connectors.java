@@ -1,11 +1,16 @@
 package pt.ua.tqs.ecocharger.ecocharger.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "connectors")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Connectors {
 
   @Id
@@ -32,93 +37,11 @@ public class Connectors {
   @JoinColumn(name = "charging_point_id")
   private ChargingPoint chargingPoint;
 
-  public Connectors() {}
-
-  public Connectors(
-      String connectorType,
-      int ratedPowerKW,
-      Integer voltageV,
-      Integer currentA,
-      String currentType) {
+  public Connectors(String connectorType, int ratedPowerKW, Integer voltageV, Integer currentA, String currentType) {
     this.connectorType = connectorType;
     this.ratedPowerKW = ratedPowerKW;
     this.voltageV = voltageV;
     this.currentA = currentA;
     this.currentType = currentType;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getConnectorType() {
-    return connectorType;
-  }
-
-  public void setConnectorType(String connectorType) {
-    this.connectorType = connectorType;
-  }
-
-  public int getRatedPowerKW() {
-    return ratedPowerKW;
-  }
-
-  public void setRatedPowerKW(int ratedPowerKW) {
-    this.ratedPowerKW = ratedPowerKW;
-  }
-
-  public Integer getVoltageV() {
-    return voltageV;
-  }
-
-  public void setVoltageV(Integer voltageV) {
-    this.voltageV = voltageV;
-  }
-
-  public Integer getCurrentA() {
-    return currentA;
-  }
-
-  public void setCurrentA(Integer currentA) {
-    this.currentA = currentA;
-  }
-
-  public String getCurrentType() {
-    return currentType;
-  }
-
-  public void setCurrentType(String currentType) {
-    this.currentType = currentType;
-  }
-
-  public ChargingPoint getChargingPoint() {
-    return chargingPoint;
-  }
-
-  public void setChargingPoint(ChargingPoint chargingPoint) {
-    this.chargingPoint = chargingPoint;
-  }
-
-  @Override
-  public String toString() {
-    return "Connectors [id="
-        + id
-        + ", connectorType="
-        + connectorType
-        + ", ratedPowerKW="
-        + ratedPowerKW
-        + ", voltageV="
-        + voltageV
-        + ", currentA="
-        + currentA
-        + ", currentType="
-        + currentType
-        + ", chargingPoint="
-        + chargingPoint
-        + "]";
   }
 }
