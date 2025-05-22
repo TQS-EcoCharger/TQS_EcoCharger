@@ -2,6 +2,8 @@ package pt.ua.tqs.ecocharger.ecocharger.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import pt.ua.tqs.ecocharger.ecocharger.dto.CreateChargingPointRequest;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingPointService;
@@ -18,11 +20,10 @@ public class ChargingPointController {
     this.chargingPointService = chargingPointService;
   }
 
-  @PostMapping
-  public ResponseEntity<ChargingPoint> createPoint(
-      @RequestBody ChargingPoint point, @RequestBody ChargingStation station) {
-    ChargingPoint saved = chargingPointService.createPoint(point, station);
-    return ResponseEntity.ok(saved);
+   @PostMapping
+  public ResponseEntity<ChargingPoint> createPoint(@RequestBody CreateChargingPointRequest request) {
+      ChargingPoint saved = chargingPointService.createPoint(request.getPoint(), request.getStation());
+      return ResponseEntity.ok(saved);
   }
 
   @GetMapping
