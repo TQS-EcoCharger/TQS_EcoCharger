@@ -15,6 +15,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Autowired private UserRepository userRepository;
 
+  @Autowired private JwtUtil jwtUtil;
+
   @Override
   public AuthResultDTO authenticate(String email, String password) {
     Optional<User> userOpt = userRepository.findByEmail(email);
@@ -33,7 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       return new AuthResultDTO(false, "Invalid password", null);
     }
 
-    String token = JwtUtil.generateToken(user.getEmail());
+    String token = jwtUtil.generateToken(user.getEmail());
 
     return new AuthResultDTO(true, "Login successful", token);
   }
@@ -65,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     userRepository.save(user);
 
-    String token = JwtUtil.generateToken(user.getEmail());
+    String token = jwtUtil.generateToken(user.getEmail());
 
     return new AuthResultDTO(true, "Registration successful", token);
   }
