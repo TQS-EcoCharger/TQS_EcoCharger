@@ -383,6 +383,11 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>xray-releases</id>
+            <name>Xray Releases</name>
+            <url>https://xray-maven.xpand-it.com/artifactory/releases</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
