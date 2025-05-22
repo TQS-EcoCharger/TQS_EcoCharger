@@ -10,15 +10,14 @@ import java.util.List;
 
 public class ChargingStationTest {
 
-    @Test
-    @DisplayName("Test ChargingStation constructor and getters")
-    @Requirement("ET-83")
-    void testChargingStationConstructorAndGetters() {
-        ChargingStation station = new ChargingStation(
-            "Aveiro", "Rua Central", 40.6405, -8.6538, "Central St",
-            "PT", "Portugal", "Electric"
-        );
-        station.setId(1L);
+  @Test
+  @DisplayName("Test ChargingStation constructor and getters")
+  @Requirement("ET-83")
+  void testChargingStationConstructorAndGetters() {
+    ChargingStation station =
+        new ChargingStation(
+            "Aveiro", "Rua Central", 40.6405, -8.6538, "Central St", "PT", "Portugal", "Electric");
+    station.setId(1L);
 
         assertEquals(1L, station.getId());
         assertEquals("Aveiro", station.getCityName());
@@ -48,8 +47,8 @@ public class ChargingStationTest {
         station.setCountry("Portugal");
         station.setVehicleType("Hybrid");
 
-        List<ChargingPoint> points = new ArrayList<>();
-        station.setChargingPoints(points);
+    List<ChargingPoint> points = new ArrayList<>();
+    station.setChargingPoints(points);
 
         assertEquals(2L, station.getId());
         assertEquals("Lisboa", station.getCityName());
@@ -63,15 +62,14 @@ public class ChargingStationTest {
         assertEquals(points, station.getChargingPoints());
     }
 
-    @Test
-    @DisplayName("Test ChargingStation toString method")
-    @Requirement("ET-83")
-    void testChargingStationToString() {
-        ChargingStation station = new ChargingStation(
-            "Porto", "Rua das Flores", 41.1496, -8.6109, "Flores",
-            "PT", "Portugal", "Electric"
-        );
-        station.setId(3L);
+  @Test
+  @DisplayName("Test ChargingStation toString method")
+  @Requirement("ET-83")
+  void testChargingStationToString() {
+    ChargingStation station =
+        new ChargingStation(
+            "Porto", "Rua das Flores", 41.1496, -8.6109, "Flores", "PT", "Portugal", "Electric");
+    station.setId(3L);
 
         String result = station.toString();
         assertTrue(result.contains("cityName=Porto"));

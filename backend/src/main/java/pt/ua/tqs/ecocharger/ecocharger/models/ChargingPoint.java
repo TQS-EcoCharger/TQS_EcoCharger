@@ -19,105 +19,112 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "charging_points")
 public class ChargingPoint {
-    
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "station_id", nullable = false)
-    private ChargingStation chargingStation;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "available", nullable = false)
-    private boolean available;
+  @JsonIgnore
+  @ManyToOne
+  @JoinColumn(name = "station_id", nullable = false)
+  private ChargingStation chargingStation;
 
-    @Column(name = "brand", nullable = false)
-    private String brand;
+  @Column(name = "available", nullable = false)
+  private boolean available;
 
-    @OneToMany(mappedBy = "chargingPoint", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Connectors> connectors = new ArrayList<>();
+  @Column(name = "brand", nullable = false)
+  private String brand;
 
-    @Column(name = "price_per_kwh") 
-    private Double pricePerKWh;
+  @OneToMany(mappedBy = "chargingPoint", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Connectors> connectors = new ArrayList<>();
 
-    @Column(name = "price_per_minute")
-    private Double pricePerMinute;
+  @Column(name = "price_per_kwh")
+  private Double pricePerKWh;
 
-    
-    public ChargingPoint() {
-    }
+  @Column(name = "price_per_minute")
+  private Double pricePerMinute;
 
-    public ChargingPoint(ChargingStation chargingStation, boolean available, String brand, List<Connectors> connectors) {
-        this.chargingStation = chargingStation;
-        this.available = available;
-        this.brand = brand;
-        this.connectors = connectors;
-    }
+  public ChargingPoint() {}
 
-    public Long getId() {
-        return id;
-    }
+  public ChargingPoint(
+      ChargingStation chargingStation,
+      boolean available,
+      String brand,
+      List<Connectors> connectors) {
+    this.chargingStation = chargingStation;
+    this.available = available;
+    this.brand = brand;
+    this.connectors = connectors;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public ChargingStation getChargingStation() {
-        return chargingStation;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setChargingStation(ChargingStation chargingStation) {
-        this.chargingStation = chargingStation;
-    }
+  public ChargingStation getChargingStation() {
+    return chargingStation;
+  }
 
-    public boolean isAvailable() {
-        return available;
-    }
+  public void setChargingStation(ChargingStation chargingStation) {
+    this.chargingStation = chargingStation;
+  }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
+  public boolean isAvailable() {
+    return available;
+  }
 
-    public String getBrand() {
-        return brand;
-    }
+  public void setAvailable(boolean available) {
+    this.available = available;
+  }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
+  public String getBrand() {
+    return brand;
+  }
 
-    public List<Connectors> getConnectors() {
-        return connectors;
-    }
+  public void setBrand(String brand) {
+    this.brand = brand;
+  }
 
-    public void setConnectors(List<Connectors> connectors) {
-        this.connectors = connectors;
-    }
+  public List<Connectors> getConnectors() {
+    return connectors;
+  }
 
-    public Double getPricePerKWh() {
-        return pricePerKWh;
-    }
+  public void setConnectors(List<Connectors> connectors) {
+    this.connectors = connectors;
+  }
 
-    public void setPricePerKWh(Double pricePerKWh) {
-        this.pricePerKWh = pricePerKWh;
-    }
+  public Double getPricePerKWh() {
+    return pricePerKWh;
+  }
 
-    public Double getPricePerMinute() {
-        return pricePerMinute;
-    }
+  public void setPricePerKWh(Double pricePerKWh) {
+    this.pricePerKWh = pricePerKWh;
+  }
 
-    public void setPricePerMinute(Double pricePerMinute) {
-        this.pricePerMinute = pricePerMinute;
-    }
+  public Double getPricePerMinute() {
+    return pricePerMinute;
+  }
 
-    @Override
-    public String toString() {
-        return "ChargingPoint [id=" + id + ", chargingStation=" + chargingStation + ", available=" + available
-                + ", brand=" + brand + ", connectors=" + connectors + "]";
-    }
-    
+  public void setPricePerMinute(Double pricePerMinute) {
+    this.pricePerMinute = pricePerMinute;
+  }
+
+  @Override
+  public String toString() {
+    return "ChargingPoint [id="
+        + id
+        + ", chargingStation="
+        + chargingStation
+        + ", available="
+        + available
+        + ", brand="
+        + brand
+        + ", connectors="
+        + connectors
+        + "]";
+  }
 }
-
-
-    

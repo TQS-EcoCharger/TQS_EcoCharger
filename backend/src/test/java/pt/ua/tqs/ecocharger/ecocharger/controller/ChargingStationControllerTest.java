@@ -29,74 +29,74 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SecurityDisableConfig.class)
 public class ChargingStationControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @SuppressWarnings("removal")
-    @MockBean
-    private ChargingStationService chargingStationService;
+  @SuppressWarnings("removal")
+  @MockBean
+  private ChargingStationService chargingStationService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    @Test
-    @DisplayName("Create station")
-    @Requirement("ET-82")
-    void testCreateStation() throws Exception {
-        ChargingStation mockStation = new ChargingStation(
-                "Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric"
-        );
-        mockStation.setId(1L);
+  @Test
+  @DisplayName("Create station")
+  @Requirement("ET-82")
+  void testCreateStation() throws Exception {
+    ChargingStation mockStation =
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
+    mockStation.setId(1L);
 
-        Mockito.when(chargingStationService.createStation(any(ChargingStation.class))).thenReturn(mockStation);
+    Mockito.when(chargingStationService.createStation(any(ChargingStation.class)))
+        .thenReturn(mockStation);
 
-        mockMvc.perform(post("/api/v1/chargingStations")
+    mockMvc
+        .perform(
+            post("/api/v1/chargingStations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mockStation)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.cityName").value("Aveiro"));
-    }
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1L))
+        .andExpect(jsonPath("$.cityName").value("Aveiro"));
+  }
 
-    @Test
-    @DisplayName("Return 404 when station not found")
-    @Requirement("ET-82")
-    void testGetAllStations() throws Exception {
-        ChargingStation mockStation = new ChargingStation(
-                "Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric"
-        );
-        mockStation.setId(1L);
+  @Test
+  @DisplayName("Return 404 when station not found")
+  @Requirement("ET-82")
+  void testGetAllStations() throws Exception {
+    ChargingStation mockStation =
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
+    mockStation.setId(1L);
 
-        Mockito.when(chargingStationService.getAllStations()).thenReturn(List.of(mockStation));
+    Mockito.when(chargingStationService.getAllStations()).thenReturn(List.of(mockStation));
 
-        mockMvc.perform(get("/api/v1/chargingStations"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].cityName").value("Aveiro"));
-    }
+    mockMvc
+        .perform(get("/api/v1/chargingStations"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].cityName").value("Aveiro"));
+  }
 
-    @Test
-    @DisplayName("Return 404 when station not found")
-    @Requirement("ET-82")
-    void testGetStationsByCity() throws Exception {
-        ChargingStation mockStation = new ChargingStation(
-                "Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric"
-        );
-        mockStation.setId(1L);
+  @Test
+  @DisplayName("Return 404 when station not found")
+  @Requirement("ET-82")
+  void testGetStationsByCity() throws Exception {
+    ChargingStation mockStation =
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
+    mockStation.setId(1L);
 
-        Mockito.when(chargingStationService.getAllStationsByCityName("Aveiro")).thenReturn(List.of(mockStation));
+    Mockito.when(chargingStationService.getAllStationsByCityName("Aveiro"))
+        .thenReturn(List.of(mockStation));
 
-        mockMvc.perform(get("/api/v1/chargingStations/city/Aveiro"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].cityName").value("Aveiro"));
-    }
+    mockMvc
+        .perform(get("/api/v1/chargingStations/city/Aveiro"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].cityName").value("Aveiro"));
+  }
 
-    @Test
-    @DisplayName("Delete station")
-    @Requirement("ET-82")
-    void testDeleteStation() throws Exception {
-        mockMvc.perform(delete("/api/v1/chargingStations/1"))
-                .andExpect(status().isNoContent());
+  @Test
+  @DisplayName("Delete station")
+  @Requirement("ET-82")
+  void testDeleteStation() throws Exception {
+    mockMvc.perform(delete("/api/v1/chargingStations/1")).andExpect(status().isNoContent());
 
-        Mockito.verify(chargingStationService).deleteStation(1L);
-    }
+    Mockito.verify(chargingStationService).deleteStation(1L);
+  }
 }
