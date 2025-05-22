@@ -27,25 +27,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SecurityDisableConfig.class)
 public class ChargingPointControllerTest {
 
-    @Autowired private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @SuppressWarnings("removal")
-    @MockBean private ChargingPointService chargingPointService;
+  @SuppressWarnings("removal")
+  @MockBean
+  private ChargingPointService chargingPointService;
 
-    @Autowired private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    @Test
-    @DisplayName("Create a charging point")
-    void testCreatePoint() throws Exception {
-        ChargingStation station = new ChargingStation();
-        station.setId(1L);
-        ChargingPoint point = new ChargingPoint();
-        point.setId(10L);
-        point.setBrand("Tesla");
+  @Test
+  @DisplayName("Create a charging point")
+  void testCreatePoint() throws Exception {
+    ChargingStation station = new ChargingStation();
+    station.setId(1L);
+    ChargingPoint point = new ChargingPoint();
+    point.setId(10L);
+    point.setBrand("Tesla");
 
-        Mockito.when(chargingPointService.createPoint(any(), any())).thenReturn(point);
+    Mockito.when(chargingPointService.createPoint(any(), any())).thenReturn(point);
 
-        String json = """
+    String json =
+        """
         {
           "point": {
             "id": 10,
@@ -56,67 +58,69 @@ public class ChargingPointControllerTest {
           }
         }
         """;
-        mockMvc.perform(post("/api/v1/points")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(10));
-    }
+    mockMvc
+        .perform(post("/api/v1/points").contentType(MediaType.APPLICATION_JSON).content(json))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(10));
+  }
 
-    @Test
-    @DisplayName("Get all charging points")
-    void testGetAllPoints() throws Exception {
-        ChargingPoint point = new ChargingPoint();
-        point.setId(1L);
-        point.setBrand("Tesla");
+  @Test
+  @DisplayName("Get all charging points")
+  void testGetAllPoints() throws Exception {
+    ChargingPoint point = new ChargingPoint();
+    point.setId(1L);
+    point.setBrand("Tesla");
 
-        Mockito.when(chargingPointService.getAllPoints()).thenReturn(List.of(point));
+    Mockito.when(chargingPointService.getAllPoints()).thenReturn(List.of(point));
 
-        mockMvc.perform(get("/api/v1/points"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].brand").value("Tesla"));
-    }
+    mockMvc
+        .perform(get("/api/v1/points"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1L))
+        .andExpect(jsonPath("$[0].brand").value("Tesla"));
+  }
 
-    @Test
-    @DisplayName("Get available points for a station")
-    void testGetAvailablePoints() throws Exception {
-        ChargingStation station = new ChargingStation();
-        station.setId(1L);
+  @Test
+  @DisplayName("Get available points for a station")
+  void testGetAvailablePoints() throws Exception {
+    ChargingStation station = new ChargingStation();
+    station.setId(1L);
 
-        ChargingPoint point = new ChargingPoint();
-        point.setId(1L);
-        point.setBrand("Tesla");
+    ChargingPoint point = new ChargingPoint();
+    point.setId(1L);
+    point.setBrand("Tesla");
 
-        Mockito.when(chargingPointService.getAvailablePoints(any())).thenReturn(List.of(point));
+    Mockito.when(chargingPointService.getAvailablePoints(any())).thenReturn(List.of(point));
 
-        mockMvc.perform(get("/api/v1/points/available")
+    mockMvc
+        .perform(
+            get("/api/v1/points/available")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(station)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].brand").value("Tesla"));
-    }
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].brand").value("Tesla"));
+  }
 
-    @Test
-    @DisplayName("Get points by station ID")
-    void testGetPointsByStationId() throws Exception {
-        ChargingPoint point = new ChargingPoint();
-        point.setId(1L);
-        point.setBrand("Tesla");
+  @Test
+  @DisplayName("Get points by station ID")
+  void testGetPointsByStationId() throws Exception {
+    ChargingPoint point = new ChargingPoint();
+    point.setId(1L);
+    point.setBrand("Tesla");
 
-        Mockito.when(chargingPointService.getPointsByStationId(1L)).thenReturn(List.of(point));
+    Mockito.when(chargingPointService.getPointsByStationId(1L)).thenReturn(List.of(point));
 
-        mockMvc.perform(get("/api/v1/points/station/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L));
-    }
+    mockMvc
+        .perform(get("/api/v1/points/station/1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1L));
+  }
 
-    @Test
-    @DisplayName("Delete a point")
-    void testDeletePoint() throws Exception {
-        mockMvc.perform(delete("/api/v1/points/1"))
-                .andExpect(status().isNoContent());
+  @Test
+  @DisplayName("Delete a point")
+  void testDeletePoint() throws Exception {
+    mockMvc.perform(delete("/api/v1/points/1")).andExpect(status().isNoContent());
 
-        Mockito.verify(chargingPointService).deletePoint(1L);
-    }
+    Mockito.verify(chargingPointService).deletePoint(1L);
+  }
 }
