@@ -24,11 +24,12 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .csrf(csrf -> csrf.disable()) // CSRF desativado para APIs REST
+        // CSRF protection is not needed for stateless REST APIs using token-based authentication
+        .csrf(csrf -> csrf.disable()) 
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/api/auth/**")
-                    .permitAll() // login e register sem autenticação
+                    .permitAll()
                     .requestMatchers("/swagger-ui/**", "/api-docs/**")
                     .permitAll()
                     .anyRequest()
