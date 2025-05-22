@@ -70,6 +70,7 @@ jobs:
           spring.flyway.enabled=false
           springdoc.swagger-ui.path=/swagger-ui-custom.html
           springdoc.api-docs.path=/api-docs
+          jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
           EOF
 
       - name: Cache Maven packages
