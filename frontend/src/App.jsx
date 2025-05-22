@@ -1,10 +1,9 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 
-function App() {
+export default function App() {
   return (
     <Router>
       <Routes>
@@ -15,5 +14,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;
