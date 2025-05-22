@@ -71,6 +71,34 @@ export default function HomePage() {
     });
 }, [navigate, token]);
 
+  const handleReservation = () => {
+    if (!selectedPoint || !startTime || !endTime) {
+      setMessage("Por favor, selecione ponto e insira horário.");
+      return;
+    }
+
+    const payload = {
+      userId: parseInt(localStorage.getItem("userId")),
+      chargingPointId: selectedPoint.id,
+      startTime,
+      endTime,
+    };
+
+    axios
+      .post(`${CONFIG.API_URL}v1/reservation`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        setMessage("Reserva criada com sucesso!");
+        setSelectedPoint(null);
+        setStartTime('');
+        setEndTime('');
+      })
+      .catch((error) => {
+        console.error("Erro na reserva:", error.response || error.message);
+        setMessage("Erro ao reservar: " + (error.response?.data || error.message));
+      });
+  };
 
   return (
     <div className={styles.page}>
