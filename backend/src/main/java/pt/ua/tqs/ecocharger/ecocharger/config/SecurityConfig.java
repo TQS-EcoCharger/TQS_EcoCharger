@@ -25,7 +25,7 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
         // CSRF protection is not needed for stateless REST APIs using token-based authentication
-        .csrf(csrf -> csrf.disable()) 
+        .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/api/auth/**")
