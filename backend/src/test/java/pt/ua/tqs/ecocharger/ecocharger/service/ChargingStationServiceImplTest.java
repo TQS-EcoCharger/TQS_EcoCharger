@@ -30,7 +30,7 @@ public class ChargingStationServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testCreateStation_NewStation() {
     ChargingStation station =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
@@ -45,7 +45,7 @@ public class ChargingStationServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testCreateStation_ExistingStation() {
     ChargingStation existingStation =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
@@ -60,7 +60,7 @@ public class ChargingStationServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetAllStationsByCityName() {
     ChargingStation s1 =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
@@ -76,7 +76,7 @@ public class ChargingStationServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testDeleteStation_Exists() {
     ChargingStation station =
         new ChargingStation("Porto", "Rua C", 41.0, -8.5, "Rua C", "PT", "Portugal", "Electric");
@@ -90,7 +90,7 @@ public class ChargingStationServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testDeleteStation_NotFound() {
     when(chargingStationRepository.findById(2L)).thenReturn(Optional.empty());
 
@@ -106,7 +106,7 @@ public class ChargingStationServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetAllStations() {
     ChargingStation s1 =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");

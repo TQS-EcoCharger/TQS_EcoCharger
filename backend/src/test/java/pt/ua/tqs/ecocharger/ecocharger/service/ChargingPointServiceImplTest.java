@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class ChargingPointServiceImplTest {
@@ -43,7 +44,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should create new charging point when it doesn't exist")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testCreateChargingPoint_NewChargingPoint() {
     when(chargingPointRepository.findByChargingStationId(station.getId()))
         .thenReturn(Optional.of(new ArrayList<>()));
@@ -58,7 +59,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should return existing charging point if ID matches")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testCreateChargingPoint_AlreadyExists() {
     List<ChargingPoint> existingPoints = List.of(point);
     when(chargingPointRepository.findByChargingStationId(station.getId()))
@@ -72,7 +73,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should return all non-null ID charging points")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetAllPoints() {
     ChargingPoint p2 = new ChargingPoint();
     p2.setId(2L);
@@ -85,7 +86,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should return available points for a station")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetAvailablePoints() {
     List<ChargingPoint> availablePoints = List.of(point);
     when(chargingPointRepository.findAvailablePointsByChargingStation(station))
@@ -99,7 +100,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should throw exception when no available points found")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetAvailablePoints_Empty() {
     when(chargingPointRepository.findAvailablePointsByChargingStation(station))
         .thenReturn(Optional.empty());
@@ -113,7 +114,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should delete charging point if exists")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testDeletePoint_Exists() {
     when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
 
@@ -124,7 +125,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should throw exception when trying to delete non-existent point")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testDeletePoint_NotFound() {
     when(chargingPointRepository.findById(2L)).thenReturn(Optional.empty());
 
@@ -137,7 +138,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should return all points by station ID")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetPointsByStationId() {
     List<ChargingPoint> points = List.of(point);
     when(chargingPointRepository.findByChargingStationId(1L)).thenReturn(Optional.of(points));
@@ -149,7 +150,7 @@ class ChargingPointServiceImplTest {
 
   @Test
   @DisplayName("Should throw exception when no points found by station ID")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetPointsByStationId_NotFound() {
     when(chargingPointRepository.findByChargingStationId(1L)).thenReturn(Optional.empty());
 
