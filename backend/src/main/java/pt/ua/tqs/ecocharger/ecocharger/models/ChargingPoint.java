@@ -50,7 +50,11 @@ public class ChargingPoint {
   @Column(name = "price_per_minute")
   private Double pricePerMinute;
 
-  public ChargingPoint(ChargingStation chargingStation, boolean available, String brand, List<Connectors> connectors) {
+  public ChargingPoint(
+      ChargingStation chargingStation,
+      boolean available,
+      String brand,
+      List<Connectors> connectors) {
     this.chargingStation = chargingStation;
     this.available = available;
     this.brand = brand;

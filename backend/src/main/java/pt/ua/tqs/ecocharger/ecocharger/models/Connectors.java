@@ -37,7 +37,12 @@ public class Connectors {
   @JoinColumn(name = "charging_point_id")
   private ChargingPoint chargingPoint;
 
-  public Connectors(String connectorType, int ratedPowerKW, Integer voltageV, Integer currentA, String currentType) {
+  public Connectors(
+      String connectorType,
+      int ratedPowerKW,
+      Integer voltageV,
+      Integer currentA,
+      String currentType) {
     this.connectorType = connectorType;
     this.ratedPowerKW = ratedPowerKW;
     this.voltageV = voltageV;

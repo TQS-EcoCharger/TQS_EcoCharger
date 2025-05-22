@@ -53,7 +53,6 @@ public class ChargingStation {
   @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ChargingPoint> chargingPoints = new ArrayList<>();
 
-
   public ChargingStation(
       String cityName,
       String address,
