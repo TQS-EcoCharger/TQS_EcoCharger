@@ -6,6 +6,6 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 
 @Data
 public class CreateChargingPointRequest {
-    private ChargingPoint point;
-    private ChargingStation station;
+  private ChargingPoint point;
+  private ChargingStation station;
 }

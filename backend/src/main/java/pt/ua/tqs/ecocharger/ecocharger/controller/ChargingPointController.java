@@ -20,10 +20,12 @@ public class ChargingPointController {
     this.chargingPointService = chargingPointService;
   }
 
-   @PostMapping
-  public ResponseEntity<ChargingPoint> createPoint(@RequestBody CreateChargingPointRequest request) {
-      ChargingPoint saved = chargingPointService.createPoint(request.getPoint(), request.getStation());
-      return ResponseEntity.ok(saved);
+  @PostMapping
+  public ResponseEntity<ChargingPoint> createPoint(
+      @RequestBody CreateChargingPointRequest request) {
+    ChargingPoint saved =
+        chargingPointService.createPoint(request.getPoint(), request.getStation());
+    return ResponseEntity.ok(saved);
   }
 
   @GetMapping
