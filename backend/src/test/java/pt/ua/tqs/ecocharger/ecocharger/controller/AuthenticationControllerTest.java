@@ -42,13 +42,21 @@ class AuthenticationControllerTest {
 
   @Test
   @DisplayName("Login success returns 200 OK and token in JSON")
+  @Requirement("ET-52")
   void testLoginSuccess() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "123456"))
         .thenReturn(new AuthResultDTO(true, "Login successful", "token123"));
 
+    String requestBody =
+        """
+          {
+            "email": "john@example.com",
+            "password": "123456"
+          }
+        """;
+
     mockMvc
-        .perform(
-            post("/api/auth/login").param("email", "john@example.com").param("password", "123456"))
+        .perform(post("/api/auth/login").contentType("application/json").content(requestBody))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Login successful"))
@@ -57,15 +65,21 @@ class AuthenticationControllerTest {
 
   @Test
   @DisplayName("Login failure returns 401 Unauthorized and message only")
+  @Requirement("ET-52")
   void testLoginFailure() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "wrongpass"))
         .thenReturn(new AuthResultDTO(false, "Invalid password", null));
 
+    String requestBody =
+        """
+          {
+            "email": "john@example.com",
+            "password": "wrongpass"
+          }
+        """;
+
     mockMvc
-        .perform(
-            post("/api/auth/login")
-                .param("email", "john@example.com")
-                .param("password", "wrongpass"))
+        .perform(post("/api/auth/login").contentType("application/json").content(requestBody))
         .andExpect(status().isUnauthorized())
         .andExpect(content().string(containsString("Invalid password")));
   }
@@ -78,7 +92,8 @@ class AuthenticationControllerTest {
         .thenReturn(new AuthResultDTO(true, "Registration successful", "token123"));
 
     String requestBody =
-        "{ \"email\": \" mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
+        "{ \"email\": \"mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
+
     mockMvc
         .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isOk())
