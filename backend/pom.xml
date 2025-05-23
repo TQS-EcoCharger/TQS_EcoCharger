@@ -26,6 +26,8 @@
         <xray-maven-plugin.version>0.8.0</xray-maven-plugin.version>
         <cucumber.version>7.21.1</cucumber.version>
         <surefire.jacoco.args>${argLine}</surefire.jacoco.args>
+        <skip.xray.unit>true</skip.xray.unit> <!-- Default: don't run -->
+        <skip.xray.cucumber>true</skip.xray.cucumber> <!-- Default: don't run -->
     </properties>
 
     <profiles>
@@ -50,7 +52,6 @@
                 </plugins>
             </build>
         </profile>
-
         <profile>
             <id>cucumber-tests</id>
             <build>
@@ -74,6 +75,22 @@
             <activeByDefault>false</activeByDefault>
         </activation>
         </profile>
+        <profile>
+            <id>xray-unit</id>
+            <properties>
+                <skip.xray.unit>false</skip.xray.unit>
+                <skip.xray.cucumber>true</skip.xray.cucumber>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>xray-cucumber</id>
+            <properties>
+                <skip.xray.unit>true</skip.xray.unit>
+                <skip.xray.cucumber>false</skip.xray.cucumber>
+            </properties>
+        </profile>
+
     </profiles>
 
     <build>
@@ -166,30 +183,6 @@
             </executions>
             </plugin>
 
-
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.5.2</version>
-                <executions>
-                    <execution>
-                        <id>integration-tests</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/*IT.java</include>
-                                <include>**/IT*.java</include>
-                                <include>**/*ITCase.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 
             <plugin>
                 <groupId>org.jacoco</groupId>
