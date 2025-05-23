@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-analyze:
-    name: Build and Analyze (Skip Functional Tests)
+    name: Build and Analyze with Verify
     runs-on: ubuntu-latest
 
     steps:
@@ -31,10 +31,6 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
-      - name: Clean package of backend without tests
-        working-directory: ./backend
-        run: mvn clean package -DskipTests
 
       - name: Write .env file
         run: |
@@ -88,40 +84,17 @@ jobs:
           jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
           EOF
 
-
-      - name: Create Jacoco report
-        working-directory: backend
-        run: mvn clean test -Punit-tests jacoco:report
-
-      - name: Run SonarQube analysis
+      - name: Run full verification lifecycle
         working-directory: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
-            -Dsonar.organization=tqs-ecocharger \
-            -Dsonar.java.binaries=target/classes \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-
-      - name: Verify test reports
-        working-directory: ./backend
-        run: |
-          echo "Test reports generated:"
-          ls -l target/surefire-reports/ || echo "No surefire reports found"
-          ls -l target/TEST-*.xml || echo "No test reports found"
-
-      - name: Push results to Xray on Jira Cloud
-        working-directory: ./backend
-        env:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
-        run: |
-          mvn \
-            -Dxray.clientId=$XRAY_CLIENT_ID \
-            -Dxray.clientSecret=$XRAY_CLIENT_SECRET \
-            -Dxray.cloud=true \
-            -Dxray.projectKey=ET \
-            -Dxray.reportFormat=junit \
-            -Dxray.reportFile=target/surefire-reports/TEST-*.xml \
-            app.getxray:xray-maven-plugin:import-results
+        run: >
+          mvn verify -Punit-tests
+          -Dxray.clientId=${XRAY_CLIENT_ID}
+          -Dxray.clientSecret=${XRAY_CLIENT_SECRET}
+          -Dsonar.login=${SONAR_TOKEN}
+          -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
+          -Dsonar.organization=tqs-ecocharger
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml

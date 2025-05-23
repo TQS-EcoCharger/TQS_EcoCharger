@@ -1,3 +1,4 @@
+@ET-52
 Feature: Registering a new user
   As a user
   I want to register a new account

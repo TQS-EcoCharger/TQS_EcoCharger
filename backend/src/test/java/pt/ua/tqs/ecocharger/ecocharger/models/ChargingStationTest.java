@@ -12,7 +12,7 @@ public class ChargingStationTest {
 
   @Test
   @DisplayName("Test ChargingStation constructor and getters")
-  @Requirement("ET-83")
+  @Requirement("ET-18")
   void testChargingStationConstructorAndGetters() {
     ChargingStation station =
         new ChargingStation(
@@ -34,7 +34,7 @@ public class ChargingStationTest {
 
   @Test
   @DisplayName("Test ChargingStation setters")
-  @Requirement("ET-83")
+  @Requirement("ET-18")
   void testChargingStationSetters() {
     ChargingStation station = new ChargingStation();
     station.setId(2L);
@@ -64,7 +64,7 @@ public class ChargingStationTest {
 
   @Test
   @DisplayName("Test ChargingStation toString method")
-  @Requirement("ET-83")
+  @Requirement("ET-18")
   void testChargingStationToString() {
     ChargingStation station =
         new ChargingStation(
