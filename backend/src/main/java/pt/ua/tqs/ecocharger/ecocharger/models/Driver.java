@@ -17,10 +17,8 @@ import lombok.NoArgsConstructor;
  * @see User
  */
 @Entity
-@Table(name = "driver")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class Driver extends User {
 
     @OneToMany(mappedBy = "driver")
@@ -28,6 +26,11 @@ public class Driver extends User {
 
     public Driver(Long id, String email, String password, String name, boolean enabled) {
         super(id, email, password, name, enabled);
+        this.cars = new ArrayList<>();
+    }
+
+    public Driver() {
+        super();
         this.cars = new ArrayList<>();
     }
 

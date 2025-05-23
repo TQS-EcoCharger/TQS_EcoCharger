@@ -36,7 +36,8 @@ public class DriverController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getDriverById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(driverService.getDriverById(id));
+            Driver existingDriver = driverService.getDriverById(id);
+            return ResponseEntity.ok(existingDriver);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -44,17 +45,15 @@ public class DriverController {
 
     @PostMapping("/")
     public ResponseEntity<Object> createDriver(@RequestBody Driver driver) {
-        try {
-            return ResponseEntity.ok(driverService.createDriver(driver));
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+        Driver newDriver = driverService.createDriver(driver);
+        return ResponseEntity.ok(newDriver);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateDriver(@PathVariable Long id, @RequestBody Driver driver) {
         try {
-            return ResponseEntity.ok(driverService.updateDriver(id, driver));
+            Driver updatedDriver = driverService.updateDriver(id, driver);
+            return ResponseEntity.ok(updatedDriver);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -63,7 +62,8 @@ public class DriverController {
     @PatchMapping("{id}/cars/{carId}")
     public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @PathVariable Long carId) {
         try {
-            return ResponseEntity.ok(driverService.addCarToDriver(id, carId));
+            Driver updatedDriver = driverService.addCarToDriver(id, carId);
+            return ResponseEntity.ok(updatedDriver);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -72,7 +72,8 @@ public class DriverController {
     @DeleteMapping("{id}/cars/{carId}")
     public ResponseEntity<Object> removeCarFromDriver(@PathVariable Long id, @PathVariable Long carId) {
         try {
-            return ResponseEntity.ok(driverService.removeCarFromDriver(id, carId));
+            Driver existingDriver = driverService.removeCarFromDriver(id, carId);
+            return ResponseEntity.ok(existingDriver);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }

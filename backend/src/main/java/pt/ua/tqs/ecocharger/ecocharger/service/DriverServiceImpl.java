@@ -39,6 +39,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver createDriver(Driver driver) {
+        Optional<Driver> existingDriver = driverRepository.findByEmail(driver.getEmail());
+        if (existingDriver.isPresent()) {
+            throw new IllegalArgumentException("Driver with email " + driver.getEmail() + " already exists");
+        }
         return saveDriver(driver);
     }
 
@@ -84,6 +88,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public void deleteDriver(Long id) {
+        Optional<Driver> driver = driverRepository.findById(id);
+        if (driver.isEmpty()) {
+            throw new NotFoundException("Driver not found with id: " + id);
+        }
         driverRepository.deleteById(id);
     }
     
