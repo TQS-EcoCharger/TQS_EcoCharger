@@ -117,3 +117,7 @@ jobs:
             -Dcucumber.filter.tags="@firefox" \
             -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
             -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }}
+
+      - name: Stop containers
+        run: docker compose -f docker-compose.yml down
+        
