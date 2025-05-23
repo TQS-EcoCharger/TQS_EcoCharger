@@ -42,7 +42,7 @@
                         <version>${maven-surefire-plugin.version}</version>
                         <configuration>
                             <excludes>
-                                <exclude>**/CucumberTest.java</exclude>
+                                <exclude>*/functional/**</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
