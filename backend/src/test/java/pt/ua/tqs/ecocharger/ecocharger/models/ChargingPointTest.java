@@ -12,9 +12,9 @@ public class ChargingPointTest {
 
   @Test
   @DisplayName("Test ChargingPoint constructor and getters")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testChargingPointConstructorAndGetters() {
-    ChargingStation station = new ChargingStation(); // você pode criar mocks se necessário
+    ChargingStation station = new ChargingStation();
     List<Connectors> connectors = new ArrayList<>();
 
     ChargingPoint chargingPoint = new ChargingPoint(station, true, "Tesla", connectors);
@@ -33,7 +33,7 @@ public class ChargingPointTest {
 
   @Test
   @DisplayName("Test ChargingPoint setters")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testChargingPointSetters() {
     ChargingPoint chargingPoint = new ChargingPoint();
 
@@ -58,7 +58,7 @@ public class ChargingPointTest {
 
   @Test
   @DisplayName("Test ChargingPoint toString method")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testChargingPointToString() {
     ChargingStation station = new ChargingStation();
     List<Connectors> connectors = new ArrayList<>();

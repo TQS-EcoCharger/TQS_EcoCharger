@@ -71,7 +71,6 @@ export default function HomePage() {
     });
 }, [navigate, token]);
 
-
   return (
     <div className={styles.page}>
       <Sidebar />

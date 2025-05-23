@@ -112,12 +112,12 @@ jobs:
           
       - name: Run functional tests (Firefox)
         working-directory: ./backend
-        run: mvn test -Dcucumber.filter.tags="@firefox"
-
-      - name: Debug test report
-        working-directory: ./backend
         run: |
-          echo "Listing test output:"
-          ls -l target/
-          echo "Showing contents:"
-          head -n 20 target/TEST-junit-jupiter.xml || echo "Report not found!"
+          mvn test -Pcucumber-tests -Dskip.xray.unit=true -Dskip.xray.cucumber=false \
+            -Dcucumber.filter.tags="@firefox" \
+            -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
+            -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }}
+
+      - name: Stop containers
+        run: docker compose -f docker-compose.yml down
+        

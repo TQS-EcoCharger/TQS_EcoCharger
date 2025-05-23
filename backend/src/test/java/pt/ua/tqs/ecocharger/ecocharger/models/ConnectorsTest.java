@@ -11,7 +11,7 @@ public class ConnectorsTest {
 
   @Test
   @DisplayName("Test Connectors constructor and basic field values")
-  @Requirement("ET-83")
+  @Requirement("ET-18")
   void testConstructor() {
     Connectors connector = new Connectors("Type2", 22, 400, 32, "AC");
 
