@@ -241,7 +241,7 @@ public class Car {
     }
 
     private boolean validateConsumption(Double consumption) {
-        return consumption != null && consumption > 0;
+        return consumption != null && consumption >= 0;
     }
 
     public boolean setEnabled(boolean enabled) {

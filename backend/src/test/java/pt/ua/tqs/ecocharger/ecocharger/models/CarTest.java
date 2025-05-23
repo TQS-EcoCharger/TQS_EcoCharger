@@ -17,18 +17,10 @@ import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 public class CarTest {
     
     private static Car car1;
-    private static Car car2;
-    private static Car car3;
-    private static Car car4;
-    private static Car car5;
-    
+
     @BeforeAll
     public static void setUp() {
         car1 = new Car(1L, "Car 1", "Make 1", "Model 1", 2020, "AB-C1-23", 50.0, 40.0, 100.0, 15.0);
-        car2 = new Car(2L, "Car 2", "Make 2", "Model 2", 2021, "DE-F4-56", 60.0, 30.0, 200.0, 12.0);
-        car3 = new Car(3L, "Car 3", "Make 3", "Model 3", 2022, "GH-I7-89", 70.0, 20.0, 300.0, 10.0);
-        car4 = new Car(4L, "Car 4", "Make 4", "Model 4", 2023, "JK-L0-12", 80.0, 10.0, 400.0, 8.0);
-        car5 = new Car(5L, "Car 5", "Make 5", "Model 5", 2024, "MN-O3-45", 90.0, 10.0, 500.0, 6.0);
     }
 
     @Test

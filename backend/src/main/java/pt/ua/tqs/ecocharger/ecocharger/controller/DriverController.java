@@ -34,37 +34,57 @@ public class DriverController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Driver> getDriverById(@PathVariable Long id) {
+    public ResponseEntity<Object> getDriverById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(driverService.getDriverById(id));
         } catch (NotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
     @PostMapping("/")
-    public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
-        return ResponseEntity.ok(driverService.createDriver(driver));
+    public ResponseEntity<Object> createDriver(@RequestBody Driver driver) {
+        try {
+            return ResponseEntity.ok(driverService.createDriver(driver));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Driver> updateDriver(@PathVariable Long id, @RequestBody Driver driver) {
-        return ResponseEntity.ok(driverService.updateDriver(id, driver));
+    public ResponseEntity<Object> updateDriver(@PathVariable Long id, @RequestBody Driver driver) {
+        try {
+            return ResponseEntity.ok(driverService.updateDriver(id, driver));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
-    @PatchMapping("/cars")
-    public ResponseEntity<Driver> addCarToDriver(@RequestBody Driver driver) {
-        return ResponseEntity.ok(driverService.addCarToDriver(driver));
+    @PatchMapping("{id}/cars/{carId}")
+    public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @PathVariable Long carId) {
+        try {
+            return ResponseEntity.ok(driverService.addCarToDriver(id, carId));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
-    @DeleteMapping("/cars/{carId}")
-    public ResponseEntity<Driver> removeCarFromDriver(@PathVariable Long carId) {
-        return ResponseEntity.ok(driverService.removeCarFromDriver(carId));
+    @DeleteMapping("{id}/cars/{carId}")
+    public ResponseEntity<Object> removeCarFromDriver(@PathVariable Long id, @PathVariable Long carId) {
+        try {
+            return ResponseEntity.ok(driverService.removeCarFromDriver(id, carId));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDriver(@PathVariable Long id) {
-        driverService.deleteDriver(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> deleteDriver(@PathVariable Long id) {
+        try {
+            driverService.deleteDriver(id);
+            return ResponseEntity.noContent().build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

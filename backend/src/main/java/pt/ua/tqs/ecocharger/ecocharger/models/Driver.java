@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
 public class Driver extends User {
 
     @OneToMany(mappedBy = "driver")

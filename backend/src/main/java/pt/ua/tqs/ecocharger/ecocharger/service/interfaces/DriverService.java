@@ -11,5 +11,7 @@ public interface DriverService {
     Driver saveDriver(Driver driver);
     Driver createDriver(Driver driver);
     Driver updateDriver(Long id, Driver driver);
+    Driver addCarToDriver(Long id, Long carId);
+    Driver removeCarFromDriver(Long id, Long carId);
     void deleteDriver(Long id);
 }

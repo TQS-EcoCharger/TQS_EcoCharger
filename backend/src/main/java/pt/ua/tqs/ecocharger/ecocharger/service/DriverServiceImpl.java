@@ -3,7 +3,10 @@ package pt.ua.tqs.ecocharger.ecocharger.service;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+
+import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
+import pt.ua.tqs.ecocharger.ecocharger.repository.CarRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.DriverRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
@@ -12,8 +15,10 @@ import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
+    private final CarRepository carRepository;
 
-    public DriverServiceImpl(DriverRepository driverRepository) {
+    public DriverServiceImpl(DriverRepository driverRepository, CarRepository carRepository) {
+        this.carRepository = carRepository;
         this.driverRepository = driverRepository;
     }
 
@@ -39,10 +44,36 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver updateDriver(Long id, Driver driver) {
-        if (!driverRepository.existsById(id)) {
+        Optional<Driver> existingDriverOptional = driverRepository.findById(id);
+        if (existingDriverOptional.isEmpty()) {
             throw new NotFoundException("Driver not found with id: " + id);
         }
-        driver.setId(id);
+        Driver existingDriver = existingDriverOptional.get();
+        existingDriver.setName(driver.getName());
+        existingDriver.setEmail(driver.getEmail());
+        existingDriver.setPassword(driver.getPassword());
+        return saveDriver(existingDriver);
+    }
+
+    @Override
+    public Driver addCarToDriver(Long id, Long carId) {
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new NotFoundException("Driver not found with id: " + id));
+        Car car = carRepository.findById(carId).orElseThrow(() -> new NotFoundException("Car not found with id: " + carId));
+        if (driver.getCars().contains(car)) {
+            throw new IllegalArgumentException("Car already assigned to driver");
+        }
+        driver.getCars().add(car);
+        return saveDriver(driver);
+    }
+
+    @Override
+    public Driver removeCarFromDriver(Long id, Long carId) {
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new NotFoundException("Driver not found with id: " + id));
+        Car car = carRepository.findById(carId).orElseThrow(() -> new NotFoundException("Car not found with id: " + carId));
+        if (!driver.getCars().contains(car)) {
+            throw new IllegalArgumentException("Car not assigned to driver");
+        }
+        driver.getCars().remove(car);
         return saveDriver(driver);
     }
 
