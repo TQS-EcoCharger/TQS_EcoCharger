@@ -46,6 +46,7 @@
                             </excludes>
                         </configuration>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
@@ -132,7 +133,7 @@
                     <clientSecret>${xray.clientSecret}</clientSecret>
                     <projectKey>ET</projectKey>
                     <reportFormat>junit</reportFormat>
-                    <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
+                    <reportFile>target/TEST-junit-jupiter.xml</reportFile>
                 </configuration>
                 </execution>
             </executions>
