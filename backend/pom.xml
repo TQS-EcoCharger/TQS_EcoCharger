@@ -68,6 +68,12 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+        <id>cucumber-xray</id>
+        <activation>
+            <activeByDefault>false</activeByDefault>
+        </activation>
+        </profile>
     </profiles>
 
     <build>
@@ -122,7 +128,7 @@
             <version>${xray-maven-plugin.version}</version>
             <executions>
                 <execution>
-                <id>import-xray-results</id>
+                <id>import-xray-unit-results</id>
                 <phase>verify</phase>
                 <goals>
                     <goal>import-results</goal>
@@ -136,8 +142,25 @@
                     <reportFile>target/TEST-junit-jupiter.xml</reportFile>
                 </configuration>
                 </execution>
+
+                <execution>
+                <id>import-xray-cucumber-results</id>
+                <phase>verify</phase>
+                <goals>
+                    <goal>import-results</goal>
+                </goals>
+                <configuration>
+                    <cloud>true</cloud>
+                    <clientId>${xray.clientId}</clientId>
+                    <clientSecret>${xray.clientSecret}</clientSecret>
+                    <projectKey>ET</projectKey>
+                    <reportFormat>cucumber</reportFormat>
+                    <reportFile>target/cucumber-report.json</reportFile>
+                </configuration>
+                </execution>
             </executions>
             </plugin>
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
