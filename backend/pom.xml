@@ -121,12 +121,13 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
             <plugin>
             <groupId>app.getxray</groupId>
             <artifactId>xray-maven-plugin</artifactId>
             <version>${xray-maven-plugin.version}</version>
             <executions>
+
+                <!-- For unit tests -->
                 <execution>
                 <id>import-xray-unit-results</id>
                 <phase>verify</phase>
@@ -140,9 +141,11 @@
                     <projectKey>ET</projectKey>
                     <reportFormat>junit</reportFormat>
                     <reportFile>target/TEST-junit-jupiter.xml</reportFile>
+                    <skip>${skip.xray.unit}</skip>
                 </configuration>
                 </execution>
 
+                <!-- For Cucumber (functional) tests -->
                 <execution>
                 <id>import-xray-cucumber-results</id>
                 <phase>verify</phase>
@@ -156,10 +159,14 @@
                     <projectKey>ET</projectKey>
                     <reportFormat>cucumber</reportFormat>
                     <reportFile>target/cucumber-report.json</reportFile>
+                    <skip>${skip.xray.cucumber}</skip>
                 </configuration>
                 </execution>
+
             </executions>
             </plugin>
+
+
 
 
             <plugin>

@@ -113,7 +113,7 @@ jobs:
       - name: Run functional tests (Firefox)
         working-directory: ./backend
         run: |
-          mvn verify -Pcucumber-xray \
+          mvn test -Pcucumber-tests -Dskip.xray.unit=true -Dskip.xray.cucumber=false \
             -Dcucumber.filter.tags="@firefox" \
             -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
             -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }}
