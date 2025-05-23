@@ -39,7 +39,7 @@ public class ChargingStationControllerTest {
 
   @Test
   @DisplayName("Create station")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testCreateStation() throws Exception {
     ChargingStation mockStation =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
@@ -60,7 +60,7 @@ public class ChargingStationControllerTest {
 
   @Test
   @DisplayName("Return 404 when station not found")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetAllStations() throws Exception {
     ChargingStation mockStation =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
@@ -76,7 +76,7 @@ public class ChargingStationControllerTest {
 
   @Test
   @DisplayName("Return 404 when station not found")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testGetStationsByCity() throws Exception {
     ChargingStation mockStation =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
@@ -93,7 +93,7 @@ public class ChargingStationControllerTest {
 
   @Test
   @DisplayName("Delete station")
-  @Requirement("ET-82")
+  @Requirement("ET-18")
   void testDeleteStation() throws Exception {
     mockMvc.perform(delete("/api/v1/chargingStations/1")).andExpect(status().isNoContent());
 
