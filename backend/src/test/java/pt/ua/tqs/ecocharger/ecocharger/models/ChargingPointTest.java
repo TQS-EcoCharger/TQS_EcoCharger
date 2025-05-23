@@ -14,7 +14,7 @@ public class ChargingPointTest {
   @DisplayName("Test ChargingPoint constructor and getters")
   @Requirement("ET-18")
   void testChargingPointConstructorAndGetters() {
-    ChargingStation station = new ChargingStation(); 
+    ChargingStation station = new ChargingStation();
     List<Connectors> connectors = new ArrayList<>();
 
     ChargingPoint chargingPoint = new ChargingPoint(station, true, "Tesla", connectors);
