@@ -91,11 +91,10 @@ jobs:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
         run: >
-          mvn verify -Punit-tests -Dskip.xray.cucumber=true -Dskip.xray.unit=false
+          mvn verify -Punit-tests,xray-unit
           -Dxray.clientId=${XRAY_CLIENT_ID}
           -Dxray.clientSecret=${XRAY_CLIENT_SECRET}
           -Dsonar.login=${SONAR_TOKEN}
           -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
           -Dsonar.organization=tqs-ecocharger
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-

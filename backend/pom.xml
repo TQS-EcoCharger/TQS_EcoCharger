@@ -76,20 +76,64 @@
         </activation>
         </profile>
         <profile>
-            <id>xray-unit</id>
-            <properties>
-                <skip.xray.unit>false</skip.xray.unit>
-                <skip.xray.cucumber>true</skip.xray.cucumber>
-            </properties>
+        <id>xray-unit</id>
+        <build>
+            <plugins>
+            <plugin>
+                <groupId>app.getxray</groupId>
+                <artifactId>xray-maven-plugin</artifactId>
+                <version>${xray-maven-plugin.version}</version>
+                <executions>
+                <execution>
+                    <id>import-xray-unit-results</id>
+                    <phase>verify</phase>
+                    <goals>
+                    <goal>import-results</goal>
+                    </goals>
+                    <configuration>
+                    <cloud>true</cloud>
+                    <clientId>${xray.clientId}</clientId>
+                    <clientSecret>${xray.clientSecret}</clientSecret>
+                    <projectKey>ET</projectKey>
+                    <reportFormat>junit</reportFormat>
+                    <reportFile>target/TEST-junit-jupiter.xml</reportFile>
+                    </configuration>
+                </execution>
+                </executions>
+            </plugin>
+            </plugins>
+        </build>
+        </profile>
+        <profile>
+        <id>xray-cucumber</id>
+        <build>
+            <plugins>
+            <plugin>
+                <groupId>app.getxray</groupId>
+                <artifactId>xray-maven-plugin</artifactId>
+                <version>${xray-maven-plugin.version}</version>
+                <executions>
+                <execution>
+                    <id>import-xray-cucumber-results</id>
+                    <phase>verify</phase>
+                    <goals>
+                    <goal>import-results</goal>
+                    </goals>
+                    <configuration>
+                    <cloud>true</cloud>
+                    <clientId>${xray.clientId}</clientId>
+                    <clientSecret>${xray.clientSecret}</clientSecret>
+                    <projectKey>ET</projectKey>
+                    <reportFormat>cucumber</reportFormat>
+                    <reportFile>target/cucumber-report.json</reportFile>
+                    </configuration>
+                </execution>
+                </executions>
+            </plugin>
+            </plugins>
+        </build>
         </profile>
 
-        <profile>
-            <id>xray-cucumber</id>
-            <properties>
-                <skip.xray.unit>true</skip.xray.unit>
-                <skip.xray.cucumber>false</skip.xray.cucumber>
-            </properties>
-        </profile>
 
     </profiles>
 
@@ -137,50 +181,6 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
-            </plugin>
-            <plugin>
-            <groupId>app.getxray</groupId>
-            <artifactId>xray-maven-plugin</artifactId>
-            <version>${xray-maven-plugin.version}</version>
-            <executions>
-
-                <!-- For unit tests -->
-                <execution>
-                <id>import-xray-unit-results</id>
-                <phase>verify</phase>
-                <goals>
-                    <goal>import-results</goal>
-                </goals>
-                <configuration>
-                    <cloud>true</cloud>
-                    <clientId>${xray.clientId}</clientId>
-                    <clientSecret>${xray.clientSecret}</clientSecret>
-                    <projectKey>ET</projectKey>
-                    <reportFormat>junit</reportFormat>
-                    <reportFile>target/TEST-junit-jupiter.xml</reportFile>
-                    <skip>${skip.xray.unit}</skip>
-                </configuration>
-                </execution>
-
-                <!-- For Cucumber (functional) tests -->
-                <execution>
-                <id>import-xray-cucumber-results</id>
-                <phase>verify</phase>
-                <goals>
-                    <goal>import-results</goal>
-                </goals>
-                <configuration>
-                    <cloud>true</cloud>
-                    <clientId>${xray.clientId}</clientId>
-                    <clientSecret>${xray.clientSecret}</clientSecret>
-                    <projectKey>ET</projectKey>
-                    <reportFormat>cucumber</reportFormat>
-                    <reportFile>target/cucumber-report.json</reportFile>
-                    <skip>${skip.xray.cucumber}</skip>
-                </configuration>
-                </execution>
-
-            </executions>
             </plugin>
 
 
