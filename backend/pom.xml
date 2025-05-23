@@ -50,6 +50,14 @@
                     </plugin>
 
                 </plugins>
+                <dependencies>
+              		<dependency>
+                        <groupId>app.getxray</groupId>
+                        <artifactId>xray-junit-extensions</artifactId>
+                        <version>${xray-junit-extensions.version}</version>
+                        <scope>test</scope>
+                    </dependency>
+                </dependencies>
             </build>
         </profile>
         <profile>
@@ -341,12 +349,6 @@
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
         </dependency>
-		<dependency>
-			<groupId>app.getxray</groupId>
-			<artifactId>xray-junit-extensions</artifactId>
-			<version>${xray-junit-extensions.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>app.getxray</groupId>
 			<artifactId>xray-maven-plugin</artifactId>
