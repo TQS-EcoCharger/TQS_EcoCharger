@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-analyze:
-    name: Build and Analyze with Verify
+    name: Build and Analyze Backend
     runs-on: ubuntu-latest
 
     steps:
