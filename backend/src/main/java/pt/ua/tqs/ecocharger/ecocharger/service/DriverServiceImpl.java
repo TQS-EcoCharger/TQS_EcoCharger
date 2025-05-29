@@ -76,6 +76,7 @@ public class DriverServiceImpl implements DriverService {
         return saveDriver(driver);
     }
 
+    /* 
     @Override
     public Driver editCarFromDriver(Long id, Long carId, Car car) {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new NotFoundException("Driver not found with id: " + id));
@@ -95,6 +96,7 @@ public class DriverServiceImpl implements DriverService {
         carRepository.save(existingCar);
         return saveDriver(driver);
     }
+    */
 
     @Override
     public Driver removeCarFromDriver(Long id, Long carId) {

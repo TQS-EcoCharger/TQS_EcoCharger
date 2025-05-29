@@ -36,4 +36,21 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponseDTO>> getAllReservations() {
         return ResponseEntity.ok(reservationService.getAllReservations());
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReservationResponseDTO>> getReservationsByUserId(@PathVariable Long userId) {
+        List<ReservationResponseDTO> reservations = reservationService.getReservationsByUserId(userId);
+        return ResponseEntity.ok(reservations);
+    }
+
+    
+    @GetMapping("/point/{chargingPointId}/active")
+    public ResponseEntity<List<ReservationResponseDTO>> getActiveReservationsByChargingPoint(
+            @PathVariable Long chargingPointId) {
+        List<ReservationResponseDTO> reservations =
+            reservationService.getActiveReservationsByChargingPointId(chargingPointId);
+        return ResponseEntity.ok(reservations);
+    }
+
+
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
@@ -12,4 +13,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "WHERE r.chargingPoint.id = :chargingPointId " +
             "AND r.endTime > :start AND r.startTime < :end")
     boolean existsByChargingPointIdAndTimeOverlap(Long chargingPointId, LocalDateTime start, LocalDateTime end);
+
+    List<Reservation> findByUserId(Long userId);
+
+
+    List<Reservation> findByChargingPointIdAndEndTimeAfter(Long chargingPointId, LocalDateTime time);
+
 }

@@ -3,12 +3,17 @@ package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingStationDTO;
+import pt.ua.tqs.ecocharger.ecocharger.dto.ConnectorDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationRequestDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
 import pt.ua.tqs.ecocharger.ecocharger.repository.*;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ReservationService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,13 +64,68 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private ReservationResponseDTO mapToDTO(Reservation res) {
+        ChargingPoint cp = res.getChargingPoint();
+        ChargingStation station = cp.getChargingStation();
+
+        ChargingStationDTO stationDTO = new ChargingStationDTO();
+        stationDTO.setId(station.getId());
+        stationDTO.setCityName(station.getCityName());
+        stationDTO.setAddress(station.getAddress());
+        stationDTO.setLatitude(station.getLatitude());
+        stationDTO.setLongitude(station.getLongitude());
+
+        ChargingPointDTO chargingPointDTO = new ChargingPointDTO();
+        chargingPointDTO.setId(cp.getId());
+        chargingPointDTO.setBrand(cp.getBrand());
+        chargingPointDTO.setAvailable(cp.isAvailable());
+        chargingPointDTO.setPricePerKWh(cp.getPricePerKWh());
+        chargingPointDTO.setPricePerMinute(cp.getPricePerMinute());
+        chargingPointDTO.setChargingStation(stationDTO);
+        chargingPointDTO.setConnectors(
+            cp.getConnectors().stream().map(conn -> {
+                ConnectorDTO cDto = new ConnectorDTO();
+                cDto.setId(conn.getId());
+                cDto.setConnectorType(conn.getConnectorType());
+                cDto.setRatedPowerKW(conn.getRatedPowerKW());
+                cDto.setVoltageV(conn.getVoltageV());
+                cDto.setCurrentA(conn.getCurrentA());
+                return cDto;
+            }).collect(Collectors.toList())
+        );
+
         ReservationResponseDTO dto = new ReservationResponseDTO();
         dto.setId(res.getId());
         dto.setUserId(res.getUser().getId());
-        dto.setChargingPointId(res.getChargingPoint().getId());
+        dto.setChargingPoint(chargingPointDTO);
         dto.setStartTime(res.getStartTime());
         dto.setEndTime(res.getEndTime());
         dto.setStatus(res.getStatus());
+
         return dto;
     }
+
+
+
+    @Override
+    public List<ReservationResponseDTO> getReservationsByUserId(Long userId) {
+        List<Reservation> reservations = reservationRepository.findByUserId(userId);
+        return reservations.stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<ReservationResponseDTO> getActiveReservationsByChargingPointId(Long chargingPointId) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Reservation> reservations = reservationRepository
+            .findByChargingPointIdAndEndTimeAfter(chargingPointId, now);
+
+        return reservations.stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
+    }
+
+    
+
 }
