@@ -1,5 +1,10 @@
 INSERT INTO users (email, password, name, enabled) VALUES
-('afonso@gmail.com', 'pass', 'Afonso Ferreira', true);
+('afonso@gmail.com', 'pass', 'Afonso Ferreira', true),
+('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true);
+
+INSERT INTO driver (id) VALUES
+(1),
+(2);
 
 -- CHARGING STATIONS (IDs 1–20)
 INSERT INTO charging_stations (

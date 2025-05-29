@@ -2,13 +2,17 @@ package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 import java.util.Optional;
+
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -71,4 +75,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     return new AuthResultDTO(true, "Registration successful", token);
   }
+
+  @Override
+  public User getCurrentUser(String token) {
+    try {
+      String email = jwtUtil.getEmailFromToken(token);
+
+      if (email == null) {
+        throw new IllegalArgumentException("Invalid token");
+      }
+
+      Optional<User> userOpt = userRepository.findByEmail(email);
+      if (userOpt.isEmpty()) {
+        throw new NotFoundException("User not found");
+      }
+
+      User user = userOpt.get();
+      if (!user.isEnabled()) {
+        throw new IllegalArgumentException("User is disabled");
+      }
+
+    return user;
+  } catch (SignatureVerificationException e) {
+    throw new IllegalArgumentException("Invalid token signature (the police is on the way)");
+  } catch (IllegalArgumentException e) {
+    throw new IllegalArgumentException("Invalid token format");
+  }
+  }
+    
 }
