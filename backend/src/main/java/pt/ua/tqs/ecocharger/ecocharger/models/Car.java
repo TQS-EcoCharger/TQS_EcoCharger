@@ -2,11 +2,15 @@ package pt.ua.tqs.ecocharger.ecocharger.models;
 
 import java.time.Year;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,8 +38,8 @@ public class Car {
     @Column(nullable = false)
     private String model;
 
-    @Column(nullable = false)
-    private Integer year;
+    @Column(name = "manufacture_year", nullable = false)
+    private Integer manufacture_year;
 
     @Column(nullable = false)
     private String licensePlate;
@@ -61,12 +65,18 @@ public class Car {
     @Column(nullable = false)
     private boolean enabled;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "driver_id", nullable = false)
+    private Driver driver;
+
+
     public Car() {
         this.id = null;
         this.name = "";
         this.make = "";
         this.model = "";
-        this.year = Year.now().getValue();
+        this.manufacture_year = Year.now().getValue();
         this.licensePlate = "";
         this.batteryCapacity = 0.0;
         this.batteryLevel = 0.0;
@@ -83,7 +93,7 @@ public class Car {
             this.name = name;
             this.make = make;
             this.model = model;
-            this.year = year;
+            this.manufacture_year = year;
             this.licensePlate = licensePlate;
             this.batteryCapacity = batteryCapacity;
             this.batteryLevel = batteryLevel;
@@ -145,9 +155,9 @@ public class Car {
         return model != null && !model.trim().isEmpty();
     }
 
-    public void setYear(Integer year) {
+    public void setManufacture_Year(Integer year) {
         if (validateYear(year)) {
-            this.year = year;
+            this.manufacture_year = year;
         } else {
             throw new IllegalArgumentException("Year must be a valid number greater than 0");
         }

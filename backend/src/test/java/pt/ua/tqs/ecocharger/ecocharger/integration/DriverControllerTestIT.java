@@ -1,52 +1,57 @@
 package pt.ua.tqs.ecocharger.ecocharger.integration;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
+import pt.ua.tqs.ecocharger.ecocharger.models.User;
+import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
+import pt.ua.tqs.ecocharger.ecocharger.integration.TestContainersConfig;
 import pt.ua.tqs.ecocharger.ecocharger.repository.DriverRepository;
+import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 
 import static org.hamcrest.Matchers.equalTo;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = DriverControllerTestIT.class)
-@Testcontainers
 @AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Import({TestContainersConfig.class, SecurityDisableConfig.class})
+@TestPropertySource(locations = "classpath:application-it.properties")
+@ActiveProfiles("test")
 public class DriverControllerTestIT {
-
-    @Container
-    public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:12")
-        .withUsername("demo")
-        .withPassword("demo")
-        .withDatabaseName("ecochargerdemo");
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", container::getJdbcUrl);
-        registry.add("spring.datasource.password", container::getPassword);
-        registry.add("spring.datasource.username", container::getUsername);
-    }
 
     @Autowired
     private DriverRepository driverRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private MockMvc mockMvc;
+
+    private Driver savedDriver;
 
     @BeforeEach
     public void setUp() {
         driverRepository.deleteAll();
-        driverRepository.save(new Driver(1L, "johndoe@example.com", "password1", "John Doe", true));
+        userRepository.deleteAll();
+
+        // Create user
+        User user = new User(null, "johndoe@example.com", "password1", "John Doe", true);
+        user = userRepository.save(user); // Insert into user table
+
+        Driver driver = new Driver(user.getId(), user.getEmail(), user.getPassword(), user.getName(), true);
+        savedDriver = driverRepository.save(driver); 
+
         RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
@@ -66,7 +71,7 @@ public class DriverControllerTestIT {
     public void testGetDriverById() {
         RestAssuredMockMvc.given()
             .when()
-            .get("/api/drivers/1")
+            .get("/api/drivers/" + savedDriver.getId())
             .then()
             .statusCode(200)
             .body("name", equalTo("John Doe"));
@@ -77,7 +82,7 @@ public class DriverControllerTestIT {
     public void testGetDriverByIdNotFound() {
         RestAssuredMockMvc.given()
             .when()
-            .get("/api/drivers/999")
+            .get("/api/drivers/99999")
             .then()
             .statusCode(404);
     }
@@ -108,7 +113,7 @@ public class DriverControllerTestIT {
             .contentType("application/json")
             .body(updatedDriverJson)
             .when()
-            .put("/api/drivers/1")
+            .put("/api/drivers/" + savedDriver.getId())
             .then()
             .statusCode(200)
             .body("name", equalTo("John Doe Updated"));
@@ -119,7 +124,7 @@ public class DriverControllerTestIT {
     public void testDeleteDriver() {
         RestAssuredMockMvc.given()
             .when()
-            .delete("/api/drivers/1")
+            .delete("/api/drivers/" + savedDriver.getId())
             .then()
             .statusCode(204);
     }
@@ -129,7 +134,7 @@ public class DriverControllerTestIT {
     public void testDeleteDriverNotFound() {
         RestAssuredMockMvc.given()
             .when()
-            .delete("/api/drivers/999")
+            .delete("/api/drivers/99999")
             .then()
             .statusCode(404);
     }
@@ -159,7 +164,7 @@ public class DriverControllerTestIT {
             .contentType("application/json")
             .body(updatedDriverJson)
             .when()
-            .put("/api/drivers/999")
+            .put("/api/drivers/99999")
             .then()
             .statusCode(404);
     }
@@ -174,7 +179,7 @@ public class DriverControllerTestIT {
             .contentType("application/json")
             .body(newCarJson)
             .when()
-            .post("/api/drivers/1/cars")
+            .post("/api/drivers/" + savedDriver.getId() + "/cars")
             .then()
             .statusCode(201);
     }
@@ -185,7 +190,7 @@ public class DriverControllerTestIT {
         testAddCarToDriver(); // ensure car exists
         RestAssuredMockMvc.given()
             .when()
-            .delete("/api/drivers/1/cars/1")
+            .delete("/api/drivers/" + savedDriver.getId() + "/cars/1")
             .then()
             .statusCode(204);
     }
@@ -195,7 +200,7 @@ public class DriverControllerTestIT {
     public void testRemoveCarFromDriverNotFound() {
         RestAssuredMockMvc.given()
             .when()
-            .delete("/api/drivers/999/cars/999")
+            .delete("/api/drivers/99999/cars/999")
             .then()
             .statusCode(404);
     }
@@ -205,7 +210,7 @@ public class DriverControllerTestIT {
     public void testGetCarByIdFromDriverNotFound() {
         RestAssuredMockMvc.given()
             .when()
-            .get("/api/drivers/999/cars/999")
+            .get("/api/drivers/99999/cars/999")
             .then()
             .statusCode(404);
     }
@@ -216,11 +221,13 @@ public class DriverControllerTestIT {
         String newCarJson = """
             { "make": "Ford", "model": "Raptor", "year": 2022, "licensePlate": "XYZ987", "batteryCapacity": 100.0, "currentCharge": 50.0, "mileage": 0.0, "consumption": 0.0 }
         """;
-        RestAssuredMockMvc.given().contentType("application/json").body(newCarJson)
-            .when().post("/api/drivers/1/cars").then().statusCode(201);
+        Long driverId = savedDriver.getId();
 
         RestAssuredMockMvc.given().contentType("application/json").body(newCarJson)
-            .when().post("/api/drivers/1/cars").then().statusCode(400);
+            .when().post("/api/drivers/" + driverId + "/cars").then().statusCode(201);
+
+        RestAssuredMockMvc.given().contentType("application/json").body(newCarJson)
+            .when().post("/api/drivers/" + driverId + "/cars").then().statusCode(400);
     }
 
     @Test
@@ -233,7 +240,7 @@ public class DriverControllerTestIT {
             .contentType("application/json")
             .body(newCarJson)
             .when()
-            .post("/api/drivers/999/cars")
+            .post("/api/drivers/99999/cars")
             .then()
             .statusCode(404);
     }
