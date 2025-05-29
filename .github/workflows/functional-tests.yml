@@ -115,7 +115,6 @@ jobs:
         run: |
           mvn verify -Pcucumber-tests,xray-cucumber \
             -Dskip.xray.unit=true -Dskip.xray.cucumber=false \
-            -Dcucumber.filter.tags="@firefox" \
             -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
             -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }}
 
