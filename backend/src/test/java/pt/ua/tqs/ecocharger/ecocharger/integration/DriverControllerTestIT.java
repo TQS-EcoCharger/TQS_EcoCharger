@@ -13,11 +13,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
-import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.integration.TestContainersConfig;
 import pt.ua.tqs.ecocharger.ecocharger.repository.DriverRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -33,9 +31,6 @@ public class DriverControllerTestIT {
     private DriverRepository driverRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private MockMvc mockMvc;
 
     private Driver savedDriver;
@@ -43,15 +38,7 @@ public class DriverControllerTestIT {
     @BeforeEach
     public void setUp() {
         driverRepository.deleteAll();
-        userRepository.deleteAll();
-
-        // Create user
-        User user = new User(null, "johndoe@example.com", "password1", "John Doe", true);
-        user = userRepository.save(user); // Insert into user table
-
-        Driver driver = new Driver(user.getId(), user.getEmail(), user.getPassword(), user.getName(), true);
-        savedDriver = driverRepository.save(driver); 
-
+        savedDriver = driverRepository.save(new Driver(null, "johndoe@example.com", "password1", "John Doe", true));
         RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
