@@ -16,9 +16,5 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 @ConfigurationParameter(
     key = PLUGIN_PROPERTY_NAME,
     value = "pretty, html:target/cucumber-report.html, json:target/cucumber-report.json")
-
-@ConfigurationParameter(
-    key = "junit.platform.listeners.default",
-    value = "summary"
-)
+@ConfigurationParameter(key = "junit.platform.listeners.default", value = "summary")
 public class CucumberTest {}
