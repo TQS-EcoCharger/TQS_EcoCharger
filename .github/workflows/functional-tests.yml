@@ -110,14 +110,22 @@ jobs:
             sleep 2
           done
           
-      - name: Run functional tests (Firefox)
+      - name: Run Cucumber functional tests
+        working-directory: ./backend
+        run: mvn test -Pcucumber-tests 
+
+      - name: Send Xray report
         working-directory: ./backend
         run: |
-          mvn test -Pcucumber-tests -Dskip.xray.unit=true -Dskip.xray.cucumber=false \
-            -Dcucumber.filter.tags="@firefox" \
+          mvn \
             -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
-            -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }}
+            -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }} \
+            -Dxray.projectKey=ET \
+            -Dxray.reportFormat=junit \
+            -Dxray.reportFile=target/surefire-reports/TEST-pt.ua.tqs.ecocharger.ecocharger.functional.CucumberTest.xml \
+            app.getxray:xray-maven-plugin:import-results
 
+          
       - name: Stop containers
         run: docker compose -f docker-compose.yml down
         

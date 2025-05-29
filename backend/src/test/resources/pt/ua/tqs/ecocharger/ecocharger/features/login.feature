@@ -1,4 +1,3 @@
-@ET-49
 Feature: Login Page
 
   Scenario: User logs in with valid credentials
