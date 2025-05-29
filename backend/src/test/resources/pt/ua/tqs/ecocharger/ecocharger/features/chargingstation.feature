@@ -1,4 +1,4 @@
-@ET-18
+@firefox @ET-18
 Feature: Home Page
 
   Scenario: Ver estações no mapa após login
