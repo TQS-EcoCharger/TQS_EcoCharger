@@ -77,7 +77,7 @@ public class ReservationControllerTestIT {
             .body(json)
             .when().post("/api/v1/reservation")
             .then().statusCode(200)
-            .body("chargingPointId", equalTo(point.getId().intValue()));
+            .body("chargingPoint.id", equalTo(point.getId().intValue()));
     }
     
     @Test

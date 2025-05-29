@@ -22,7 +22,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> createReservation(@RequestBody ReservationRequestDTO request) {
-        try {
+        try {>
             ReservationResponseDTO response = reservationService.createReservation(request);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
@@ -43,14 +43,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    
     @GetMapping("/point/{chargingPointId}/active")
     public ResponseEntity<List<ReservationResponseDTO>> getActiveReservationsByChargingPoint(
             @PathVariable Long chargingPointId) {
-        List<ReservationResponseDTO> reservations =
-            reservationService.getActiveReservationsByChargingPointId(chargingPointId);
+        List<ReservationResponseDTO> reservations = reservationService
+                .getActiveReservationsByChargingPointId(chargingPointId);
         return ResponseEntity.ok(reservations);
     }
-
 
 }
