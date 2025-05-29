@@ -12,7 +12,6 @@ public class UserTest {
 
   @Test
   @DisplayName("Test User constructor and getters")
-  @Requirement("ET-49")
   void testUserConstructorAndGetters() {
     User user = new User(1L, "john@example.com", "password123", "John Doe", true);
 
@@ -25,7 +24,6 @@ public class UserTest {
 
   @Test
   @DisplayName("Test User setters")
-  @Requirement("ET-49")
   void testUserSetters() {
     User user = new User();
     user.setId(2L);
@@ -43,7 +41,6 @@ public class UserTest {
 
   @Test
   @DisplayName("Test User toString method")
-  @Requirement("ET-49")
   void testUserEquality() {
     User user1 = new User(1L, "a@b.com", "pass", "Name", true);
     User user2 = new User(1L, "a@b.com", "pass", "Name", true);

@@ -22,7 +22,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Object> createReservation(@RequestBody ReservationRequestDTO request) {
-        try {>
+        try {
             ReservationResponseDTO response = reservationService.createReservation(request);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
