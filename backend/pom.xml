@@ -347,6 +347,12 @@
 			<version>${xray-maven-plugin.version}</version>
 		</dependency>
         <dependency>
+            <groupId>app.getxray</groupId>
+            <artifactId>xray-junit-extensions</artifactId>
+            <version>${xray-junit-extensions.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
             <version>0.11.5</version>
