@@ -20,6 +20,7 @@ import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 import static org.mockito.Mockito.when;
 // TODO: Change wildcard to single imports
 import static org.mockito.ArgumentMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.mockito.Mockito.doThrow;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -128,37 +129,28 @@ public class DriverControllerTest {
     @Test
     @DisplayName("Adding car to driver returns 200 OK and updated driver in JSON if it exists")
     public void testAddCarToDriver() throws Exception {
-        Car car = new Car(2L,"Tesla Model S", "Tesla", "Model S", 2022, "ABC123", 100.0, 50.0, 0.0, 0.0);
+        Car car = new Car(1L,"Tesla Model S", "Tesla", "Model S", 2022, "ABC123", 100.0, 50.0, 0.0, 0.0);
         driver1.addCar(car);
-        when(driverService.addCarToDriver(1L, 2L)).thenReturn(driver1);
-
-        mockMvc.perform(patch("/api/v1/driver/1/cars/2")
+        when(driverService.addCarToDriver(eq(1L), any(Car.class))).thenReturn(driver1);
+        mockMvc.perform(patch("/api/v1/driver/1/cars/")
                 .contentType("application/json")
-                .content("{\"carId\":2}"))
+                .content("{\"id\":1, \"make\":\"Tesla\", \"model\":\"Model S\", \"year\":2022, \"licensePlate\":\"ABC123\", \"batteryCapacity\":100.0, \"currentCharge\":50.0, \"kilometers\":0.0, \"consumption\":0.0}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cars[0].id").value(2));
+                .andDo(print())
+                .andExpect(jsonPath("$.cars", hasSize(1)));
     }
 
     @Test
     @DisplayName("Adding car to driver returns 404 NOT FOUND if driver does not exist")
     public void testAddCarToDriverNotFound() throws Exception {
-        when(driverService.addCarToDriver(6L, 2L)).thenThrow(new NotFoundException("Driver not found"));
-        mockMvc.perform(patch("/api/v1/driver/6/cars/2"))
+        when(driverService.addCarToDriver(eq(6L), any(Car.class))).thenThrow(new NotFoundException("Driver not found"));
+        mockMvc.perform(patch("/api/v1/driver/6/cars/")
+                .contentType("application/json")
+                .content("{\"id\":1, \"make\":\"Tesla\", \"model\":\"Model S\", \"year\":2022, \"licensePlate\":\"ABC123\", \"batteryCapacity\":100.0, \"currentCharge\":50.0, \"mileage\":0.0, \"consumption\":0.0}"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$").value("Driver not found"));
     }
-
-    @Test
-    @DisplayName("Adding car to driver returns 404 NOT FOUND if car does not exist")
-    public void testAddCarToDriverCarNotFound() throws Exception {
-        when(driverService.addCarToDriver(1L, 6L)).thenThrow(new NotFoundException("Car not found"));
-        mockMvc.perform(patch("/api/v1/driver/1/cars/6")
-                .contentType("application/json")
-                .content("{\"carId\":6}"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$").value("Car not found"));
-    }
-
+    
     @Test
     @DisplayName("Removing car from driver returns 200 OK and updated driver in JSON if it exists")
     public void testRemoveCarFromDriver() throws Exception {

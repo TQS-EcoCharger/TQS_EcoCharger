@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -13,15 +14,16 @@ import lombok.NoArgsConstructor;
 
 /**
  * A Driver is a User that register cars and uses the app to find, book and use charging stations
- * 
+ *
  * @see User
  */
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "driver")
 public class Driver extends User {
 
-    @OneToMany(mappedBy = "driver")
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Car> cars;
 
     public Driver(Long id, String email, String password, String name, boolean enabled) {

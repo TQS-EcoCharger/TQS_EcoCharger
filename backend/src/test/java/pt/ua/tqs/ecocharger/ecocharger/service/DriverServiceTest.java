@@ -164,7 +164,7 @@ public class DriverServiceTest {
         driverWithCar.setName(driver1.getName());
         driverWithCar.addCar(car1);
         when(driverRepository.save(driverWithCar)).thenReturn(driverWithCar);
-        Driver updatedDriver = driverService.addCarToDriver(1L, 1L);
+        Driver updatedDriver = driverService.addCarToDriver(1L, car1);
         assertEquals(driver1, updatedDriver);
         verify(driverRepository, times(1)).findById(1L);
         verify(carRepository, times(1)).findById(1L);
@@ -176,7 +176,7 @@ public class DriverServiceTest {
     @Requirement("ET-34")
     public void testAddCarToDriverNotFound() throws Exception {
         when(driverRepository.findById(6L)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> driverService.addCarToDriver(6L, 1L));
+        assertThrows(NotFoundException.class, () -> driverService.addCarToDriver(6L, car1));
         verify(driverRepository, times(1)).findById(6L);
     }
 
@@ -220,7 +220,7 @@ public class DriverServiceTest {
         when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
         driver1.addCar(car1);
         when(driverRepository.save(driver1)).thenReturn(driver1);
-        assertThrows(IllegalArgumentException.class, () -> driverService.addCarToDriver(1L, 1L));
+        assertThrows(IllegalArgumentException.class, () -> driverService.addCarToDriver(1L, car1));
         verify(driverRepository, times(1)).findById(1L);
         verify(carRepository, times(1)).findById(1L);
     }

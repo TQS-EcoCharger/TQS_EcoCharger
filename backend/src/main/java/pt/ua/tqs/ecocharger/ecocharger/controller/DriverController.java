@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
@@ -37,6 +38,7 @@ public class DriverController {
     public ResponseEntity<Object> getDriverById(@PathVariable Long id) {
         try {
             Driver existingDriver = driverService.getDriverById(id);
+            System.out.println("Driver found: " + existingDriver);
             return ResponseEntity.ok(existingDriver);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
@@ -59,10 +61,10 @@ public class DriverController {
         }
     }
 
-    @PatchMapping("{id}/cars/{carId}")
-    public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @PathVariable Long carId) {
+    @PatchMapping("{id}/cars/")
+    public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @RequestBody Car car) {
         try {
-            Driver updatedDriver = driverService.addCarToDriver(id, carId);
+            Driver updatedDriver = driverService.addCarToDriver(id, car);
             return ResponseEntity.ok(updatedDriver);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
