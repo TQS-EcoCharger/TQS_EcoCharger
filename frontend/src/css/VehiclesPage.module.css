@@ -26,4 +26,22 @@
     background-color: #07400d;
   }
   
+  .actionButtons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .iconButton {
+    background: #fdc459;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    padding: 0.3rem;
+    transition: color 0.2s ease;
+  }
+  
+  .iconButton:hover {
+    color: #007bff;
+  }
+  
   

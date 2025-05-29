@@ -60,21 +60,27 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver addCarToDriver(Long id, Car car) {
-        Driver driver = driverRepository.findById(id).orElseThrow(() -> new NotFoundException("Driver not found with id: " + id));
-        Optional<Car> existingCar = carRepository.findById(car.getId());
-        if (existingCar.isPresent() && driver.getCars().contains(existingCar.get())) {
-            throw new IllegalArgumentException("Car already assigned to driver");
+    public Driver addCarToDriver(Long driverId, Car car) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new NotFoundException("Driver not found with id: " + driverId));
+    
+        Car persistedCar;
+    
+        if (car.getId() != null) {
+            persistedCar = carRepository.findById(car.getId())
+                    .orElseThrow(() -> new NotFoundException("Car not found with id: " + car.getId()));
+    
+            if (driver.getCars().contains(persistedCar)) {
+                throw new IllegalArgumentException("Car already assigned to driver");
+            }
+        } else {
+            persistedCar = carRepository.save(car); // Let JPA assign ID
         }
-        if (existingCar.isPresent()) {
-            driver.getCars().add(existingCar.get());
-            return saveDriver(driver);
-        }
-        car.setId(carRepository.findAll().size() + 1L);
-        carRepository.save(car);
-        driver.getCars().add(car);
-        return saveDriver(driver);
+    
+        driver.getCars().add(persistedCar);
+        return driverRepository.save(driver);
     }
+    
 
     @Override
     public Driver editCarFromDriver(Long id, Long carId, Car car) {
@@ -84,7 +90,7 @@ public class DriverServiceImpl implements DriverService {
             throw new IllegalArgumentException("Car not assigned to driver");
         }
         existingCar.setName(car.getName());
-        existingCar.setBrand(car.getMake());
+        existingCar.setMake(car.getMake());
         existingCar.setModel(car.getModel());
         existingCar.setYear(car.getYear());
         existingCar.setLicensePlate(car.getLicensePlate());

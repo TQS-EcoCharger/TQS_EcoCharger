@@ -1,0 +1,80 @@
+.detailsContainer {
+    padding: 3vw;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+  }
+  
+  .vehicleName {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5vw;
+    color: #fff
+  }
+  
+  .vehicleInfo {
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    color: #777;
+    margin-bottom: 2vw;
+  }
+  
+  .cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2vw;
+  }
+  
+  .card {
+    background: linear-gradient(135deg, #fffdf5 0%, #fde5a7 100%);
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    padding: 1.8vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .icon {
+    font-size: 2.2vw;
+    color: #3e8ed0;
+  }
+  
+  .cardContent h3 {
+    margin: 0;
+    font-size: 1.4vw;
+    font-weight: 600;
+  }
+  
+  .cardContent p {
+    margin: 0.3vw 0 0 0;
+    font-size: 1.1vw;
+    color: #444;
+  }
+  
+  .loading {
+    font-size: 1.8vw;
+    text-align: center;
+    margin-top: 5vw;
+    color: #888;
+  }
+  
+  .editButton {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.8vw 1.5vw;
+    border-radius: 8px;
+    font-size: 1.2vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .editButton:hover {
+    background-color: #45a049;
+  }
+  
+  

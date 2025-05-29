@@ -1,9 +1,7 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
 import styles from '../css/Table.module.css';
 
 export default function Table({headers, rows}) {
-    console.log("Table component rendered with headers:", headers, "and rows:", rows);
   return (
     <div className={styles.tableContainer}>
       <table className={styles.table}>

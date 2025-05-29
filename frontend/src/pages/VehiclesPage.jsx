@@ -5,9 +5,13 @@ import styles from "../css/VehiclesPage.module.css";
 import AddCarModal from "../components/AddCarModal";
 import axios from "axios";
 import CONFIG from "../../config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
+import VehicleDetails from "./VehicleDetails";
 
 export default function VehiclesPage() {
   const [cars, setCars] = useState([]);
+  const [currentCar, setCurrentCar] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchVehicles = async () => {
@@ -69,26 +73,82 @@ export default function VehiclesPage() {
     }
   };
 
+  const handleDelete = async (carId) => {
+    const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
+    if (!meId) return;
+
+    try {
+      await axios.delete(`${CONFIG.API_URL}v1/driver/${meId}/cars/${carId}`, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      fetchVehicles();
+    } catch (error) {
+      console.error("Error deleting car:", error);
+      alert("Failed to delete car: " + (error.response?.data || error.message));
+    }
+  };
+
+  const openVehicleDetails = (car) => {
+    setCurrentCar(car);
+  };
+
+  const goBackToList = () => {
+    setCurrentCar(null);
+  };
+
   return (
     <div className={styles.pageContainer}>
       <Sidebar />
       <div className={styles.content}>
-        <h1>Vehicles Page</h1>
-        <button className={styles.addCarButton} onClick={() => setModalOpen(true)}>Add New Car</button>
-        <Table
-          headers={["ID", "Model", "Year"]}
-          rows={cars.map(car => [
-            car.id,
-            car.model,
-            car.year
-          ])}
-        />
-        <AddCarModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onAdd={handleAddCar}
-        />
-        <p>More content can be added here.</p>
+        {currentCar ? (
+          <div>
+            <button className={styles.addCarButton} onClick={goBackToList}>← Back to List</button>
+            <VehicleDetails vehicle={currentCar} />
+          </div>
+        ) : (
+          <>
+            <h1>Vehicles Page</h1>
+            <button className={styles.addCarButton} onClick={() => setModalOpen(true)}>Add New Car</button>
+            <Table
+              headers={[
+                "ID",
+                "Name",
+                "Make",
+                "Actions"
+              ]}
+              rows={cars.map(car => [
+                car.id,
+                car.name,
+                car.make,
+                <div className={styles.actionButtons}>
+                  <button
+                    className={styles.iconButton}
+                    onClick={() => openVehicleDetails(car)}
+                    title="View Details"
+                  >
+                    <FontAwesomeIcon icon={faEye} />
+                  </button>
+                  <button
+                    className={styles.iconButton}
+                    onClick={() => handleDelete(car.id)}
+                    title="Delete Car"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ])}
+            />
+
+            <AddCarModal
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+              onAdd={handleAddCar}
+            />
+            <p>More content can be added here.</p>
+          </>
+        )}
       </div>
     </div>
   );
