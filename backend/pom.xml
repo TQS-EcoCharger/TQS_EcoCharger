@@ -50,14 +50,6 @@
                     </plugin>
 
                 </plugins>
-                <dependencies>
-              		<dependency>
-                        <groupId>app.getxray</groupId>
-                        <artifactId>xray-junit-extensions</artifactId>
-                        <version>${xray-junit-extensions.version}</version>
-                        <scope>test</scope>
-                    </dependency>
-                </dependencies>
             </build>
         </profile>
         <profile>
