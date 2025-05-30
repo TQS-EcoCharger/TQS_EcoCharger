@@ -22,7 +22,7 @@ jobs:
         run: docker builder prune -a -f
 
       - name: Build and up 
-        run: docker compose -f docker-compose.prod.yml up --build -d
+        run: docker compose -f docker-compose.yml up --build -d
         env: 
           POSTGRES_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
