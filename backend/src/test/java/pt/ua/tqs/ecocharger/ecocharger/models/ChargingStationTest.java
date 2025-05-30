@@ -16,7 +16,7 @@ public class ChargingStationTest {
   void testChargingStationConstructorAndGetters() {
     ChargingStation station =
         new ChargingStation(
-            "Aveiro", "Rua Central", 40.6405, -8.6538, "Central St", "PT", "Portugal", "Electric");
+            "Aveiro", "Rua Central", 40.6405, -8.6538, "Central St", "PT", "Portugal");
     station.setId(1L);
 
     assertEquals(1L, station.getId());
@@ -27,7 +27,6 @@ public class ChargingStationTest {
     assertEquals("Central St", station.getStreetName());
     assertEquals("PT", station.getCountryCode());
     assertEquals("Portugal", station.getCountry());
-    assertEquals("Electric", station.getVehicleType());
     assertNotNull(station.getChargingPoints());
     assertTrue(station.getChargingPoints().isEmpty());
   }
@@ -45,7 +44,6 @@ public class ChargingStationTest {
     station.setStreetName("Liberdade");
     station.setCountryCode("PT");
     station.setCountry("Portugal");
-    station.setVehicleType("Hybrid");
 
     List<ChargingPoint> points = new ArrayList<>();
     station.setChargingPoints(points);
@@ -58,7 +56,6 @@ public class ChargingStationTest {
     assertEquals("Liberdade", station.getStreetName());
     assertEquals("PT", station.getCountryCode());
     assertEquals("Portugal", station.getCountry());
-    assertEquals("Hybrid", station.getVehicleType());
     assertEquals(points, station.getChargingPoints());
   }
 
@@ -68,13 +65,12 @@ public class ChargingStationTest {
   void testChargingStationToString() {
     ChargingStation station =
         new ChargingStation(
-            "Porto", "Rua das Flores", 41.1496, -8.6109, "Flores", "PT", "Portugal", "Electric");
+            "Porto", "Rua das Flores", 41.1496, -8.6109, "Flores", "PT", "Portugal");
     station.setId(3L);
 
     String result = station.toString();
     assertTrue(result.contains("cityName=Porto"));
     assertTrue(result.contains("address=Rua das Flores"));
     assertTrue(result.contains("country=Portugal"));
-    assertTrue(result.contains("vehicleType=Electric"));
   }
 }

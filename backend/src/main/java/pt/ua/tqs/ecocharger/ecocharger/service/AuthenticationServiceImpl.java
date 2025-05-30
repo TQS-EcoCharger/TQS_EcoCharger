@@ -1,6 +1,5 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
@@ -13,9 +12,14 @@ import java.util.Optional;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-  @Autowired private UserRepository userRepository;
+  private UserRepository userRepository;
 
-  @Autowired private JwtUtil jwtUtil;
+  private JwtUtil jwtUtil;
+
+  public AuthenticationServiceImpl(UserRepository userRepository,JwtUtil jwtUtil) {
+    this.userRepository = userRepository;
+    this.jwtUtil = jwtUtil;
+  }
 
   @Override
   public AuthResultDTO authenticate(String email, String password) {

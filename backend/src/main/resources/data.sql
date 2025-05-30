@@ -4,37 +4,37 @@ INSERT INTO users (email, password, name, enabled) VALUES
 -- CHARGING STATIONS (IDs 1–20)
 INSERT INTO charging_stations (
     id, municipality, address, latitude, longitude,
-    streetName, countryCode, country, vehicleType
+    streetName, countryCode, country
 ) VALUES
 (1, 'Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739,
- 'Rua do Batalhão de Caçadores 10', 'PT', 'Portugal', 'Car,Truck'),
+ 'Rua do Batalhão de Caçadores 10', 'PT', 'Portugal'),
 
 (2, 'Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
- 'Rua Batalhão Caçadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
+ 'Rua Batalhão Caçadores Dez -', 'PT', 'Portugal'),
 
 (3, 'Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
- 'Rua Batalhýo Caýadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
+ 'Rua Batalhýo Caýadores Dez -', 'PT', 'Portugal'),
 
 (4, 'Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682,
- 'Rua Príncipe Perfeito', 'PT', 'Portugal', 'Car,Truck'),
+ 'Rua Príncipe Perfeito', 'PT', 'Portugal'),
 
 (5, 'Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208,
- 'Praça Marquês de Pombal', 'PT', 'Portugal', 'Car,Truck'),
+ 'Praça Marquês de Pombal', 'PT', 'Portugal'),
 
 (6, 'Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503,
- 'Largo do Rossio', 'PT', 'Portugal', 'Car,Truck'),
+ 'Largo do Rossio', 'PT', 'Portugal'),
 
 (7, 'Aveiro', 'Rua Doutor Alberto Souto -, 3800-148 Aveiro', 40.64375, -8.64861,
- 'Rua Doutor Alberto Souto -', 'PT', 'Portugal', 'Car,Truck'),
+ 'Rua Doutor Alberto Souto -', 'PT', 'Portugal'),
 
 (8, 'Aveiro', 'Rua Doutor Alberto Soares Machado, 3800-146 Aveiro', 40.643751, -8.648611,
- 'Rua Doutor Alberto Soares Machado', 'PT', 'Portugal', 'Car,Truck'),
+ 'Rua Doutor Alberto Soares Machado', 'PT', 'Portugal'),
 
 (9, 'Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023,
- 'Cais da Fonte Nova', 'PT', 'Portugal', 'Car,Truck'),
+ 'Cais da Fonte Nova', 'PT', 'Portugal'),
 
 (10, 'Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514,
- 'Avenida da Universidade', 'PT', 'Portugal', 'Car,Truck');
+ 'Avenida da Universidade', 'PT', 'Portugal');
 
 
 -- Station 1: Atlante

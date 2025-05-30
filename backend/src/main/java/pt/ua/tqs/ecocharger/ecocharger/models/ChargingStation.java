@@ -49,15 +49,12 @@ public class ChargingStation {
   @Column(name = "country", nullable = false)
   private String country;
 
-  @Column(name = "vehicletype", nullable = false)
-  private String vehicleType;
-
   @OneToMany(mappedBy = "chargingStation", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ChargingPoint> chargingPoints = new ArrayList<>();
 
   @ManyToOne 
-  @JoinColumn(name = "administrator_id", nullable = false)
-  private Adminstrator addedBy;
+  @JoinColumn(name = "administrator_id", nullable = true)
+  private Administrator addedBy;
 
   public ChargingStation(
       String cityName,
@@ -66,8 +63,7 @@ public class ChargingStation {
       double longitude,
       String streetName,
       String countryCode,
-      String country,
-      String vehicleType) {
+      String country) {
     this.cityName = cityName;
     this.address = address;
     this.latitude = latitude;
@@ -75,6 +71,5 @@ public class ChargingStation {
     this.streetName = streetName;
     this.countryCode = countryCode;
     this.country = country;
-    this.vehicleType = vehicleType;
   }
 }
