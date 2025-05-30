@@ -1,0 +1,28 @@
+on: 
+  push:
+    branches:
+      - master
+    
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy: 
+    runs-on: self-hosted
+    name: Eco_Charger Deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Down containers
+        run: docker compose down
+      
+      - name: Remove build caches
+        run: docker builder prune -a -f
+
+      - name: Build and up 
+        run: docker compose -f docker-compose.yml up --build -d
+        env: 
+          POSTGRES_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}

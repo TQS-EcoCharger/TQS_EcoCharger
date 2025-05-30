@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1a1a;
+  padding: 2rem;
+  overflow-y: hidden;
+}
+
+.cardWrapper {
+  width: 100%;
+  max-width: 500px;
+  padding: 1rem;
+}
+
+.card {
+  background-color: #262626;
+  color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #ffcb73;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  color: #ffcb73;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.input {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: #333;
+  color: white;
+  border: none;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #aaa;
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #ffcb73;
+  color: #1a1a1a;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover {
+  background-color: #ffcb73;
+}

@@ -1,0 +1,131 @@
+name: Run Selenium Tests with Firefox
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  selenium-firefox-tests:
+    name: Run Functional Tests (Firefox)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Write .env file
+        run: |
+          cat <<EOF > .env
+          SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ecocharger
+          SPRING_DATASOURCE_USERNAME=ecocharger
+          SPRING_DATASOURCE_PASSWORD=ecocharger
+          EOF
+
+      - name: Write test application.properties
+        run: |
+          mkdir -p backend/src/test/resources
+          cat <<EOF > backend/src/test/resources/application.properties
+          spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+          spring.datasource.driver-class-name=org.h2.Driver
+          spring.datasource.username=sa
+          spring.datasource.password=
+          spring.sql.init.mode=never
+          spring.flyway.enabled=true
+          spring.flyway.locations=classpath:db/migration
+          spring.flyway.clean-disabled=false
+          spring.flyway.baseline-on-migrate=true
+          spring.flyway.check-location=false
+          spring.jpa.hibernate.ddl-auto=none
+          spring.jpa.defer-datasource-initialization=false
+          spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration+
+          spring.security.enabled=false
+          EOF
+
+      - name: Write runtime application.properties
+        run: |
+          mkdir -p backend/src/main/resources
+          cat <<EOF > backend/src/main/resources/application.properties
+          spring.application.name=ecocharger
+          spring.datasource.url=jdbc:postgresql://db:5432/ecocharger
+          spring.datasource.username=ecocharger
+          spring.datasource.password=ecocharger
+          spring.datasource.driver-class-name=org.postgresql.Driver
+          spring.jpa.show-sql=true
+          spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+          spring.jpa.hibernate.ddl-auto=create
+          spring.sql.init.data-locations=classpath:data.sql
+          spring.sql.init.mode=always
+          spring.sql.init.continue-on-error=false
+          spring.sql.init.platform=postgres
+          spring.jpa.defer-datasource-initialization=true
+          spring.flyway.enabled=false
+          springdoc.swagger-ui.path=/swagger-ui-custom.html
+          springdoc.api-docs.path=/api-docs
+          jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
+          EOF
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Install Firefox and GeckoDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox wget unzip jq
+          
+          GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
+          wget "$GECKO_URL" -O geckodriver.tar.gz
+          tar -xzf geckodriver.tar.gz
+          sudo mv geckodriver /usr/bin/geckodriver
+          sudo chmod +x /usr/bin/geckodriver
+
+      - name: Build backend
+        working-directory: ./backend
+        run: mvn clean package -DskipTests
+
+      - name: Start containers
+        run: docker compose -f docker-compose.yml up -d --build
+
+      - name: Wait for frontend to be healthy
+        run: |
+          echo "Waiting for frontend to respond..."
+          for i in {1..30}; do
+            if curl -sSf http://localhost:5000 > /dev/null; then
+              echo "Frontend is up."
+              break
+            fi
+            echo "Waiting..."
+            sleep 2
+          done
+          
+      - name: Run Cucumber functional tests
+        working-directory: ./backend
+        run: mvn test -Pcucumber-tests 
+
+      - name: Send Xray report
+        working-directory: ./backend
+        run: |
+          mvn \
+            -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
+            -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }} \
+            -Dxray.projectKey=ET \
+            -Dxray.reportFormat=junit \
+            -Dxray.reportFile=target/surefire-reports/TEST-pt.ua.tqs.ecocharger.ecocharger.functional.CucumberTest.xml \
+            app.getxray:xray-maven-plugin:import-results
+
+          
+      - name: Stop containers
+        run: docker compose -f docker-compose.yml down
+        
