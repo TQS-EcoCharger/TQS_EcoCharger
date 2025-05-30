@@ -51,6 +51,10 @@ jobs:
       - name: Remove build caches
         run: docker builder prune -a -f
 
+      - name: Package backend
+        run: mvn clean package -DskipTests
+        working-directory: ./backend
+
       - name: Build and up 
         run: docker compose -f docker-compose.yml up --build -d
         env: 
