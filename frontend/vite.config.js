@@ -9,6 +9,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://backend:8080',
+        allowedHosts: ['deti-tqs-19.ua.pt'],
         changeOrigin: true,
         secure: false,
       },
