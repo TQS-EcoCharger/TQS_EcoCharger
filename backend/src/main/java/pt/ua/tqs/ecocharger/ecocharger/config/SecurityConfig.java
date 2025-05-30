@@ -25,7 +25,8 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
         // CSRF protection is disabled intentionally.
-        // Justification: This is a stateless REST API using JWT tokens, which are immune to CSRF.
+        // Justification: This is a stateless REST API using JWT tokens, which are
+        // immune to CSRF.
         // No session or cookie-based authentication is used.
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
@@ -45,8 +46,8 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:5000")); // frontend origin
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedOrigins(List.of("http://localhost:5000", "http://deti-tqs-19.ua.pt:5000"));
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", ""));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
 
