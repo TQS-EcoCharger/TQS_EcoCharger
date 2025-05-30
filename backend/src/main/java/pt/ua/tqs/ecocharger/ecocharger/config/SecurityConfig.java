@@ -19,8 +19,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-  @Autowired
-  private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @Autowired private JwtAuthenticationFilter jwtAuthenticationFilter;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,13 +30,14 @@ public class SecurityConfig {
         // No session or cookie-based authentication is used.
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
-            auth -> auth.requestMatchers("/api/auth/**")
-                .permitAll()
-                .requestMatchers("/swagger-ui/**", "/api-docs/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated() // tudo o resto precisa de token
-        )
+            auth ->
+                auth.requestMatchers("/api/auth/**")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui/**", "/api-docs/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated() // tudo o resto precisa de token
+            )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
