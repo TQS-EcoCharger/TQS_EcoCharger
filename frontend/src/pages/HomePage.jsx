@@ -157,7 +157,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} id="homepage">
       <Sidebar />
 
       <div className={styles.wrapper}>

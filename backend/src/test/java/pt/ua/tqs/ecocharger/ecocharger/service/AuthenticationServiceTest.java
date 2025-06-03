@@ -1,11 +1,14 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
+import pt.ua.tqs.ecocharger.ecocharger.models.User;
+import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
@@ -25,11 +28,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
 
-  @Mock private UserRepository userRepository;
+  @Mock
+  private UserRepository userRepository;
 
-  @Mock private JwtUtil jwtUtil;
+  @Mock
+  private JwtUtil jwtUtil;
 
-  @InjectMocks private AuthenticationServiceImpl authService;
+  @InjectMocks
+  private AuthenticationServiceImpl authService;
 
   private User enabledUser;
 
