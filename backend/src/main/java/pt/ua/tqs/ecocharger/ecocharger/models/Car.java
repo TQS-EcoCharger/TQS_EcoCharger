@@ -72,7 +72,7 @@ public class Car {
         this.batteryLevel = 0.0;
         this.kilometers = 0.0;
         this.consumption = 0.0;
-        this.enabled = false;
+        this.enabled = true;
     }
 
     public Car(Long id, String name, String make, String model, Integer year, String licensePlate,
@@ -105,7 +105,7 @@ public class Car {
     }
 
     public boolean validateId(Long id) {
-        return id != null && id > 0;
+        return id == null || id > 0;
     }
 
 
@@ -262,6 +262,23 @@ public class Car {
         if (!validateBatteryLevel(batteryLevel, batteryCapacity)) throw new IllegalArgumentException("Invalid battery level");
         if (!validateKilometers(kilometers)) throw new IllegalArgumentException("Invalid kilometers");
         if (!validateConsumption(consumption)) throw new IllegalArgumentException("Invalid consumption");
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", make='" + make + '\'' +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                ", licensePlate='" + licensePlate + '\'' +
+                ", batteryCapacity=" + batteryCapacity +
+                ", batteryLevel=" + batteryLevel +
+                ", kilometers=" + kilometers +
+                ", consumption=" + consumption +
+                ", enabled=" + enabled +
+                '}';
     }
 
     

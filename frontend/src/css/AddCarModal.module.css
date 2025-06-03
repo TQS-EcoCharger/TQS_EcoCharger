@@ -1,69 +1,104 @@
 .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 50, 0, 0.7); /* dark greenish overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px); /* optional elegant blur */
+}
+
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  .modal {
-    background: #f4f9f4; /* light greenish */
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    max-width: 90vw;
-    box-shadow: 0 0 15px #0b5020;
-    color: #0a3a10;
-    font-family: Arial, sans-serif;
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .form label {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 12px;
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-  
-  .form input {
-    margin-top: 4px;
-    padding: 6px 8px;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: 1px solid #0a3a10;
-  }
-  
-  .buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  button {
-    background-color: #0a3a10;
-    color: #f4f9f4;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #07400d;
-  }
-  
-  .cancelBtn {
-    background-color: #7c2a18;
-  }
-  
-  .cancelBtn:hover {
-    background-color: #541a0f;
-  }
-  
+}
+
+.modal {
+  background: #1e1e1e;
+  padding: 24px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  color: #f4f4f4;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: modalFadeIn 0.3s ease-out;
+  border: 1px solid #2c2c2c;
+}
+
+.modal h2 {
+  color: #fdc459;
+  margin-bottom: 20px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+.form input {
+  margin-top: 6px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: #f4f4f4;
+}
+
+.form input:focus {
+  outline: none;
+  border-color: #fdc459;
+  box-shadow: 0 0 5px #fdc45955;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+button {
+  background-color: #fdc459;
+  color: #1e1e1e;
+  border: none;
+  padding: 10px 18px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: #e5ae3d;
+}
+
+.submitBtn {
+  background-color: #fdc459;
+  color: #1e1e1e;
+}
+
+.cancelBtn {
+  background-color: #444;
+  color: #f4f4f4;
+}
+
+.cancelBtn:hover {
+  background-color: #333;
+}

@@ -11,8 +11,8 @@
   }
 
   .addCarButton {
-    background-color: #0a3a10;
-    color: #f4f9f4;
+    background-color: #fdc459;
+    color: #000000;
     border: none;
     padding: 10px 18px;
     border-radius: 6px;
@@ -23,7 +23,7 @@
   }
   
   .addCarButton:hover {
-    background-color: #07400d;
+    background-color: #ffd27f;
   }
   
   .actionButtons {

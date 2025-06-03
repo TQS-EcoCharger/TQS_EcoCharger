@@ -14,9 +14,9 @@ export default function VehiclesPage() {
   const [currentCar, setCurrentCar] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+
   const fetchVehicles = async () => {
     const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
-    if (!meId) return;
 
     try {
       const response = await axios.get(`${CONFIG.API_URL}v1/driver/${meId}`, {
@@ -48,10 +48,10 @@ export default function VehiclesPage() {
       } else {
         console.log("Self data already exists in localStorage.");
       }
+      fetchVehicles();
     };
 
     fetchSelf();
-    fetchVehicles();
   }, []);
 
   const handleAddCar = async (carData) => {
@@ -70,6 +70,28 @@ export default function VehiclesPage() {
     } catch (error) {
       console.error("Error adding car:", error);
       alert("Failed to add car: " + (error.response?.data || error.message));
+    }
+  };
+
+  const handleEditCar = async (carId, updatedData) => {
+    const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
+    console.log("Editing car with ID:", carId, "and data:", updatedData);
+    if (!meId) return;
+    try {
+      await axios.patch(`${CONFIG.API_URL}v1/driver/${meId}/cars/${carId}`, updatedData, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+      });
+      if (currentCar && currentCar.id === carId) {
+        setCurrentCar(prev => ({ ...prev, ...updatedData }));
+      }
+      fetchVehicles();
+    }
+    catch (error) {
+      console.error("Error editing car:", error);
+      alert("Failed to edit car: " + (error.response?.data || error.message));
     }
   };
 
@@ -99,34 +121,46 @@ export default function VehiclesPage() {
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.pageContainer} id="vehicles-page">
       <Sidebar />
       <div className={styles.content}>
         {currentCar ? (
-          <div>
-            <button className={styles.addCarButton} onClick={goBackToList}>← Back to List</button>
-            <VehicleDetails vehicle={currentCar} />
+          <div id="vehicle-details-container">
+            <button
+              className={styles.addCarButton}
+              onClick={goBackToList}
+              id="vehicle-back-button"
+            >
+              ← Back to List
+            </button>
+            <VehicleDetails vehicle={currentCar} onEdit={handleEditCar} />
           </div>
         ) : (
           <>
-            <h1>Vehicles Page</h1>
-            <button className={styles.addCarButton} onClick={() => setModalOpen(true)}>Add New Car</button>
+            <h1 id="vehicles-title">Vehicles Page</h1>
+            <button
+              className={styles.addCarButton}
+              onClick={() => setModalOpen(true)}
+              id="add-car-button"
+            >
+              Add New Car
+            </button>
             <Table
-              headers={[
-                "ID",
-                "Name",
-                "Make",
-                "Actions"
-              ]}
+              id="vehicle-table"
+              headers={["ID", "Name", "Make", "Actions"]}
               rows={cars.map(car => [
                 car.id,
                 car.name,
                 car.make,
-                <div className={styles.actionButtons}>
+                <div
+                  className={styles.actionButtons}
+                  id={`car-actions-${car.id}`}
+                >
                   <button
                     className={styles.iconButton}
                     onClick={() => openVehicleDetails(car)}
                     title="View Details"
+                    id={`view-car-${car.id}`}
                   >
                     <FontAwesomeIcon icon={faEye} />
                   </button>
@@ -134,6 +168,7 @@ export default function VehiclesPage() {
                     className={styles.iconButton}
                     onClick={() => handleDelete(car.id)}
                     title="Delete Car"
+                    id={`delete-car-${car.id}`}
                   >
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
@@ -145,6 +180,7 @@ export default function VehiclesPage() {
               isOpen={modalOpen}
               onClose={() => setModalOpen(false)}
               onAdd={handleAddCar}
+              id="add-car-modal"
             />
             <p>More content can be added here.</p>
           </>

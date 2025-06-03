@@ -58,28 +58,24 @@ public class DriverServiceImpl implements DriverService {
         existingDriver.setPassword(driver.getPassword());
         return saveDriver(existingDriver);
     }
-
+    
     @Override
     public Driver addCarToDriver(Long driverId, Car car) {
-        Driver driver = driverRepository.findById(driverId)
-                .orElseThrow(() -> new NotFoundException("Driver not found with id: " + driverId));
-    
-        Car persistedCar;
-    
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new NotFoundException("Driver not found with id: " + driverId));
         if (car.getId() != null) {
-            persistedCar = carRepository.findById(car.getId())
-                    .orElseThrow(() -> new NotFoundException("Car not found with id: " + car.getId()));
-    
-            if (driver.getCars().contains(persistedCar)) {
+            Car existingCar = carRepository.findById(car.getId()).orElseThrow(() -> new NotFoundException("Car not found with id: " + car.getId()));
+            if (driver.getCars().contains(existingCar)) {
                 throw new IllegalArgumentException("Car already assigned to driver");
             }
+            driver.getCars().add(existingCar);
         } else {
-            persistedCar = carRepository.save(car); // Let JPA assign ID
+            Car newCar = carRepository.save(car);
+            driver.getCars().add(newCar);
         }
-    
-        driver.getCars().add(persistedCar);
-        return driverRepository.save(driver);
+        return saveDriver(driver);
     }
+    
+    
     
 
     @Override
@@ -95,9 +91,9 @@ public class DriverServiceImpl implements DriverService {
         existingCar.setYear(car.getYear());
         existingCar.setLicensePlate(car.getLicensePlate());
         existingCar.setBatteryCapacity(car.getBatteryCapacity());
-        existingCar.setAutonomy(car.getAutonomy());
-        existingCar.setLatitude(car.getLatitude());
-        existingCar.setLongitude(car.getLongitude());
+        existingCar.setBatteryLevel(car.getBatteryLevel());
+        existingCar.setConsumption(car.getConsumption());
+        existingCar.setEnabled(car.isEnabled());
         carRepository.save(existingCar);
         return saveDriver(driver);
     }

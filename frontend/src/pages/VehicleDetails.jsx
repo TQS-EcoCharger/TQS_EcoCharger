@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import styles from "../css/VehicleDetails.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,60 +9,102 @@ import {
   faCar,
   faPenToSquare
 } from "@fortawesome/free-solid-svg-icons";
+import AddCarModal from "../components/AddCarModal";
 
-export default function VehicleDetails({ vehicle }) {
+export default function VehicleDetails({ vehicle, onEdit }) {
+  const [initialVehicle, setInitialVehicle] = useState(vehicle);
   if (!vehicle) {
-    return <div className={styles.loading}>Loading vehicle details...</div>;
+    return (
+      <div id="vehicle-details-loading" className={styles.loading}>
+        Loading vehicle details...
+      </div>
+    );
   }
 
-  return (
-    <div className={styles.detailsContainer}>
-      <h1 className={styles.vehicleName}>{vehicle.name}</h1>
-      <FontAwesomeIcon icon={faPenToSquare} className={styles.editButton}/>
-      <h2 className={styles.vehicleInfo}>{vehicle.make} • {vehicle.model}</h2>
+  const [modalOpen, setModalOpen] = useState(false);
 
-      
-      <div className={styles.cardGrid}>
-        <div className={styles.card}>
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const onEditVehicle = (updatedVehicle) => {
+    onEdit(initialVehicle.id, updatedVehicle);
+    setModalOpen(false);
+  };
+
+  useEffect(() => {
+    setInitialVehicle(vehicle);
+  }, [vehicle]);
+
+  return (
+    <div id="vehicle-details-container" className={styles.detailsContainer}>
+      <div id="vehicle-name" className={styles.vehicleName}>
+        {initialVehicle.name}
+        <FontAwesomeIcon
+          icon={faPenToSquare}
+          id="edit-vehicle-button"
+          className={styles.editButton}
+          onClick={() => {
+            setModalOpen(true);
+          }}
+        />
+      </div>
+      <div id="vehicle-make-model" className={styles.vehicleInfo}>
+        {initialVehicle.make} • {initialVehicle.model}
+      </div>
+
+      <div id="vehicle-cards-grid" className={styles.cardGrid}>
+        <div id="vehicle-mileage-card" className={styles.card}>
           <FontAwesomeIcon icon={faGauge} className={styles.icon} />
           <div className={styles.cardContent}>
             <h3>Mileage</h3>
-            <p>{vehicle.kilometers} km</p>
+            <p id="vehicle-mileage-value">{initialVehicle.kilometers} km</p>
           </div>
         </div>
 
-        <div className={styles.card}>
+        <div id="vehicle-registered-card" className={styles.card}>
           <FontAwesomeIcon icon={faCalendarAlt} className={styles.icon} />
           <div className={styles.cardContent}>
             <h3>Registered</h3>
-            <p>{vehicle.year || "Unknown"}</p>
+            <p id="vehicle-year-value">{initialVehicle.year || "Unknown"}</p>
           </div>
         </div>
 
-        <div className={styles.card}>
+        <div id="vehicle-consumption-card" className={styles.card}>
           <FontAwesomeIcon icon={faBolt} className={styles.icon} />
           <div className={styles.cardContent}>
             <h3>Energy Consumption</h3>
-            <p>{vehicle.consumption} kWh</p>
+            <p id="vehicle-consumption-value">
+              {initialVehicle.consumption} kWh
+            </p>
           </div>
         </div>
 
-        <div className={styles.card}>
-            <FontAwesomeIcon icon={faBolt} className={styles.icon} />
-            <div className={styles.cardContent}>
-                <h3>Battery Capacity</h3>
-                <p>{vehicle.batteryCapacity} kWh</p>
-            </div>
+        <div id="vehicle-battery-card" className={styles.card}>
+          <FontAwesomeIcon icon={faBolt} className={styles.icon} />
+          <div className={styles.cardContent}>
+            <h3>Battery Capacity</h3>
+            <p id="vehicle-battery-value">
+              {initialVehicle.batteryCapacity} kWh
+            </p>
+          </div>
         </div>
 
-        <div className={styles.card}>
-            <FontAwesomeIcon icon={faCar} className={styles.icon} />
-            <div className={styles.cardContent}>
-                <h3>License Plate</h3>
-                <p>{vehicle.licensePlate}</p>
-            </div>
+        <div id="vehicle-license-card" className={styles.card}>
+          <FontAwesomeIcon icon={faCar} className={styles.icon} />
+          <div className={styles.cardContent}>
+            <h3>License Plate</h3>
+            <p id="vehicle-license-value">{initialVehicle.licensePlate}</p>
+          </div>
         </div>
       </div>
+
+      <AddCarModal
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        onAdd={onEditVehicle}
+        existingData={initialVehicle}
+      />
     </div>
   );
 }

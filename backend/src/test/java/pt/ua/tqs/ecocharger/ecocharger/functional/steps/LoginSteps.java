@@ -54,7 +54,7 @@ public class LoginSteps {
 
   @And("I click the {string}")
   public void i_click_the_button(String buttonId) {
-    WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By.id(buttonId)));
+    WebElement button = driver.findElement(By.id(buttonId));
     button.click();
   }
 
