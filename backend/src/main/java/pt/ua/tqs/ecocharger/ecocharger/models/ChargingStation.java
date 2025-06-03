@@ -40,9 +40,6 @@ public class ChargingStation {
   @Column(name = "longitude", nullable = false)
   private double longitude;
 
-  @Column(name = "streetname", nullable = false)
-  private String streetName;
-
   @Column(name = "countrycode", nullable = false)
   private String countryCode;
 
@@ -61,14 +58,12 @@ public class ChargingStation {
       String address,
       double latitude,
       double longitude,
-      String streetName,
       String countryCode,
       String country) {
     this.cityName = cityName;
     this.address = address;
     this.latitude = latitude;
     this.longitude = longitude;
-    this.streetName = streetName;
     this.countryCode = countryCode;
     this.country = country;
   }

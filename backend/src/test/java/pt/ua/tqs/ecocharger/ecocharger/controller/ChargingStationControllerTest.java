@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ChargingStationController.class)
 @Import(SecurityDisableConfig.class)
-public class ChargingStationControllerTest {
+class ChargingStationControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
@@ -42,7 +42,7 @@ public class ChargingStationControllerTest {
   @Requirement("ET-18")
   void testCreateStation() throws Exception {
     ChargingStation mockStation =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal");
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     mockStation.setId(1L);
 
     Mockito.when(chargingStationService.createStation(any(ChargingStation.class)))
@@ -63,7 +63,7 @@ public class ChargingStationControllerTest {
   @Requirement("ET-18")
   void testGetAllStations() throws Exception {
     ChargingStation mockStation =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal");
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     mockStation.setId(1L);
 
     Mockito.when(chargingStationService.getAllStations()).thenReturn(List.of(mockStation));
@@ -79,7 +79,7 @@ public class ChargingStationControllerTest {
   @Requirement("ET-18")
   void testGetStationsByCity() throws Exception {
     ChargingStation mockStation =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal");
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     mockStation.setId(1L);
 
     Mockito.when(chargingStationService.getAllStationsByCityName("Aveiro"))

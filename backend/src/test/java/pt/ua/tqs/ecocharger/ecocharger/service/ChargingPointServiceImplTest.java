@@ -33,7 +33,7 @@ class ChargingPointServiceImplTest {
   void setUp() {
     MockitoAnnotations.openMocks(this);
     station =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal");
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     station.setId(1L);
 
     point = new ChargingPoint();
