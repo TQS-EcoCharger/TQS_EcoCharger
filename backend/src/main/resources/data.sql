@@ -1,5 +1,12 @@
-INSERT INTO users (email, password, name, enabled) VALUES
-('afonso@gmail.com', 'pass', 'Afonso Ferreira', true);
+INSERT INTO users (id, email, password, name, enabled, user_type)
+VALUES (1, 'afonso@gmail.com', 'pass', 'Afonso Ferreira', true, 'clients');
+
+INSERT INTO users (id, email, password, name, enabled, user_type)
+VALUES (2, 'tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators');
+
+INSERT INTO clients (id) VALUES (1);
+INSERT INTO administrators (id) VALUES (2);
+
 
 -- CHARGING STATIONS (IDs 1–20)
 INSERT INTO charging_stations (

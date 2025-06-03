@@ -11,14 +11,11 @@ import { useNavigate } from 'react-router-dom';
 import { FiZap, FiPower } from 'react-icons/fi';
 import { FaRoad } from 'react-icons/fa';
 import { FaCity } from 'react-icons/fa';
-import { FaCar } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
-
 import Chargingicon from '../../public/ChargingStation.png';
 
-// Configuração do ícone Leaflet
 const customIcon = new L.Icon({
   iconUrl: Chargingicon,
   iconSize: [40, 45],

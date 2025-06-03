@@ -5,12 +5,14 @@ import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
 import CONFIG from "../../config";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useUser();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -22,8 +24,14 @@ const LoginPage = () => {
       });
 
       console.log("Login successful:", response.data);
-      localStorage.setItem("token", response.data.token);
-      navigate("/home");
+     login(response.data.token, response.data.userType);
+
+     if (response.data.userType === "administrator") {
+       navigate("/admin/dashboard");
+     } else {
+       navigate("/home");
+     }
+
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
       setError(err.response?.data || "Login failed. Please try again.");
