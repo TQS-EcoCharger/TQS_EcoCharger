@@ -98,35 +98,35 @@ public class Car {
       Double consumption) {
     try {
       if (!validateId(id)) {
-          throw new IllegalArgumentException("ID must be a positive number");
+        throw new IllegalArgumentException("ID must be a positive number");
       }
       if (!validateName(name)) {
-          throw new IllegalArgumentException("Name cannot be null or empty");
+        throw new IllegalArgumentException("Name cannot be null or empty");
       }
       if (!validateMake(make)) {
-          throw new IllegalArgumentException("Make cannot be null or empty");
+        throw new IllegalArgumentException("Make cannot be null or empty");
       }
       if (!validateModel(model)) {
-          throw new IllegalArgumentException("Model cannot be null or empty");
+        throw new IllegalArgumentException("Model cannot be null or empty");
       }
       if (!validateYear(year)) {
-          throw new IllegalArgumentException("Year must be a valid number greater than 0");
+        throw new IllegalArgumentException("Year must be a valid number greater than 0");
       }
       if (!validateLicensePlate(licensePlate)) {
-          throw new IllegalArgumentException("Invalid license plate format");
+        throw new IllegalArgumentException("Invalid license plate format");
       }
       if (!validateBatteryCapacity(batteryCapacity)) {
-          throw new IllegalArgumentException("Battery capacity must be a positive number");
+        throw new IllegalArgumentException("Battery capacity must be a positive number");
       }
       if (!validateBatteryLevel(batteryLevel, batteryCapacity)) {
-          throw new IllegalArgumentException(
-              "Battery level must be between 0 and the battery capacity");
+        throw new IllegalArgumentException(
+            "Battery level must be between 0 and the battery capacity");
       }
       if (!validateKilometers(kilometers)) {
-          throw new IllegalArgumentException("Kilometers must be a positive number");
+        throw new IllegalArgumentException("Kilometers must be a positive number");
       }
       if (!validateConsumption(consumption)) {
-          throw new IllegalArgumentException("Consumption must be a positive number");
+        throw new IllegalArgumentException("Consumption must be a positive number");
       }
       this.id = id;
       this.name = name;
