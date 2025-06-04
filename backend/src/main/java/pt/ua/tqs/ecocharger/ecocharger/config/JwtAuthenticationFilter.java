@@ -36,14 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-      String path = request.getRequestURI();
+    String path = request.getRequestURI();
 
-      // Skip actuator endpoints
-      if (path.startsWith("/actuator")) {
-          filterChain.doFilter(request, response);
-          return;
-      }
-      String token = extractTokenFromHeader(request);
+    // Skip actuator endpoints
+    if (path.startsWith("/actuator")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+    String token = extractTokenFromHeader(request);
 
     if (token != null) {
       try {
