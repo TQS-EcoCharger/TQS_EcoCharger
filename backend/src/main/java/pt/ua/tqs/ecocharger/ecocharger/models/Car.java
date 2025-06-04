@@ -97,16 +97,37 @@ public class Car {
       Double kilometers,
       Double consumption) {
     try {
-      validateCarData(
-          name,
-          make,
-          model,
-          year,
-          licensePlate,
-          batteryCapacity,
-          batteryLevel,
-          kilometers,
-          consumption);
+      if (!validateId(id)) {
+          throw new IllegalArgumentException("ID must be a positive number");
+      }
+      if (!validateName(name)) {
+          throw new IllegalArgumentException("Name cannot be null or empty");
+      }
+      if (!validateMake(make)) {
+          throw new IllegalArgumentException("Make cannot be null or empty");
+      }
+      if (!validateModel(model)) {
+          throw new IllegalArgumentException("Model cannot be null or empty");
+      }
+      if (!validateYear(year)) {
+          throw new IllegalArgumentException("Year must be a valid number greater than 0");
+      }
+      if (!validateLicensePlate(licensePlate)) {
+          throw new IllegalArgumentException("Invalid license plate format");
+      }
+      if (!validateBatteryCapacity(batteryCapacity)) {
+          throw new IllegalArgumentException("Battery capacity must be a positive number");
+      }
+      if (!validateBatteryLevel(batteryLevel, batteryCapacity)) {
+          throw new IllegalArgumentException(
+              "Battery level must be between 0 and the battery capacity");
+      }
+      if (!validateKilometers(kilometers)) {
+          throw new IllegalArgumentException("Kilometers must be a positive number");
+      }
+      if (!validateConsumption(consumption)) {
+          throw new IllegalArgumentException("Consumption must be a positive number");
+      }
       this.id = id;
       this.name = name;
       this.make = make;
@@ -131,7 +152,7 @@ public class Car {
     }
   }
 
-  public boolean validateId(Long id) {
+  private static boolean validateId(Long id) {
     return id == null || id > 0;
   }
 
@@ -143,7 +164,7 @@ public class Car {
     }
   }
 
-  public boolean validateName(String name) {
+  private static boolean validateName(String name) {
     return name != null && !name.trim().isEmpty();
   }
 
@@ -155,7 +176,7 @@ public class Car {
     }
   }
 
-  public boolean validateMake(String make) {
+  private static boolean validateMake(String make) {
     return make != null && !make.trim().isEmpty();
   }
 
@@ -167,7 +188,7 @@ public class Car {
     }
   }
 
-  public boolean validateModel(String model) {
+  private static boolean validateModel(String model) {
     return model != null && !model.trim().isEmpty();
   }
 
@@ -179,7 +200,7 @@ public class Car {
     }
   }
 
-  public boolean validateYear(Integer year) {
+  private static boolean validateYear(Integer year) {
     return year != null && year > 0;
   }
 
@@ -199,7 +220,7 @@ public class Car {
    * @param licensePlate
    * @return sanitized license plate
    */
-  public String sanitizeLicensePlate(String licensePlate) {
+  private static String sanitizeLicensePlate(String licensePlate) {
     if (licensePlate == null) {
       return null;
     }
@@ -218,7 +239,7 @@ public class Car {
    * @param licensePlate
    * @return true if valid, false otherwise
    */
-  private boolean validateLicensePlate(String licensePlate) {
+  private static boolean validateLicensePlate(String licensePlate) {
     return licensePlate != null && licensePlate.matches("^[A-Z0-9]{1,4}([ -]?[A-Z0-9]{1,4}){0,2}$");
   }
 
@@ -230,7 +251,7 @@ public class Car {
     }
   }
 
-  private boolean validateBatteryCapacity(Double batteryCapacity) {
+  private static boolean validateBatteryCapacity(Double batteryCapacity) {
     return batteryCapacity != null && batteryCapacity > 0;
   }
 
@@ -243,7 +264,7 @@ public class Car {
     }
   }
 
-  private boolean validateBatteryLevel(Double batteryLevel, Double batteryCapacity) {
+  private static boolean validateBatteryLevel(Double batteryLevel, Double batteryCapacity) {
     return batteryLevel != null && batteryLevel >= 0 && batteryLevel <= batteryCapacity;
   }
 
@@ -255,7 +276,7 @@ public class Car {
     }
   }
 
-  private boolean validateKilometers(Double kilometers) {
+  private static boolean validateKilometers(Double kilometers) {
     return kilometers != null && kilometers >= 0;
   }
 
@@ -267,39 +288,13 @@ public class Car {
     }
   }
 
-  private boolean validateConsumption(Double consumption) {
+  private static boolean validateConsumption(Double consumption) {
     return consumption != null && consumption >= 0;
   }
 
   public boolean setEnabled(boolean enabled) {
     this.enabled = enabled;
     return this.enabled;
-  }
-
-  private void validateCarData(
-      String name,
-      String make,
-      String model,
-      Integer year,
-      String licensePlate,
-      Double batteryCapacity,
-      Double batteryLevel,
-      Double kilometers,
-      Double consumption) {
-
-    if (!validateName(name)) throw new IllegalArgumentException("Invalid name");
-    if (!validateMake(make)) throw new IllegalArgumentException("Invalid make");
-    if (!validateModel(model)) throw new IllegalArgumentException("Invalid model");
-    if (!validateYear(year)) throw new IllegalArgumentException("Invalid year");
-    if (!validateLicensePlate(licensePlate))
-      throw new IllegalArgumentException("Invalid license plate");
-    if (!validateBatteryCapacity(batteryCapacity))
-      throw new IllegalArgumentException("Invalid battery capacity");
-    if (!validateBatteryLevel(batteryLevel, batteryCapacity))
-      throw new IllegalArgumentException("Invalid battery level");
-    if (!validateKilometers(kilometers)) throw new IllegalArgumentException("Invalid kilometers");
-    if (!validateConsumption(consumption))
-      throw new IllegalArgumentException("Invalid consumption");
   }
 
   @Override

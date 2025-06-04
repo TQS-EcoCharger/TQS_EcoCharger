@@ -73,6 +73,8 @@ public class DriverServiceTest {
     verify(driverRepository, times(1)).findAll();
   }
 
+
+
   @Test
   @DisplayName("Get Driver By ID")
   @Requirement("ET-34")
@@ -176,6 +178,22 @@ public class DriverServiceTest {
     when(driverRepository.findById(6L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> driverService.addCarToDriver(6L, car1));
     verify(driverRepository, times(1)).findById(6L);
+  }
+
+  @Test
+  @DisplayName("Edit a car in a driver")
+  @Requirement("ET-34")
+  public void testEditCarFromDriver() throws Exception {
+    driver1.addCar(car1);
+    when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
+    when(driverRepository.save(driver1)).thenReturn(driver1);
+    Car updatedCar = new Car(1L, "Updated Car", "Updated Make", "Updated Model", 2021, "AB-C2-34", 60.0, 50.0, 120.0, 18.0);
+    Driver updatedDriver = driverService.editCarFromDriver(1L, 1L, updatedCar);
+    assertEquals(1, updatedDriver.getCars().size());
+    assertEquals(updatedCar.getName(), updatedDriver.getCars().get(0).getName());
+    verify(driverRepository, times(1)).findById(1L);
+    verify(carRepository, times(1)).findById(1L);
+    verify(driverRepository, times(1)).save(driver1);
   }
 
   @Test
