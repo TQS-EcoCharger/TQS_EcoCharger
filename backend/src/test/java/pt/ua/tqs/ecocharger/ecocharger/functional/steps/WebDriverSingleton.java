@@ -2,10 +2,10 @@ package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
@@ -15,11 +15,17 @@ public class WebDriverSingleton {
 
   public static void initialize() {
     if (driver == null) {
-      WebDriverManager.firefoxdriver().setup();
-      FirefoxOptions options = new FirefoxOptions();
-      options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
-      driver = new FirefoxDriver(options);
-      driver.manage().window().setSize(new Dimension(1400, 1200));
+      WebDriverManager.chromedriver().setup();
+
+      ChromeOptions options = new ChromeOptions();
+      options.addArguments(
+          "--headless=new"); 
+      options.addArguments("--no-sandbox");
+      options.addArguments("--disable-dev-shm-usage");
+      options.addArguments("--disable-gpu");
+      options.addArguments("--window-size=1200,800");
+
+      driver = new ChromeDriver(options);
       wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
   }
