@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
+import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AdministratorService;
 
@@ -48,6 +49,17 @@ public class AdministratorController {
                                                          @RequestBody ChargingStation station) {
         station.setId(stationId);
         return ResponseEntity.ok(administratorService.updateChargingStation(station));
+    }
+
+    @Operation(summary = "Update a charging point")
+    @PutMapping("/stations/{stationId}/points/{pointId}")
+    public ResponseEntity<ChargingPoint> updatePoint(@RequestBody ChargingPoint point,
+                                                   @PathVariable Long stationId,
+                                                   @PathVariable Long pointId) {
+        ChargingStation station = new ChargingStation();
+        station.setId(stationId);
+        point.setChargingStation(station);
+        return ResponseEntity.ok(administratorService.updateChargingPoint(point, pointId));
     }
 
     @Operation(summary = "Delete a charging station")

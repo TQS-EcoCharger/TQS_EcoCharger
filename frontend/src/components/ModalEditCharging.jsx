@@ -14,7 +14,6 @@ function ModalEditCharging({ station, onClose, onSuccess }) {
     country: ""
   });
 
-  console.log("Station data:", station);
   useEffect(() => {
     if (station) {
       setForm({

@@ -18,6 +18,7 @@ import Chargingicon from '../../public/ChargingStation.png';
 import { useUser } from "../context/UserContext";
 import ModalAddCharging from '../components/ModalAddCharging';
 import ModalEditCharging from '../components/ModalEditCharging';
+import ModalChargingPoints from '../components/ModalChargingPoints';
 
 const customIcon = new L.Icon({
   iconUrl: Chargingicon,
@@ -37,6 +38,8 @@ export default function HomePage() {
   const { userType } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddPointModal, setShowAddPointModal] = useState(false);
+
 
    const handleNewStation = (newStation) => {
     setStations(prev => [...prev, newStation]);
@@ -95,50 +98,74 @@ export default function HomePage() {
 
       <div className={styles.wrapper}>
         <div className={styles.stationDetails}>
-          <h2>Detalhes da Estação</h2>
+          <h2>Charging Station Details</h2>
           {selectedStation ? (
               <div className={styles.cardScrollable}>
                 <div className={styles.cardContent}>
                   <div className={styles.stationInfo}>
-                    <p><strong><FaCity /> Cidade:</strong> {selectedStation.cityName}</p>
+                    <p><strong><FaCity /> City:</strong> {selectedStation.cityName}</p>
                     <p><strong><FaRoad /> Address:</strong> {selectedStation.address}</p>
+                    <p><strong>Country:</strong> {selectedStation.country || 'N/A'}</p>
+                    <p><strong>Country Code:</strong> {selectedStation.countryCode}</p>
+                    <p><strong>Latitude:</strong> {selectedStation.latitude}</p>
+                    <p><strong>Longitude:</strong> {selectedStation.longitude}</p>
                   </div>
 
-                  <h3 className={styles.sectionTitle}>Pontos de Carregamento</h3>
-                  {selectedStation.chargingPoints.map((point) => (
-                    <div key={point.id} className={styles.chargingCard}>
-                      <div className={styles.chargingHeader}>
-                        <BsPlug className={styles.icon} />
-                        <span><strong>{point.brand}</strong></span>
-                        {point.available ? (
-                          <BsCheckCircle className={styles.available} title="Disponível" />
-                        ) : (
-                          <BsXCircle className={styles.unavailable} title="Indisponível" />
-                        )}
-                      </div>
-                      {point.connectors.length > 0 ? (
-                        <div className={styles.connectorList}>
-                          {point.connectors.map((connector) => (
-                            <div key={connector.id} className={styles.connectorItem}>
-                              <span><FiZap className={styles.iconSmall} /> <strong>Type:</strong> {connector.connectorType}</span>
-                              <span><FiPower className={styles.iconSmall} /> <strong>Potência:</strong> {connector.ratedPowerKW} kW</span>
-                              <span><TbBatteryCharging2 className={styles.iconSmall} /> <strong>Voltagem:</strong> {connector.voltageV} V</span>
-                              <span><GiElectric className={styles.iconSmall} /> <strong>Corrente:</strong> {connector.currentA} A</span>
+                  <h3 className={styles.sectionTitle}>Charging Points</h3>
+                    {selectedStation.chargingPoints && selectedStation.chargingPoints.length > 0 ? (
+                      selectedStation.chargingPoints.map((point) => (
+                        <div key={point.id} className={styles.chargingCard}>
+                          <div className={styles.chargingHeader}>
+                            <BsPlug className={styles.icon} />
+                            <span><strong>{point.brand}</strong></span>
+                            {point.available ? (
+                              <BsCheckCircle className={styles.available} title="Disponível" />
+                            ) : (
+                              <BsXCircle className={styles.unavailable} title="Indisponível" />
+                            )}
+                          </div>
+                          
+                          {point.connectors.length > 0 ? (
+                            <div className={styles.connectorList}>
+                              {point.connectors.map((connector) => (
+                                <div key={connector.id} className={styles.connectorItem}>
+                                  <span><FiZap className={styles.iconSmall} /> <strong>Type:</strong> {connector.connectorType}</span>
+                                  <span><FiPower className={styles.iconSmall} /> <strong>Potência:</strong> {connector.ratedPowerKW} kW</span>
+                                  <span><TbBatteryCharging2 className={styles.iconSmall} /> <strong>Voltagem:</strong> {connector.voltageV} V</span>
+                                  <span><GiElectric className={styles.iconSmall} /> <strong>Corrente:</strong> {connector.currentA} A</span>
+                                </div>
+                              ))}
                             </div>
-                          ))}
+                          ) : (
+                            <p style={{ fontStyle: 'italic', color: '#666', paddingLeft: '8px' }}>
+                              No connectors available for this charging point.
+                            </p>
+                          )}
                         </div>
-                      ) : (
-                        <p style={{ fontStyle: 'italic', color: '#666', paddingLeft: '8px' }}>
-                          Nenhum conector disponível.
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                      ))
+                    ) : (
+                      <div
+                        className={styles.addChargingPointBox}
+                        onClick={() => setShowAddPointModal(true)}
+                      >
+                        <span className={styles.addIcon}>+</span>
+                        <p>Add Charging Point</p>
+                      </div>
+                    )}
                 </div>
                 <button className={styles.reserveBtn}>Reservations</button>
+
                 {userType === 'administrator' && (
-                  <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
+                  <>
+                    <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
+                
+                    {selectedStation.chargingPoints &&
+                     selectedStation.chargingPoints.length >0 && (
+                      <button className={styles.editBtn} onClick={() => setShowAddPointModal(true)}>+ Add Point</button>
+                    )}
+                  </>
                 )}
+
               </div>
           ) : (
             <p>Selecione uma estação no mapa</p>
@@ -202,6 +229,24 @@ export default function HomePage() {
             }}
           />
         )}
+
+
+        {showAddPointModal && selectedStation && (
+            <ModalChargingPoints
+              stationId={selectedStation.id}
+              onClose={() => setShowAddPointModal(false)}
+              onSuccess={(newPoint) => {
+                const updatedStation = {
+                  ...selectedStation,
+                  chargingPoints: [...selectedStation.chargingPoints, newPoint]
+                };
+                setStations(prev =>
+                  prev.map(s => (s.id === updatedStation.id ? updatedStation : s))
+                );
+                setSelectedStation(updatedStation);
+              }}
+            />
+          )}
 
         
 

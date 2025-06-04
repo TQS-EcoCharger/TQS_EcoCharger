@@ -5,8 +5,11 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
+import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
+import pt.ua.tqs.ecocharger.ecocharger.models.Connectors;
 import pt.ua.tqs.ecocharger.ecocharger.repository.AdministratorRepository;
+import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingPointRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingStationRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AdministratorService;
 
@@ -15,11 +18,14 @@ public class AdministratorServiceImpl implements AdministratorService{
 
     private final ChargingStationRepository chargingStationRepository;
     private final AdministratorRepository administratorRepository;
+    private final ChargingPointRepository chargingPointRepository;
 
     public AdministratorServiceImpl(ChargingStationRepository chargingStationRepository,
-                                    AdministratorRepository administratorRepository) {
+                                    AdministratorRepository administratorRepository,
+                                    ChargingPointRepository chargingPointRepository) {
         this.chargingStationRepository = chargingStationRepository;
         this.administratorRepository = administratorRepository;
+        this.chargingPointRepository = chargingPointRepository;
     }   
 
     @Override
@@ -106,6 +112,33 @@ public class AdministratorServiceImpl implements AdministratorService{
             throw new RuntimeException("Charging Station not found");
         }
     }
+
+    @Override
+    public ChargingPoint updateChargingPoint(ChargingPoint point, Long pointId) {
+        System.out.println("Updating Charging Point with ID: " + pointId);
+    
+        Optional<ChargingPoint> existingPointOpt = chargingPointRepository.findById(pointId);
+        if (existingPointOpt.isEmpty()) {
+            throw new RuntimeException("Charging Point not found");
+        }
+    
+        ChargingPoint existingPoint = existingPointOpt.get();
+    
+        existingPoint.setChargingStation(point.getChargingStation());
+        existingPoint.setAvailable(point.isAvailable());
+        existingPoint.setBrand(point.getBrand());
+        existingPoint.setPricePerKWh(point.getPricePerKWh());
+        existingPoint.setPricePerMinute(point.getPricePerMinute());
+    
+        existingPoint.getConnectors().clear();
+        for (Connectors connector : point.getConnectors()) {
+            connector.setChargingPoint(existingPoint); 
+            existingPoint.getConnectors().add(connector);
+        }
+    
+        return chargingPointRepository.save(existingPoint);
+    }
+    
 
     @Override
     public Administrator createAdministrator(String email, String password, String name) {
