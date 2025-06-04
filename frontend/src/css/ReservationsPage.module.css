@@ -1,0 +1,91 @@
+/* Ensure the sidebar + content layout is respected */
+.page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #1e1e1e;
+}
+
+/* Main content area next to the sidebar */
+.container {
+  flex-grow: 1;
+  padding: 2rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Grid that holds the cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible 3 per row */
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Card styling stays as is */
+.card {
+  background: #fdc459;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  color: #000000;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Title at the top */
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Text when no reservations */
+.message {
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+/* Card title */
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+/* Connector styles */
+.connectorList {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.5rem;
+}
+
+.connectorItem {
+  background-color: #9c7836;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+/* Status colors */
+.pending {
+  background-color: #fdc459;
+}
+
+.confirmed {
+  background-color: #a5d6a7;
+}
+
+.cancelled {
+  background-color: #ef9a9a;
+}
