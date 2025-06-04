@@ -22,4 +22,8 @@ public class JwtUtil {
         .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
         .sign(Algorithm.HMAC256(jwtSecret.getBytes()));
   }
+
+  public String getEmailFromToken(String token) {
+    return JWT.require(Algorithm.HMAC256(jwtSecret.getBytes())).build().verify(token).getSubject();
+  }
 }
