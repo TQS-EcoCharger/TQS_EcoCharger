@@ -60,15 +60,14 @@ public class Car {
   public static Car cloneCar(Car car) {
     return new Car(
         null,
-        car.name,
-        car.make,
-        car.model,
-        car.year,
-        car.licensePlate,
-        car.batteryCapacity,
-        car.batteryLevel,
-        car.kilometers,
-        car.consumption);
+        car.getName(),
+        car.getMake(),
+        car.getModel(),
+        car.getLicensePlate(),
+        car.getBatteryCapacity(),
+        car.getBatteryLevel(),
+        car.getKilometers(),
+        car.getConsumption());
   }
 
   public Car() {
