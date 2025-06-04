@@ -1,10 +1,11 @@
-/*
 package pt.ua.tqs.ecocharger.ecocharger.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
 
 import java.time.LocalDateTime;
@@ -65,6 +66,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
+    @Requirement("ET-30")
     void testExistsByChargingPointIdAndTimeOverlap_shouldReturnTrueWhenOverlapping() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -82,6 +84,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
+    @Requirement("ET-30")
     void testExistsByChargingPointIdAndTimeOverlap_shouldReturnFalseWhenNotOverlapping() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -99,6 +102,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
+    @Requirement("ET-30")
     void testFindByUserId_shouldReturnReservations() {
         Reservation reservation = new Reservation(null, user, chargingPoint,
             LocalDateTime.now(), LocalDateTime.now().plusHours(1), ReservationStatus.PENDING);
@@ -111,6 +115,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
+    @Requirement("ET-30")
     void testFindByChargingPointIdAndEndTimeAfter_shouldReturnFutureReservations() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -126,5 +131,3 @@ public class ReservationRepositoryTest {
         assertThat(results.get(0).getChargingPoint().getId()).isEqualTo(chargingPoint.getId());
     }
 }
-
-*/

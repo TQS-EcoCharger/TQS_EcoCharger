@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import io.cucumber.java.an.E;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingStationDTO;
@@ -62,6 +64,7 @@ public class ReservationControllerTest {
   }
 
   @Test
+  @Requirement("ET-30")
   @DisplayName("Creating reservation returns 200 OK with reservation details")
   void testCreateReservation() throws Exception {
     mockMvc
@@ -76,6 +79,7 @@ public class ReservationControllerTest {
   }
 
   @Test
+  @Requirement("ET-30")
   @DisplayName("Getting all reservations returns 200 OK with reservations list")
   void testGetAllReservations() throws Exception {
     mockMvc
@@ -86,6 +90,7 @@ public class ReservationControllerTest {
   }
 
   @Test
+  @Requirement("ET-30")
   @DisplayName("Getting reservations by user ID returns 200 OK with reservations list")
   void testGetReservationsByUserId() throws Exception {
     mockMvc
@@ -96,6 +101,7 @@ public class ReservationControllerTest {
   }
 
   @Test
+  @Requirement("ET-30")
   @DisplayName(
       "Getting active reservations by charging point ID returns 200 OK with reservations list")
   void testGetActiveReservationsByChargingPoint() throws Exception {

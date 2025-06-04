@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationRequestDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
@@ -70,6 +71,7 @@ public class ReservationServiceTest {
 
   @Test
   @DisplayName("Create Reservation Successfully")
+  @Requirement("ET-30")
   void testCreateReservation() {
     ReservationRequestDTO request =
         new ReservationRequestDTO(
@@ -87,6 +89,7 @@ public class ReservationServiceTest {
 
   @Test
   @DisplayName("Fail to Create Reservation - Time Slot Conflict")
+  @Requirement("ET-30")
   void testCreateReservationConflict() {
     when(reservationRepository.existsByChargingPointIdAndTimeOverlap(anyLong(), any(), any()))
         .thenReturn(true);
@@ -104,6 +107,7 @@ public class ReservationServiceTest {
 
   @Test
   @DisplayName("Get All Reservations")
+  @Requirement("ET-30")
   void testGetAllReservations() {
     when(reservationRepository.findAll()).thenReturn(List.of(reservation));
 
@@ -115,6 +119,7 @@ public class ReservationServiceTest {
 
   @Test
   @DisplayName("Get Reservations by User ID")
+  @Requirement("ET-30")
   void testGetReservationsByUserId() {
     when(reservationRepository.findByUserId(1L)).thenReturn(List.of(reservation));
 
@@ -125,6 +130,7 @@ public class ReservationServiceTest {
   }
 
   @Test
+  @Requirement("ET-30")
   @DisplayName("Get Active Reservations by Charging Point ID")
   void testGetActiveReservationsByChargingPointId() {
     when(reservationRepository.findByChargingPointIdAndEndTimeAfter(
