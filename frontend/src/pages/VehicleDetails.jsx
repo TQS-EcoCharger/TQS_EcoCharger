@@ -13,6 +13,11 @@ import AddCarModal from "../components/AddCarModal";
 export default function VehicleDetails({ vehicle, onEdit }) {
   const [initialVehicle, setInitialVehicle] = useState(vehicle);
   const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    setInitialVehicle(vehicle);
+  }, [vehicle]);
+
   if (!vehicle) {
     return (
       <div id="vehicle-details-loading" className={styles.loading}>
@@ -20,10 +25,6 @@ export default function VehicleDetails({ vehicle, onEdit }) {
       </div>
     );
   }
-
-  useEffect(() => {
-    setInitialVehicle(vehicle);
-  }, [vehicle]);
 
   const handleCloseModal = () => {
     setModalOpen(false);
