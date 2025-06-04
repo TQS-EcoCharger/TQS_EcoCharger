@@ -1,6 +1,6 @@
-INSERT INTO users (email, password, name, enabled) VALUES
-('afonso@gmail.com', 'pass', 'Afonso Ferreira', true),
-('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true);
+INSERT INTO users (email, password, name, enabled, user_type) VALUES
+('afonso@gmail.com', 'pass', 'Afonso Ferreira', true, 'clients'),
+('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'clients');
 
 INSERT INTO driver (id) VALUES
 (1),
@@ -20,105 +20,54 @@ INSERT INTO driver_cars (driver_id, cars_id) VALUES
 (2, 4);
 
 
--- CHARGING STATIONS (IDs 1–20)
-INSERT INTO charging_stations (
-    id, municipality, address, latitude, longitude,
-    streetName, countryCode, country, vehicleType
-) VALUES
-(1, 'Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739,
- 'Rua do Batalhão de Caçadores 10', 'PT', 'Portugal', 'Car,Truck'),
+INSERT INTO users (email, password, name, enabled, user_type)
+VALUES ('tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators');
 
-(2, 'Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
- 'Rua Batalhão Caçadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
-
-(3, 'Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
- 'Rua Batalhýo Caýadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
-
-(4, 'Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682,
- 'Rua Príncipe Perfeito', 'PT', 'Portugal', 'Car,Truck'),
-
-(5, 'Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208,
- 'Praça Marquês de Pombal', 'PT', 'Portugal', 'Car,Truck'),
-
-(6, 'Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503,
- 'Largo do Rossio', 'PT', 'Portugal', 'Car,Truck'),
-
-(7, 'Aveiro', 'Rua Doutor Alberto Souto -, 3800-148 Aveiro', 40.64375, -8.64861,
- 'Rua Doutor Alberto Souto -', 'PT', 'Portugal', 'Car,Truck'),
-
-(8, 'Aveiro', 'Rua Doutor Alberto Soares Machado, 3800-146 Aveiro', 40.643751, -8.648611,
- 'Rua Doutor Alberto Soares Machado', 'PT', 'Portugal', 'Car,Truck'),
-
-(9, 'Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023,
- 'Cais da Fonte Nova', 'PT', 'Portugal', 'Car,Truck'),
-
-(10, 'Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514,
- 'Avenida da Universidade', 'PT', 'Portugal', 'Car,Truck');
+INSERT INTO clients (id) SELECT id FROM users WHERE email = 'afonso@gmail.com';
+INSERT INTO administrators (id) SELECT id FROM users WHERE email = 'tomas@gmail.com';
 
 
--- Station 1: Atlante
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (1, 1, true, 'Atlante');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (2, 1, true, 'Atlante');
+INSERT INTO charging_stations (municipality, address, latitude, longitude, countryCode, country) VALUES
+('Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739, 'PT', 'Portugal'),
+('Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
+('Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
+('Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682, 'PT', 'Portugal'),
+('Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208, 'PT', 'Portugal'),
+('Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503, 'PT', 'Portugal'),
+('Aveiro', 'Rua Doutor Alberto Souto -, 3800-148 Aveiro', 40.64375, -8.64861, 'PT', 'Portugal'),
+('Aveiro', 'Rua Doutor Alberto Soares Machado, 3800-146 Aveiro', 40.643751, -8.648611, 'PT', 'Portugal'),
+('Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023, 'PT', 'Portugal'),
+('Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514, 'PT', 'Portugal');
 
--- Station 2: Mobi.E
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (3, 2, true, 'Mobi.E');
+SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations));
 
--- Station 3: Mobi.E
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (4, 3, false, 'Mobi.E');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (5, 3, true, 'Mobi.E');
 
--- Station 4: EDP Comercial
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (6, 4, true, 'EDP');
+INSERT INTO charging_points (station_id, available, brand) VALUES
+((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
+((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante');
 
--- Station 5: EDP Comercial
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (7, 5, true, 'EDP');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (8, 5, true, 'EDP');
 
--- Station 6: AVR-90002
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (9, 6, true, 'AVR-90002');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (10, 6, false, 'AVR-90002');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (11, 6, true, 'AVR-90002');
+INSERT INTO charging_points (station_id, available, brand) VALUES
+((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 1), true, 'Mobi.E');
 
--- Station 7: Mobi.E
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (12, 7, true, 'Mobi.E');
 
--- Station 8: Galp Power
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (13, 8, true, 'Galp electric');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (14, 8, false, 'Galp electric');
+INSERT INTO charging_points (station_id, available, brand) VALUES
+((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), false, 'Mobi.E'),
+((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), true, 'Mobi.E');
 
--- Station 9: Powerdot
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (15, 9, true, 'Powerdot');
 
--- Station 10: Atlante
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (16, 10, true, 'Atlante');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (17, 10, true, 'Atlante');
+SELECT setval('charging_points_id_seq', (SELECT MAX(id) FROM charging_points));
 
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (1, 1, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type) VALUES
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 0), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 0), 'Chademo', 50, 400, 125, 'DC'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 1), 'Chademo', 50, 400, 125, 'DC'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 2), 'IEC62196Type2CCS', 60, 400, 150, 'DC'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 3), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 4), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 5), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 6), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 7), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 8), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
 
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (2, 1, 'Chademo', 50, 400, 125, 'DC');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (3, 2, 'Chademo', 50, 400, 125, 'DC');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (4, 3, 'IEC62196Type2CCS', 60, 400, 150, 'DC');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (5, 4, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (6, 5, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (7, 6, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (8, 7, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (9, 8, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
-
-INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
-VALUES (10, 9, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+SELECT setval('connectors_id_seq', (SELECT MAX(id) FROM connectors));

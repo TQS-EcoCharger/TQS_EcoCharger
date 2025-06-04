@@ -21,7 +21,11 @@ import java.util.List;
 @Profile("!test")
 public class SecurityConfig {
 
-  @Autowired private JwtAuthenticationFilter jwtAuthenticationFilter;
+ private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+ public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,10 +38,10 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/api/auth/**")
                     .permitAll()
-                    .requestMatchers("/swagger-ui/**", "/api-docs/**", "/actuator/**")
+                    .requestMatchers("authorizeHttpRequests/swagger-ui/**", "/api-docs/**")
                     .permitAll()
                     .anyRequest()
-                    .authenticated() // tudo o resto precisa de token
+                    .authenticated() 
             )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -47,7 +51,7 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:5000")); // frontend origin
+    config.setAllowedOrigins(List.of("http://localhost:5000")); 
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);

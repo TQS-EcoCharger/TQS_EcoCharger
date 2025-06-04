@@ -3,11 +3,9 @@ package pt.ua.tqs.ecocharger.ecocharger.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -15,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.web.servlet.MockMvc;
-
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 
 import static org.hamcrest.Matchers.containsString;
@@ -45,7 +42,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testLoginSuccess() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "123456"))
-        .thenReturn(new AuthResultDTO(true, "Login successful", "token123"));
+        .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "client"));
 
     String requestBody =
         """
@@ -60,7 +57,8 @@ class AuthenticationControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Login successful"))
-        .andExpect(jsonPath("$.token").value("token123"));
+        .andExpect(jsonPath("$.token").value("token123"))
+        .andExpect(jsonPath("$.userType").value("client"));
   }
 
   @Test
@@ -68,7 +66,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testLoginFailure() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "wrongpass"))
-        .thenReturn(new AuthResultDTO(false, "Invalid password", null));
+        .thenReturn(new AuthResultDTO(false, "Invalid password", null, null));
 
     String requestBody =
         """
@@ -89,7 +87,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterSuccess() throws Exception {
     Mockito.when(authService.register("mariah@example.com", "123456", "Mariah"))
-        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123"));
+        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123", "client"));
 
     String requestBody =
         "{ \"email\": \"mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
@@ -99,7 +97,8 @@ class AuthenticationControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Registration successful"))
-        .andExpect(jsonPath("$.token").value("token123"));
+        .andExpect(jsonPath("$.token").value("token123"))
+        .andExpect(jsonPath("$.userType").value("client"));
   }
 
   @Test
@@ -107,9 +106,11 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterExistingEmail() throws Exception {
     Mockito.when(authService.register("peter@example.com", "123456", "Peter"))
-        .thenReturn(new AuthResultDTO(false, "Email already in use", null));
+        .thenReturn(new AuthResultDTO(false, "Email already in use", null, null));
+
     String requestBody =
         "{ \"email\": \" peter@example.com\", \"password\": \"123456\", \"name\": \"Peter\" }";
+
     mockMvc
         .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
@@ -121,9 +122,11 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterShortPassword() throws Exception {
     Mockito.when(authService.register("andrew@example.com", "123", "Andrew"))
-        .thenReturn(new AuthResultDTO(false, "Password must be at least 6 characters", null));
+        .thenReturn(new AuthResultDTO(false, "Password must be at least 6 characters", null, null));
+
     String requestBody =
         "{ \"email\": \" andrew@example.com\", \"password\": \"123\", \"name\": \"Andrew\" }";
+
     mockMvc
         .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
@@ -135,9 +138,11 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterInvalidEmail() throws Exception {
     Mockito.when(authService.register("invalid-email", "123456", "Invalid"))
-        .thenReturn(new AuthResultDTO(false, "Invalid email format", null));
+        .thenReturn(new AuthResultDTO(false, "Invalid email format", null, null));
+
     String requestBody =
         "{ \"email\": \" invalid-email\", \"password\": \"123456\", \"name\": \"Invalid\" }";
+
     mockMvc
         .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
@@ -149,9 +154,11 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterInvalidName() throws Exception {
     Mockito.when(authService.register("john@example.com", "123456", ""))
-        .thenReturn(new AuthResultDTO(false, "Name must be at least 3 characters", null));
+        .thenReturn(new AuthResultDTO(false, "Name must be at least 3 characters", null, null));
+
     String requestBody =
         "{ \"email\": \" john@example.com\", \"password\": \"123456\", \"name\": \"\" }";
+
     mockMvc
         .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
