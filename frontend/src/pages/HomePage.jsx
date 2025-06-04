@@ -15,6 +15,9 @@ import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
 import Chargingicon from '../../public/ChargingStation.png';
+import { useUser } from "../context/UserContext";
+import ModalAddCharging from '../components/ModalAddCharging';
+import ModalEditCharging from '../components/ModalEditCharging';
 
 const customIcon = new L.Icon({
   iconUrl: Chargingicon,
@@ -31,6 +34,13 @@ export default function HomePage() {
   const [selectedStation, setSelectedStation] = useState(null);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const { userType } = useUser();
+  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+   const handleNewStation = (newStation) => {
+    setStations(prev => [...prev, newStation]);
+  };
 
  useEffect(() => {
   if (!token) {
@@ -48,7 +58,7 @@ export default function HomePage() {
     .then((res) => {
       const stationsData = res.data.map((station) => ({
         id: station.id,
-        municipality: station.cityName,
+        cityName: station.cityName,
         address: station.address,
         latitude: station.latitude,
         longitude: station.longitude,
@@ -56,8 +66,11 @@ export default function HomePage() {
           ...cp,
           connectors: cp.connectors || [],
         })),
+        countryCode: station.countryCode,
+        country: station.country || '',
       }));
       setStations(stationsData);
+      console.log("Estações carregadas com sucesso:", stationsData);
     })
     .catch((error) => {
       console.error("Erro ao buscar estações:", error.response || error.message);
@@ -67,6 +80,14 @@ export default function HomePage() {
       }
     });
 }, [navigate, token]);
+
+  const handleEditButtonClick = () => {
+  if (selectedStation) {
+    setShowEditModal(true);
+  } else {
+    alert("Select a charging station to edit.");
+  }
+};
 
   return (
     <div className={styles.page}>
@@ -79,8 +100,8 @@ export default function HomePage() {
               <div className={styles.cardScrollable}>
                 <div className={styles.cardContent}>
                   <div className={styles.stationInfo}>
-                    <p><strong><FaCity /> Município:</strong> {selectedStation.municipality}</p>
-                    <p><strong><FaRoad /> Morada:</strong> {selectedStation.address}</p>
+                    <p><strong><FaCity /> Cidade:</strong> {selectedStation.cityName}</p>
+                    <p><strong><FaRoad /> Address:</strong> {selectedStation.address}</p>
                   </div>
 
                   <h3 className={styles.sectionTitle}>Pontos de Carregamento</h3>
@@ -99,7 +120,7 @@ export default function HomePage() {
                         <div className={styles.connectorList}>
                           {point.connectors.map((connector) => (
                             <div key={connector.id} className={styles.connectorItem}>
-                              <span><FiZap className={styles.iconSmall} /> <strong>Tipo:</strong> {connector.connectorType}</span>
+                              <span><FiZap className={styles.iconSmall} /> <strong>Type:</strong> {connector.connectorType}</span>
                               <span><FiPower className={styles.iconSmall} /> <strong>Potência:</strong> {connector.ratedPowerKW} kW</span>
                               <span><TbBatteryCharging2 className={styles.iconSmall} /> <strong>Voltagem:</strong> {connector.voltageV} V</span>
                               <span><GiElectric className={styles.iconSmall} /> <strong>Corrente:</strong> {connector.currentA} A</span>
@@ -114,7 +135,10 @@ export default function HomePage() {
                     </div>
                   ))}
                 </div>
-                <button className={styles.reserveBtn}>Reservar</button>
+                <button className={styles.reserveBtn}>Reservations</button>
+                {userType === 'administrator' && (
+                  <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
+                )}
               </div>
           ) : (
             <p>Selecione uma estação no mapa</p>
@@ -122,6 +146,7 @@ export default function HomePage() {
 
         </div>
 
+        <div className={styles.mapWrapper}>
         <MapContainer
           center={[40.641, -8.653]}
           zoom={14}
@@ -142,7 +167,7 @@ export default function HomePage() {
             >
               <Popup>
                 <div className={styles.popupContent}>
-                  <p><FaCity className={styles.popupIcon} /> <strong>Município:</strong> {station.municipality}</p>
+                  <p><FaCity className={styles.popupIcon} /> <strong>City Name:</strong> {station.cityName}</p>
                   <p><strong>Latitude:</strong>{station.latitude}</p>
                   <p><strong>Longitude:</strong>{station.longitude}</p>
                 </div>
@@ -150,6 +175,36 @@ export default function HomePage() {
             </Marker>
           ))}
         </MapContainer>
+        </div>
+
+        {userType === 'administrator' && (
+        <button
+          className={styles.addStationBtn}
+          onClick={() => setShowModal(true)}
+        >
+          + Add Charging Station
+        </button>
+        )}
+        {showModal && (
+          <ModalAddCharging onClose={() => setShowModal(false)} onSuccess={handleNewStation} />
+        )}
+
+        {showEditModal && (
+          <ModalEditCharging
+            station={selectedStation}
+            onClose={() => setShowEditModal(false)}
+            onSuccess={(updatedStation) => {
+              setStations((prev) =>
+                prev.map((s) => (s.id === updatedStation.id ? updatedStation : s))
+              );
+              setSelectedStation(updatedStation);
+              setShowEditModal(false);
+            }}
+          />
+        )}
+
+        
+
       </div>
     </div>
   );

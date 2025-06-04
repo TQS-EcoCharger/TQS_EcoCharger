@@ -92,6 +92,27 @@
 }
 
 /* ============================================================
+  BOTÃO DE EDITAR
+============================================================ */
+.editBtn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 16px;
+  background-color: #000000;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editBtn:hover {
+  background-color: #e4ac3d;
+}
+
+/* ============================================================
   DETALHES DO CARTÃO DE CADA ESTAÇÃO
 ============================================================ */
 .cardScrollable {

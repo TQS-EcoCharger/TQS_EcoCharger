@@ -23,14 +23,10 @@ const LoginPage = () => {
         password,
       });
 
-      console.log("Login successful:", response.data);
-     login(response.data.token, response.data.userType);
-
-     if (response.data.userType === "administrator") {
-       navigate("/admin/dashboard");
-     } else {
-       navigate("/home");
-     }
+      onsole.log("Login successful:", response.data);
+      login(response.data.token, response.data.userType);
+      navigate("/home");
+    
 
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);

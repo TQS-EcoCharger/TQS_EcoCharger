@@ -10,7 +10,7 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AdministratorService;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/v1/admin")
 @Tag(name = "Administrator", description = "Management of administrators and charging stations")
 public class AdministratorController {
 

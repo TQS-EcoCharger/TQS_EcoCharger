@@ -90,6 +90,7 @@ public class AdministratorServiceImpl implements AdministratorService{
 
     @Override
     public ChargingStation updateChargingStation(ChargingStation station) {
+        System.out.println("Updating Charging Station: " + station);
         Optional<ChargingStation> existingStation = chargingStationRepository.findById(station.getId());
         if (existingStation.isPresent()) {
             ChargingStation updatedStation = existingStation.get();
