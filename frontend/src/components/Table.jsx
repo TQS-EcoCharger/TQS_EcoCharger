@@ -21,7 +21,7 @@ export default function Table({ headers, rows }) {
               return (
                 <tr key={rowKey}>
                   {row.map((cell, i) => (
-                    <td key={`${rowKey}-${i}`}>{cell}</td>
+                    <td key={`${rowKey}-${headers[i]}`}>{cell}</td>
                   ))}
                 </tr>
               );
