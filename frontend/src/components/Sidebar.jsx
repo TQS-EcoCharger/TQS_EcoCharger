@@ -14,14 +14,16 @@ export default function Sidebar() {
           alt="Perfil"
           className={styles.profileImage}
         />
-        <div className={styles.title}>EcoCharger</div>
         <ul className={styles.menu}>
-          { userType === 'administrator' && (
-          <li><NavLink to="/home">Mapa</NavLink></li>
+          {userType === 'administrator' && (
+            <li><NavLink to="/home">Dashboard</NavLink></li>
           )}
-          <li><NavLink to="/stations">Estações</NavLink></li>
-          <li><NavLink to="/profile">Perfil</NavLink></li>
-          <li><NavLink to="/reservations">Reservas</NavLink></li>
+          <li><NavLink to="/home">Map</NavLink></li>
+          <li><NavLink to="/stations">Charging Stations</NavLink></li>
+        </ul>
+        <ul className={styles.bottomMenu}>
+          <li><NavLink to="/profile">Profile</NavLink></li>
+          <li><NavLink to="/logout">Logout</NavLink></li>
         </ul>
       </div>
       <main style={{ flex: 1, overflow: 'auto' }}>

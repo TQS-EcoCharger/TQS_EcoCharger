@@ -63,7 +63,7 @@ export default function HomePage() {
       console.error("Erro ao buscar estações:", error.response || error.message);
       if (error.response?.status === 403 || error.response?.status === 401) {
         localStorage.removeItem("token");
-        navigate("/"); // token inválido ou expirado
+        navigate("/"); 
       }
     });
 }, [navigate, token]);
