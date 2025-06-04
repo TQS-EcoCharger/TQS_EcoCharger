@@ -339,6 +339,7 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-devtools-v137</artifactId> 
             <version>4.25.0</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- WebDriverManager (for managing browser drivers automatically) -->
@@ -396,6 +397,17 @@
             <id>xray-releases</id>
             <name>Xray Releases</name>
             <url>https://xray-maven.xpand-it.com/artifactory/releases</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
