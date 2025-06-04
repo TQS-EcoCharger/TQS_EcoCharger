@@ -58,10 +58,7 @@ CREATE TABLE IF NOT EXISTS reservations (
 
 CREATE TABLE IF NOT EXISTS driver (
     id BIGINT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    name VARCHAR(255),
-    enabled BOOLEAN NOT NULL
+    FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS car (
@@ -75,9 +72,15 @@ CREATE TABLE IF NOT EXISTS car (
     battery_level DOUBLE NOT NULL,
     kilometers DOUBLE NOT NULL,
     consumption DOUBLE NOT NULL,
-    enabled BOOLEAN NOT NULL,
+    enabled BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS driver_cars (
     driver_id BIGINT NOT NULL,
-    CONSTRAINT fk_car_driver FOREIGN KEY (driver_id) REFERENCES driver(id) ON DELETE CASCADE
+    cars_id BIGINT NOT NULL,
+    PRIMARY KEY (driver_id, cars_id),
+    FOREIGN KEY (driver_id) REFERENCES driver(id) ON DELETE CASCADE,
+    FOREIGN KEY (cars_id) REFERENCES car(id) ON DELETE CASCADE
 );
 
 

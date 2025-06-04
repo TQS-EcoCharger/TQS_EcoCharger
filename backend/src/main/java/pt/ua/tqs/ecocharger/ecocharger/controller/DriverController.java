@@ -47,8 +47,14 @@ public class DriverController {
 
   @PostMapping("/")
   public ResponseEntity<Object> createDriver(@RequestBody Driver driver) {
-    Driver newDriver = driverService.createDriver(driver);
-    return ResponseEntity.ok(newDriver);
+    try {
+      Driver newDriver = driverService.createDriver(driver);
+      return ResponseEntity.ok(newDriver);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(400).body(e.getMessage());
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body("An error occurred while creating the driver.");
+    }
   }
 
   @PutMapping("/{id}")
