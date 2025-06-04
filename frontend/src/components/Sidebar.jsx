@@ -18,6 +18,7 @@ export default function Sidebar() {
           <li><NavLink to="/stations" id="nav-stations">Estações</NavLink></li>
           <li><NavLink to="/profile" id="nav-profile">Perfil</NavLink></li>
           <li><NavLink to="/reservations" id="nav-reservations">Reservas</NavLink></li>
+          <li><NavLink to="/vehicles" id="nav-vehicles">Vehicles</NavLink></li>
         </ul>
       </div>
       <main style={{ flex: 1, overflow: 'auto' }} id="main-content">
