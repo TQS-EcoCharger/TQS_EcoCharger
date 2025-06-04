@@ -6,7 +6,7 @@ INSERT INTO driver (id) VALUES
 (1),
 (2);
 
-INSERT INTO car (name, make, model, manufactureYear, license_plate, battery_capacity, battery_level, kilometers, consumption, enabled) VALUES
+INSERT INTO car (name, make, model, manufacture_year, license_plate, battery_capacity, battery_level, kilometers, consumption, enabled) VALUES
 ('Tesla Model 3', 'Tesla', 'Model 3', 2022, 'AA-12-BB', 75.0, 40.0, 25000, 15.0, true),
 ('Nissan Leaf', 'Nissan', 'Leaf', 2021, 'CC-34-DD', 40.0, 20.0, 32000, 14.5, true),
 
