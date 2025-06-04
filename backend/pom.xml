@@ -22,6 +22,7 @@
         <sonar.organization>tqs-ecocharger</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <webdrivermanager.version>5.9.3</webdrivermanager.version>
         <xray-junit-extensions.version>0.7.3</xray-junit-extensions.version>
         <xray-maven-plugin.version>0.8.0</xray-maven-plugin.version>
         <cucumber.version>7.21.1</cucumber.version>
@@ -342,7 +343,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>6.1.0</version>
+            <version>${webdrivermanager.version}</version>
             <scope>test</scope>
         </dependency>
 
