@@ -35,10 +35,6 @@ public class VehicleSteps {
   @When("I navigate to the vehicles page")
   public void i_navigate_to_the_vehicles_page() {
 
-    // driver.get("http://localhost:5000/home");
-    // ((JavascriptExecutor) driver).executeScript("window.localStorage.setItem('token',
-    // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyaWNhcmRvLmFudHVuZXMyMDAyQGdtYWlsLmNvbSIsImlhdCI6MTc0OTAyOTk1OCwiZXhwIjoxNzQ5MTE2MzU4fQ.PFyy5fcQeqOKo1AdWy3p-kGq4k7TUbgOp4TCSl8gRKQ');");
-    // insert email jwt token in local storage
     try {
       Thread.sleep(2000);
     } catch (InterruptedException e) {
