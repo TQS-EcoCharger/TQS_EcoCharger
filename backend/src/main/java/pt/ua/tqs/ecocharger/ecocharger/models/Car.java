@@ -63,7 +63,7 @@ public class Car {
         car.getName(),
         car.getMake(),
         car.getModel(),
-        car.getmanufactureYear(),
+        car.getManufactureYear(),
         car.getLicensePlate(),
         car.getBatteryCapacity(),
         car.getBatteryLevel(),
@@ -171,7 +171,7 @@ public class Car {
     return model != null && !model.trim().isEmpty();
   }
 
-  public void setmanufactureYear(Integer year) {
+  public void setManufactureYear(Integer year) {
     if (validateYear(year)) {
       this.manufactureYear = year;
     } else {
