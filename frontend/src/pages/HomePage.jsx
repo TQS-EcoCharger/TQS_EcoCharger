@@ -157,161 +157,183 @@ export default function HomePage() {
   };
 
   return (
-    <div className={styles.page} id="homepage">
-      <Sidebar />
+<div className={styles.page} id="homepage">
+  <Sidebar />
 
-      <div className={styles.wrapper}>
-        <div className={styles.stationDetails}>
-          <h2>Station Details</h2>
-          {selectedStation ? (
-            <div className={styles.cardScrollable}>
-              <div className={styles.cardContent}>
-                <div className={styles.stationInfo}>
-                  <p><strong><FaCity /> Municipality:</strong> {selectedStation.municipality}</p>
-                  <p><strong><FaRoad /> Address:</strong> {selectedStation.address}</p>
+  <div className={styles.wrapper} id="map-and-details-wrapper">
+    <div className={styles.stationDetails} id="station-details-panel">
+      <h2 id="station-details-header">Station Details</h2>
+      {selectedStation ? (
+        <div className={styles.cardScrollable} id="station-card-scrollable">
+          <div className={styles.cardContent}>
+            <div className={styles.stationInfo} id="station-info">
+              <p><strong><FaCity /> Municipality:</strong> {selectedStation.municipality}</p>
+              <p><strong><FaRoad /> Address:</strong> {selectedStation.address}</p>
+            </div>
+
+            <h3 className={styles.sectionTitle} id="charging-points-header">Charging Points</h3>
+            {selectedStation.chargingPoints.map((point) => (
+              <div key={point.id} className={styles.chargingCard} id={`charging-point-${point.id}`}>
+                <div className={styles.chargingHeader}>
+                  <BsPlug className={styles.icon} />
+                  <span><strong>{point.brand}</strong></span>
+                  {point.available ? (
+                    <BsCheckCircle className={styles.available} title="Available" />
+                  ) : (
+                    <BsXCircle className={styles.unavailable} title="Unavailable" />
+                  )}
                 </div>
-
-                <h3 className={styles.sectionTitle}>Charging Points</h3>
-                {selectedStation.chargingPoints.map((point) => (
-                  <div key={point.id} className={styles.chargingCard}>
-                    <div className={styles.chargingHeader}>
-                      <BsPlug className={styles.icon} />
-                      <span><strong>{point.brand}</strong></span>
-                      {point.available ? (
-                        <BsCheckCircle className={styles.available} title="Available" />
-                      ) : (
-                        <BsXCircle className={styles.unavailable} title="Unavailable" />
-                      )}
-                    </div>
-                    {point.connectors.length > 0 ? (
-                      <div className={styles.connectorList}>
-                        {point.connectors.map((connector) => (
-                          <div key={connector.id} className={styles.connectorItem}>
-                            <span><FiZap className={styles.iconSmall} /> <strong>Type:</strong> {connector.connectorType}</span>
-                            <span><FiPower className={styles.iconSmall} /> <strong>Power:</strong> {connector.ratedPowerKW} kW</span>
-                            <span><TbBatteryCharging2 className={styles.iconSmall} /> <strong>Voltage:</strong> {connector.voltageV} V</span>
-                            <span><GiElectric className={styles.iconSmall} /> <strong>Current:</strong> {connector.currentA} A</span>
-                          </div>
-                        ))}
+                {point.connectors.length > 0 ? (
+                  <div className={styles.connectorList}>
+                    {point.connectors.map((connector) => (
+                      <div
+                        key={connector.id}
+                        className={styles.connectorItem}
+                        id={`connector-${connector.id}`}
+                      >
+                        <span><FiZap className={styles.iconSmall} /> <strong>Type:</strong> {connector.connectorType}</span>
+                        <span><FiPower className={styles.iconSmall} /> <strong>Power:</strong> {connector.ratedPowerKW} kW</span>
+                        <span><TbBatteryCharging2 className={styles.iconSmall} /> <strong>Voltage:</strong> {connector.voltageV} V</span>
+                        <span><GiElectric className={styles.iconSmall} /> <strong>Current:</strong> {connector.currentA} A</span>
                       </div>
-                    ) : (
-                      <p style={{ fontStyle: 'italic', color: '#666', paddingLeft: '8px' }}>
-                        No connectors available.
-                      </p>
-                    )}
-                    <button
-                      className={styles.reserveBtn}
-                      onClick={() => {
-                        setSelectedPoint(point);
-                        setIsModalOpen(true);
-
-                        axios
-                          .get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                          })
-                          .then((res) => setExistingReservations(res.data))
-                          .catch((err) => {
-                            console.error('Failed to fetch existing reservations:', err);
-                            setExistingReservations([]);
-                          });
-                      }}
-                    >
-                      Reserve
-                    </button>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <p style={{ fontStyle: 'italic', color: '#666', paddingLeft: '8px' }}>
+                    No connectors available.
+                  </p>
+                )}
+                <button
+                  className={styles.reserveBtn}
+                  id={`reserve-button-${point.id}`}
+                  onClick={() => {
+                    setSelectedPoint(point);
+                    setIsModalOpen(true);
+
+                    axios
+                      .get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                      })
+                      .then((res) => setExistingReservations(res.data))
+                      .catch((err) => {
+                        console.error('Failed to fetch existing reservations:', err);
+                        setExistingReservations([]);
+                      });
+                  }}
+                >
+                  Reserve
+                </button>
               </div>
-            </div>
-          ) : (
-            <p>Select a station on the map</p>
-          )}
-        </div>
-
-        <MapContainer center={[40.641, -8.653]} zoom={14} className={styles.map}>
-          {userLocation && (
-            <Marker position={[userLocation.lat, userLocation.lng]}>
-              <Popup>
-                <strong>You are here</strong>
-              </Popup>
-            </Marker>
-          )}
-          <TileLayer
-            attribution='&copy; OpenStreetMap contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {stations.map((station) => (
-            <Marker
-              key={station.id}
-              position={[station.latitude, station.longitude]}
-              icon={customIcon}
-              eventHandlers={{ click: () => setSelectedStation(station) }}
-            >
-              <Popup>
-                <div className={styles.popupContent}>
-                  <p><FaCity className={styles.popupIcon} /> <strong>Municipality:</strong> {station.municipality}</p>
-                  <p><strong>Latitude:</strong> {station.latitude}</p>
-                  <p><strong>Longitude:</strong> {station.longitude}</p>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <h2>Make a Reservation</h2>
-            <p><strong>Point:</strong> {selectedPoint?.brand}</p>
-            {existingReservations.length > 0 && (
-              <div className={styles.existingReservations}>
-                <h2 style={{marginTop:"0px"}}>Current Reservations:</h2>
-                <ul className={styles.reservationList}>
-                  {existingReservations.map((res, index) => (
-                    <li key={res.id} className={styles.reservationItem}>
-                      <span><strong>Reservation {index + 1}</strong></span><br />
-                      <span><strong>Start:</strong> {new Date(res.startTime).toLocaleString()}</span><br />
-                      <span><strong>End:</strong> {new Date(res.endTime).toLocaleString()}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <label>Start:</label>
-            <DatePicker
-              selected={startTime}
-              onChange={(date) => setStartTime(date)}
-              showTimeSelect
-              timeIntervals={15}
-              dateFormat="Pp"
-              timeCaption="Time"
-              className={styles.datePicker}
-            />
-
-            <label>End:</label>
-            <DatePicker
-              selected={endTime}
-              onChange={(date) => setEndTime(date)}
-              showTimeSelect
-              timeIntervals={15}
-              dateFormat="Pp"
-              timeCaption="Time"
-              className={styles.datePicker}
-            />
-
-            <div className={styles.modalButtons}>
-              <button onClick={handleReservation} className={styles.confirmButton}>
-                Reserve
-              </button>
-              <button onClick={() => setIsModalOpen(false)} className={styles.cancelButton}>Cancel</button>
-            </div>
-
-            {message && <p className={styles.message}>{message}</p>}
+            ))}
           </div>
         </div>
+      ) : (
+        <p id="select-station-placeholder">Select a station on the map</p>
       )}
     </div>
+
+    <MapContainer
+      center={[40.641, -8.653]}
+      zoom={14}
+      className={styles.map}
+      id="station-map"
+    >
+      {userLocation && (
+        <Marker position={[userLocation.lat, userLocation.lng]}>
+          <Popup>
+            <strong>You are here</strong>
+          </Popup>
+        </Marker>
+      )}
+      <TileLayer
+        attribution='&copy; OpenStreetMap contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {stations.map((station) => (
+        <Marker
+          key={station.id}
+          position={[station.latitude, station.longitude]}
+          icon={customIcon}
+          eventHandlers={{ click: () => setSelectedStation(station) }}
+        >
+          <Popup>
+            <div className={styles.popupContent}>
+              <p><FaCity className={styles.popupIcon} /> <strong>Municipality:</strong> {station.municipality}</p>
+              <p><strong>Latitude:</strong> {station.latitude}</p>
+              <p><strong>Longitude:</strong> {station.longitude}</p>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
+  </div>
+
+  {isModalOpen && (
+    <div className={styles.modalOverlay} id="reservation-modal-overlay">
+      <div className={styles.modal} id="reservation-modal">
+        <h2 id="modal-title">Make a Reservation</h2>
+        <p><strong>Point:</strong> {selectedPoint?.brand}</p>
+
+        {existingReservations.length > 0 && (
+          <div className={styles.existingReservations} id="existing-reservations">
+            <h2 style={{ marginTop: "0px" }}>Current Reservations:</h2>
+            <ul className={styles.reservationList}>
+              {existingReservations.map((res, index) => (
+                <li key={res.id} className={styles.reservationItem} id={`reservation-${res.id}`}>
+                  <span><strong>Reservation {index + 1}</strong></span><br />
+                  <span><strong>Start:</strong> {new Date(res.startTime).toLocaleString()}</span><br />
+                  <span><strong>End:</strong> {new Date(res.endTime).toLocaleString()}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <label htmlFor="start-time-picker">Start:</label>
+        <DatePicker
+          selected={startTime}
+          onChange={(date) => setStartTime(date)}
+          showTimeSelect
+          timeIntervals={15}
+          dateFormat="Pp"
+          timeCaption="Time"
+          className={styles.datePicker}
+          id="start-time-picker"
+        />
+
+        <label htmlFor="end-time-picker">End:</label>
+        <DatePicker
+          selected={endTime}
+          onChange={(date) => setEndTime(date)}
+          showTimeSelect
+          timeIntervals={15}
+          dateFormat="Pp"
+          timeCaption="Time"
+          className={styles.datePicker}
+          id="end-time-picker"
+        />
+
+        <div className={styles.modalButtons}>
+          <button
+            onClick={handleReservation}
+            className={styles.confirmButton}
+            id="confirm-reservation-button"
+          >
+            Reserve
+          </button>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className={styles.cancelButton}
+            id="cancel-reservation-button"
+          >
+            Cancel
+          </button>
+        </div>
+
+        {message && <p className={styles.message} id="reservation-message">{message}</p>}
+      </div>
+    </div>
+  )}
+</div>
   );
 }

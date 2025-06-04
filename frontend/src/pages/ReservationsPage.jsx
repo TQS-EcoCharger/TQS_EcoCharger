@@ -34,66 +34,54 @@ export default function ReservationsPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <Sidebar />
-    <div className={styles.container}>
-      <h2 className={styles.title}>My Reservations</h2>
-      {reservations.length === 0 ? (
-        <p className={styles.message}>You have no reservations.</p>
-      ) : (
-        <div className={styles.grid}>
-          {reservations.map((reservation) => {
-            const cp = reservation.chargingPoint;
-            const cs = cp?.chargingStation;
+<div className={styles.page} data-testid="reservations-page">
+  <Sidebar />
+  <div className={styles.container}>
+    <h2 className={styles.title} data-testid="reservations-title">My Reservations</h2>
 
-            return (
-                <div
-                  key={reservation.id}
-                  className={`${styles.card} ${
-                    reservation.status === 'PENDING'
-                      ? styles.pending
-                      : reservation.status === 'CONFIRMED'
-                      ? styles.confirmed
-                      : reservation.status === 'CANCELLED'
-                      ? styles.cancelled
-                      : ''
-                  }`}
-                >
-                <h3 className={styles.cardTitle}>{cp?.brand || 'Charging Point'}</h3>
+    {reservations.length === 0 ? (
+      <p className={styles.message} data-testid="no-reservations">You have no reservations.</p>
+    ) : (
+      <div className={styles.grid} data-testid="reservations-list">
+        {reservations.map((reservation) => {
+          const cp = reservation.chargingPoint;
+          const cs = cp?.chargingStation;
 
-                <p><strong>Status:</strong> {reservation.status}</p>
-                <p><strong>Start:</strong> {new Date(reservation.startTime).toLocaleString()}</p>
-                <p><strong>End:</strong> {new Date(reservation.endTime).toLocaleString()}</p>
+          return (
+            <div
+              key={reservation.id}
+              className={`${styles.card} ${
+                reservation.status === 'PENDING'
+                  ? styles.pending
+                  : reservation.status === 'CONFIRMED'
+                  ? styles.confirmed
+                  : reservation.status === 'CANCELLED'
+                  ? styles.cancelled
+                  : ''
+              }`}
+              data-testid={`reservation-card-${reservation.id}`}
+            >
+              <h3 className={styles.cardTitle} data-testid={`reservation-brand-${reservation.id}`}>
+                {cp?.brand || 'Charging Point'}
+              </h3>
 
-                <p><strong>Price per kWh:</strong> €{cp?.pricePerKWh?.toFixed(2) ?? 'N/A'}</p>
-                <p><strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}</p>
-                <p><strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}</p>
+              <p><strong>Status:</strong> <span data-testid={`reservation-status-${reservation.id}`}>{reservation.status}</span></p>
+              <p><strong>Start:</strong> <span data-testid={`reservation-start-${reservation.id}`}>{new Date(reservation.startTime).toLocaleString()}</span></p>
+              <p><strong>End:</strong> <span data-testid={`reservation-end-${reservation.id}`}>{new Date(reservation.endTime).toLocaleString()}</span></p>
 
-                {cs && (
-                  <p><strong>Location:</strong> {cs.address}, {cs.cityName}</p>
-                )}
+              <p><strong>Price per kWh:</strong> €{cp?.pricePerKWh?.toFixed(2) ?? 'N/A'}</p>
+              <p><strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}</p>
+              <p><strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}</p>
 
-                {cp?.connectors?.length > 0 && (
-                  <>
-                    <p><strong>Connectors:</strong></p>
-                    <ul className={styles.connectorList}>
-                      {cp.connectors.map((conn) => (
-                        <li key={conn.id} className={styles.connectorItem}>
-                          <span><strong>Type:</strong> {conn.connectorType}</span>,
-                          <span> <strong>Power:</strong> {conn.ratedPowerKW} kW</span>,
-                          <span> <strong>Voltage:</strong> {conn.voltageV} V</span>,
-                          <span> <strong>Current:</strong> {conn.currentA} A</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-    </div>
+              {cs && (
+                <p><strong>Location:</strong> <span data-testid={`reservation-location-${reservation.id}`}>{cs.address}, {cs.cityName}</span></p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+</div>
   );
 }

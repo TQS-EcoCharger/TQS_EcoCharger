@@ -1,13 +1,16 @@
-Feature: Reserving a charging point
+Feature: Make a reservation
 
-  Background: User is logged in
-    Given I am on the login page
-    When I enter "afonso@gmail.com" into the "email" field
-    And I enter "pass" into the "password" field
-    And I click the "login-button"
-    Then I should be redirected to the home page
+  Background:
+    Given I am logged in as "afonso@gmail.com" with password "pass"
 
-  Scenario: User selects a station and makes a reservation
-    When I click a station marker on the map
-    And I click the "reserve-button"
-    Then I should see a reservation confirmation
+  Scenario: User successfully makes a reservation for a charging point
+    When I select a charging station from the map
+    And I click the "Reserve" button on a charging point
+    And I set the reservation start time
+    And I set the reservation end time
+    And I click the "confirm-reservation-button"
+    Then I should see the message "Reservation successfully created!"
+
+  Scenario: User views reservation details
+    When I visit the reservations page
+    Then I should see at least one reservation with details
