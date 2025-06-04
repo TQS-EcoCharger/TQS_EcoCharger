@@ -44,4 +44,30 @@
     color: #007bff;
   }
   
+  .successMessage {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #4BB543; /* green */
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: fadeInOut 3s ease forwards;
+  }
+  
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    10%, 90% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
   

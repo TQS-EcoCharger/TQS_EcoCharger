@@ -62,16 +62,19 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Driver addCarToDriver(Long driverId, Car car) {
         Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new NotFoundException("Driver not found with id: " + driverId));
-        if (car.getId() != null) {
-            Car existingCar = carRepository.findById(car.getId()).orElseThrow(() -> new NotFoundException("Car not found with id: " + car.getId()));
-            if (driver.getCars().contains(existingCar)) {
-                throw new IllegalArgumentException("Car already assigned to driver");
-            }
-            driver.getCars().add(existingCar);
-        } else {
-            Car newCar = carRepository.save(car);
-            driver.getCars().add(newCar);
-        }
+        
+        Car newCar = new Car();
+        newCar.setName(car.getName());
+        newCar.setMake(car.getMake());
+        newCar.setModel(car.getModel());
+        newCar.setYear(car.getYear());
+        newCar.setLicensePlate(car.getLicensePlate());
+        newCar.setBatteryCapacity(car.getBatteryCapacity());
+        newCar.setBatteryLevel(car.getBatteryLevel());
+        newCar.setConsumption(car.getConsumption());
+        newCar.setEnabled(true);
+        carRepository.save(newCar);
+        driver.getCars().add(newCar);
         return saveDriver(driver);
     }
     

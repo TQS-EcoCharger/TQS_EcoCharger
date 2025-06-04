@@ -42,7 +42,7 @@ public class VehicleSteps {
     public void i_navigate_to_the_vehicles_page() {
 
         driver.get("http://localhost:5000/home");
-        ((JavascriptExecutor) driver).executeScript("window.localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyaWNhcmRvLmFudHVuZXMyMDAyQGdtYWlsLmNvbSIsImlhdCI6MTc0ODU1MzcwNiwiZXhwIjoxNzQ4NjQwMTA2fQ.mBKF-Py6D8rSbRwOJS06fMb9dYVgplbGECtEmvrK2SA');");
+        ((JavascriptExecutor) driver).executeScript("window.localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyaWNhcmRvLmFudHVuZXMyMDAyQGdtYWlsLmNvbSIsImlhdCI6MTc0OTAyOTk1OCwiZXhwIjoxNzQ5MTE2MzU4fQ.PFyy5fcQeqOKo1AdWy3p-kGq4k7TUbgOp4TCSl8gRKQ');");
         // insert email jwt token in local storage
         driver.get("http://localhost:5000/vehicles");
         wait.until(ExpectedConditions.urlContains("/vehicles"));
@@ -53,7 +53,6 @@ public class VehicleSteps {
     public void i_should_see_a_table_of_vehicles() throws InterruptedException {
         List<WebElement> vehicleRows = driver.findElements(By.cssSelector("#vehicles-table tbody tr"));
         assertFalse(vehicleRows.isEmpty(), "Vehicle table is empty");
-        Thread.sleep(6000); // Wait for the table to load completely
     }
 
     @Then("the table should have the following columns:")

@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,11 @@ import lombok.NoArgsConstructor;
 public class Driver extends User {
 
     @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "driver_cars",
+        joinColumns = @JoinColumn(name = "driver_id"),
+        inverseJoinColumns = @JoinColumn(name = "cars_id")
+    )
     private List<Car> cars;
 
     public Driver(Long id, String email, String password, String name, boolean enabled) {

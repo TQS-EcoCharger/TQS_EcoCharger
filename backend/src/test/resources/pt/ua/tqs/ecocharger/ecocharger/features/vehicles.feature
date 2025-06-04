@@ -21,26 +21,26 @@ Feature: Check and Manage Vehicles
             | 4  | Renault Zoe           | Renault |
 
     Scenario: Adding multiple new vehicles with valid data
-        When I click the "_addCarButton_10u6h_13" button
+        When I click the "_addCarButton_1foq6_13" button
         And I fill in the vehicle form with:
             | name-input    | make-input  | model-input   | year-input | license-input | capacity-input | level-input | kilometers-input | consumption-input |
             | Tesla Model 3 | Tesla | Model 3 | 2020 | AA-12-CC      | 75               | 46            | 17000      | 15          |
         And I click the "_submitBtn_139ol_92" button
-        Then I should see a success message saying "Vehicle added successfully"
+        Then I should see a success message saying "Vehicle added successfully!"
 
-        When I click the "_addCarButton_10u6h_13" button
+        When I click the "_addCarButton_1foq6_13" button
         And I fill in the vehicle form with:
             | name-input    | make-input  | model-input   | year-input | license-input | capacity-input | level-input | kilometers-input | consumption-input |
             | Toyota Prius | Toyota | Prius | 2018 | BB-34-DD      | 95               | 80            | 80000      | 4.5         |
         And I click the "_submitBtn_139ol_92" button
-        Then I should see a success message saying "Vehicle added successfully"
+        Then I should see a success message saying "Vehicle added successfully!"
 
-        When I click the "_addCarButton_10u6h_13" button
+        When I click the "_addCarButton_1foq6_13" button
         And I fill in the vehicle form with:
             | name-input    | make-input  | model-input   | year-input | license-input | capacity-input | level-input | kilometers-input | consumption-input |
             | Citroen C4 | Citroen | C4    | 2019 | CC-56-EE      | 50               | 30            | 50000      | 6.2         |
         And I click the "_submitBtn_139ol_92" button
-        Then I should see a success message saying "Vehicle added successfully"
+        Then I should see a success message saying "Vehicle added successfully!"
 
         And the table should have 5 rows
         And the table should contain the following data:
@@ -52,7 +52,7 @@ Feature: Check and Manage Vehicles
             | 7  | Citroen C4            | Citroen |
 
     Scenario: Checking the details of a vehicle
-        When I click the "view-car-3"
+        When I click the "view\-car\-3"
         Then I should see the vehicle details page for "Hyundai Kona Electric"
         And I should see the following details:
             | Name                      | Hyundai Kona Electric |

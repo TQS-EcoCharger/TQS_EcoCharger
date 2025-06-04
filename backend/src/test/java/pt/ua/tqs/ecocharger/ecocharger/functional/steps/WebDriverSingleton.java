@@ -17,7 +17,7 @@ public class WebDriverSingleton {
   public static void initialize() {
     if (options == null) {
       options = new FirefoxOptions();
-      options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+      options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
     }
     if (driver == null) {
       WebDriverManager.firefoxdriver().setup();

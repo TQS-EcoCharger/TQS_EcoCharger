@@ -13,7 +13,7 @@ export default function VehiclesPage() {
   const [cars, setCars] = useState([]);
   const [currentCar, setCurrentCar] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [successMessage, setSuccessMessage] = useState("");  // NEW
 
   const fetchVehicles = async () => {
     const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
@@ -54,6 +54,11 @@ export default function VehiclesPage() {
     fetchSelf();
   }, []);
 
+  const showTemporarySuccess = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(""), 3000); // Hide after 3 seconds
+  };
+
   const handleAddCar = async (carData) => {
     const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
     if (!meId) return;
@@ -67,6 +72,7 @@ export default function VehiclesPage() {
       });
       setModalOpen(false);
       fetchVehicles();
+      showTemporarySuccess("Vehicle added successfully!");
     } catch (error) {
       console.error("Error adding car:", error);
       alert("Failed to add car: " + (error.response?.data || error.message));
@@ -88,6 +94,7 @@ export default function VehiclesPage() {
         setCurrentCar(prev => ({ ...prev, ...updatedData }));
       }
       fetchVehicles();
+      showTemporarySuccess("Vehicle updated successfully!");
     }
     catch (error) {
       console.error("Error editing car:", error);
@@ -105,6 +112,7 @@ export default function VehiclesPage() {
           "Authorization": "Bearer " + localStorage.getItem("token"),
         },
       });
+      showTemporarySuccess("Vehicle deleted successfully!");
       fetchVehicles();
     } catch (error) {
       console.error("Error deleting car:", error);
@@ -182,7 +190,13 @@ export default function VehiclesPage() {
               onAdd={handleAddCar}
               id="add-car-modal"
             />
-            <p>More content can be added here.</p>
+            {/* Success message shown here after modal closes */}
+            {successMessage && (
+              <div className={styles.successMessage} id="success-message">
+                {successMessage}
+              </div>
+            )}
+
           </>
         )}
       </div>
