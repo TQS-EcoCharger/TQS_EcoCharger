@@ -34,8 +34,8 @@ public class Car {
   @Column(nullable = false)
   private String model;
 
-  @Column(name = "manufacture_year", nullable = false)
-  private Integer manufacture_year;
+  @Column(name = "manufactureYear", nullable = false)
+  private Integer manufactureYear;
 
   @Column(nullable = false)
   private String licensePlate;
@@ -63,6 +63,7 @@ public class Car {
         car.getName(),
         car.getMake(),
         car.getModel(),
+        car.getmanufactureYear(),
         car.getLicensePlate(),
         car.getBatteryCapacity(),
         car.getBatteryLevel(),
@@ -75,7 +76,7 @@ public class Car {
     this.name = "";
     this.make = "";
     this.model = "";
-    this.year = Year.now().getValue();
+    this.manufactureYear = Year.now().getValue();
     this.licensePlate = "";
     this.batteryCapacity = 0.0;
     this.batteryLevel = 0.0;
@@ -110,7 +111,7 @@ public class Car {
       this.name = name;
       this.make = make;
       this.model = model;
-      this.manufacture_year = year;
+      this.manufactureYear = year;
       this.licensePlate = licensePlate;
       this.batteryCapacity = batteryCapacity;
       this.batteryLevel = batteryLevel;
@@ -170,9 +171,9 @@ public class Car {
     return model != null && !model.trim().isEmpty();
   }
 
-  public void setManufacture_Year(Integer year) {
+  public void setmanufactureYear(Integer year) {
     if (validateYear(year)) {
-      this.manufacture_year = year;
+      this.manufactureYear = year;
     } else {
       throw new IllegalArgumentException("Year must be a valid number greater than 0");
     }
@@ -316,7 +317,7 @@ public class Car {
         + model
         + '\''
         + ", year="
-        + year
+        + manufactureYear
         + ", licensePlate='"
         + licensePlate
         + '\''
