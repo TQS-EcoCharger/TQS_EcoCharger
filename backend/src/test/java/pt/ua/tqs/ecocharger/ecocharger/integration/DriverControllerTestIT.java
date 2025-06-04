@@ -36,7 +36,8 @@ public class DriverControllerTestIT {
   public void setUp() {
     driverRepository.deleteAll();
     savedDriver =
-        driverRepository.save(new Driver(null, "johndoe@example.com", "password1", "John Doe", true));
+        driverRepository.save(
+            new Driver(null, "johndoe@example.com", "password1", "John Doe", true));
     System.out.println("Saved driver: " + driverRepository.findAll());
     RestAssuredMockMvc.mockMvc(mockMvc);
   }
@@ -151,7 +152,6 @@ public class DriverControllerTestIT {
         .statusCode(404);
   }
 
-
   @Test
   @DisplayName("Test add car to driver")
   public void testAddCarToDriver() {
@@ -165,7 +165,7 @@ public class DriverControllerTestIT {
         .when()
         .patch("/api/v1/driver/" + savedDriver.getId() + "/cars/")
         .then()
-        //TODO: 201 <-> 405
+        // TODO: 201 <-> 405
         .statusCode(200);
   }
 
@@ -183,9 +183,12 @@ public class DriverControllerTestIT {
   @Test
   @DisplayName("Test remove car from driver not found")
   public void testRemoveCarFromDriverNotFound() {
-    RestAssuredMockMvc.given().when().delete("/api/v1/drivers/99999/cars/999").then().statusCode(404);
+    RestAssuredMockMvc.given()
+        .when()
+        .delete("/api/v1/drivers/99999/cars/999")
+        .then()
+        .statusCode(404);
   }
-
 
   @Test
   @DisplayName("Test add car to driver not found")
