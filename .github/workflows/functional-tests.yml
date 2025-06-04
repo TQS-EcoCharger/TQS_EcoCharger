@@ -1,4 +1,4 @@
-name: Run Selenium Tests with Firefox
+name: Run Selenium Tests with Chrome
 
 on:
   workflow_dispatch:
@@ -80,16 +80,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Install Firefox and GeckoDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox wget unzip jq
-          
-          GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
-          wget "$GECKO_URL" -O geckodriver.tar.gz
-          tar -xzf geckodriver.tar.gz
-          sudo mv geckodriver /usr/bin/geckodriver
-          sudo chmod +x /usr/bin/geckodriver
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: '124.0.6367.91'  # Match this with your installed Chrome version
 
       - name: Build backend
         working-directory: ./backend
