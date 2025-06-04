@@ -2,15 +2,12 @@ package pt.ua.tqs.ecocharger.ecocharger.models;
 
 import java.time.Year;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,27 +55,36 @@ public class Car {
   @Column(nullable = false)
   private Double consumption;
 
-    @Column(nullable = false)
-    private boolean enabled;
+  @Column(nullable = false)
+  private boolean enabled;
 
-    public static Car cloneCar(Car car) {
-        return new Car(null, car.name, car.make, car.model, car.year, car.licensePlate,
-                car.batteryCapacity, car.batteryLevel, car.kilometers, car.consumption);
-    }
+  public static Car cloneCar(Car car) {
+    return new Car(
+        null,
+        car.name,
+        car.make,
+        car.model,
+        car.year,
+        car.licensePlate,
+        car.batteryCapacity,
+        car.batteryLevel,
+        car.kilometers,
+        car.consumption);
+  }
 
-    public Car() {
-        this.id = null;
-        this.name = "";
-        this.make = "";
-        this.model = "";
-        this.year = Year.now().getValue();
-        this.licensePlate = "";
-        this.batteryCapacity = 0.0;
-        this.batteryLevel = 0.0;
-        this.kilometers = 0.0;
-        this.consumption = 0.0;
-        this.enabled = true;
-    }
+  public Car() {
+    this.id = null;
+    this.name = "";
+    this.make = "";
+    this.model = "";
+    this.year = Year.now().getValue();
+    this.licensePlate = "";
+    this.batteryCapacity = 0.0;
+    this.batteryLevel = 0.0;
+    this.kilometers = 0.0;
+    this.consumption = 0.0;
+    this.enabled = true;
+  }
 
   public Car(
       Long id,
@@ -126,10 +132,9 @@ public class Car {
     }
   }
 
-    public boolean validateId(Long id) {
-        return id == null || id > 0;
-    }
-
+  public boolean validateId(Long id) {
+    return id == null || id > 0;
+  }
 
   public void setName(String name) {
     if (validateName(name)) {
@@ -283,33 +288,50 @@ public class Car {
       Double kilometers,
       Double consumption) {
 
-        if (!validateName(name)) throw new IllegalArgumentException("Invalid name");
-        if (!validateMake(make)) throw new IllegalArgumentException("Invalid make");
-        if (!validateModel(model)) throw new IllegalArgumentException("Invalid model");
-        if (!validateYear(year)) throw new IllegalArgumentException("Invalid year");
-        if (!validateLicensePlate(licensePlate)) throw new IllegalArgumentException("Invalid license plate");
-        if (!validateBatteryCapacity(batteryCapacity)) throw new IllegalArgumentException("Invalid battery capacity");
-        if (!validateBatteryLevel(batteryLevel, batteryCapacity)) throw new IllegalArgumentException("Invalid battery level");
-        if (!validateKilometers(kilometers)) throw new IllegalArgumentException("Invalid kilometers");
-        if (!validateConsumption(consumption)) throw new IllegalArgumentException("Invalid consumption");
-    }
+    if (!validateName(name)) throw new IllegalArgumentException("Invalid name");
+    if (!validateMake(make)) throw new IllegalArgumentException("Invalid make");
+    if (!validateModel(model)) throw new IllegalArgumentException("Invalid model");
+    if (!validateYear(year)) throw new IllegalArgumentException("Invalid year");
+    if (!validateLicensePlate(licensePlate))
+      throw new IllegalArgumentException("Invalid license plate");
+    if (!validateBatteryCapacity(batteryCapacity))
+      throw new IllegalArgumentException("Invalid battery capacity");
+    if (!validateBatteryLevel(batteryLevel, batteryCapacity))
+      throw new IllegalArgumentException("Invalid battery level");
+    if (!validateKilometers(kilometers)) throw new IllegalArgumentException("Invalid kilometers");
+    if (!validateConsumption(consumption))
+      throw new IllegalArgumentException("Invalid consumption");
+  }
 
-    @Override
-    public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", make='" + make + '\'' +
-                ", model='" + model + '\'' +
-                ", year=" + year +
-                ", licensePlate='" + licensePlate + '\'' +
-                ", batteryCapacity=" + batteryCapacity +
-                ", batteryLevel=" + batteryLevel +
-                ", kilometers=" + kilometers +
-                ", consumption=" + consumption +
-                ", enabled=" + enabled +
-                '}';
-    }
-
-    
+  @Override
+  public String toString() {
+    return "Car{"
+        + "id="
+        + id
+        + ", name='"
+        + name
+        + '\''
+        + ", make='"
+        + make
+        + '\''
+        + ", model='"
+        + model
+        + '\''
+        + ", year="
+        + year
+        + ", licensePlate='"
+        + licensePlate
+        + '\''
+        + ", batteryCapacity="
+        + batteryCapacity
+        + ", batteryLevel="
+        + batteryLevel
+        + ", kilometers="
+        + kilometers
+        + ", consumption="
+        + consumption
+        + ", enabled="
+        + enabled
+        + '}';
+  }
 }

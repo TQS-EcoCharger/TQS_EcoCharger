@@ -3,7 +3,6 @@ package pt.ua.tqs.ecocharger.ecocharger.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -24,13 +23,12 @@ import lombok.EqualsAndHashCode;
 @Table(name = "driver")
 public class Driver extends User {
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "driver_cars",
-        joinColumns = @JoinColumn(name = "driver_id"),
-        inverseJoinColumns = @JoinColumn(name = "cars_id")
-    )
-    private List<Car> cars;
+  @OneToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+      name = "driver_cars",
+      joinColumns = @JoinColumn(name = "driver_id"),
+      inverseJoinColumns = @JoinColumn(name = "cars_id"))
+  private List<Car> cars;
 
   public Driver(Long id, String email, String password, String name, boolean enabled) {
     super(id, email, password, name, enabled);

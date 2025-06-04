@@ -61,37 +61,39 @@ public class DriverController {
     }
   }
 
-    @PatchMapping("{id}/cars/")
-    public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @RequestBody Car car) {
-        try {
-            System.out.println("Adding car to driver with ID: " + id);
-            System.out.println("Car details: " + car);
-            Driver updatedDriver = driverService.addCarToDriver(id, car);
-            return ResponseEntity.ok(updatedDriver);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+  @PatchMapping("{id}/cars/")
+  public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @RequestBody Car car) {
+    try {
+      System.out.println("Adding car to driver with ID: " + id);
+      System.out.println("Car details: " + car);
+      Driver updatedDriver = driverService.addCarToDriver(id, car);
+      return ResponseEntity.ok(updatedDriver);
+    } catch (NotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
     }
+  }
 
-    @DeleteMapping("{id}/cars/{carId}")
-    public ResponseEntity<Object> removeCarFromDriver(@PathVariable Long id, @PathVariable Long carId) {
-        try {
-            Driver existingDriver = driverService.removeCarFromDriver(id, carId);
-            return ResponseEntity.ok(existingDriver);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+  @DeleteMapping("{id}/cars/{carId}")
+  public ResponseEntity<Object> removeCarFromDriver(
+      @PathVariable Long id, @PathVariable Long carId) {
+    try {
+      Driver existingDriver = driverService.removeCarFromDriver(id, carId);
+      return ResponseEntity.ok(existingDriver);
+    } catch (NotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
     }
+  }
 
-    @PatchMapping("{id}/cars/{carId}")
-    public ResponseEntity<Object> editCarFromDriver(@PathVariable Long id, @PathVariable Long carId, @RequestBody Car car) {
-        try {
-            Driver updatedDriver = driverService.editCarFromDriver(id, carId, car);
-            return ResponseEntity.ok(updatedDriver);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+  @PatchMapping("{id}/cars/{carId}")
+  public ResponseEntity<Object> editCarFromDriver(
+      @PathVariable Long id, @PathVariable Long carId, @RequestBody Car car) {
+    try {
+      Driver updatedDriver = driverService.editCarFromDriver(id, carId, car);
+      return ResponseEntity.ok(updatedDriver);
+    } catch (NotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
     }
+  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> deleteDriver(@PathVariable Long id) {
