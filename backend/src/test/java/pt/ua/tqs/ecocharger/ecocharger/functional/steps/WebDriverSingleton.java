@@ -16,25 +16,26 @@ public class WebDriverSingleton {
   private static WebDriver driver;
   private static WebDriverWait wait;
 
-  public static void initialize() {
-    if (driver == null) {
-      WebDriverManager.chromedriver().setup();
+public static void initialize() {
+  if (driver == null) {
+    WebDriverManager.chromedriver().setup();
 
-      ChromeOptions options = new ChromeOptions();
-      options.addArguments("--no-sandbox");
-      options.addArguments("--disable-dev-shm-usage");
-      options.addArguments("--window-size=1920,1080");
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments("--window-size=1920,1080");
 
-      try {
-        Path tempProfile = Files.createTempDirectory("chrome-profile-" + UUID.randomUUID());
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to create temp user-data-dir", e);
-      }
-
-      driver = new ChromeDriver(options);
-      wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    try {
+      Path tempProfile = Files.createTempDirectory("chrome-profile");
+      options.addArguments("--user-data-dir=" + tempProfile.toString());
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to create user-data-dir", e);
     }
+
+    driver = new ChromeDriver(options);
+    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
   }
+}
 
   public static WebDriver getDriver() {
     return driver;
