@@ -1,6 +1,5 @@
 package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +20,8 @@ public class WebDriverSingleton {
       System.setProperty("webdriver.firefox.logfile", "/dev/null");
 
       FirefoxOptions options = new FirefoxOptions();
-      options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
+      options.addArguments(
+          "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
 
       driver = new FirefoxDriver(options);
       driver.manage().window().setSize(new Dimension(1400, 1200));
