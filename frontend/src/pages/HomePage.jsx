@@ -42,7 +42,7 @@ export default function HomePage() {
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [message, setMessage] = useState('');
-  const [userLocation, setUserLocation] = useState(null);
+  const [setUserLocation] = useState(null);
   const [existingReservations, setExistingReservations] = useState([]);
 
   const token = localStorage.getItem('token');
