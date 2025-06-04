@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../css/VehicleDetails.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,6 +12,7 @@ import AddCarModal from "../components/AddCarModal";
 
 export default function VehicleDetails({ vehicle, onEdit }) {
   const [initialVehicle, setInitialVehicle] = useState(vehicle);
+  const [modalOpen, setModalOpen] = useState(false);
   if (!vehicle) {
     return (
       <div id="vehicle-details-loading" className={styles.loading}>
@@ -21,7 +21,9 @@ export default function VehicleDetails({ vehicle, onEdit }) {
     );
   }
 
-  const [modalOpen, setModalOpen] = useState(false);
+  useEffect(() => {
+    setInitialVehicle(vehicle);
+  }, [vehicle]);
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -32,9 +34,7 @@ export default function VehicleDetails({ vehicle, onEdit }) {
     setModalOpen(false);
   };
 
-  useEffect(() => {
-    setInitialVehicle(vehicle);
-  }, [vehicle]);
+
 
   return (
     <div id="vehicle-details-container" className={styles.detailsContainer}>

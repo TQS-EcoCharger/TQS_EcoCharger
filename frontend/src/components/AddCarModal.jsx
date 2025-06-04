@@ -70,31 +70,31 @@ export default function AddCarModal({ isOpen, onClose, onAdd, existingData }) {
         <h2 id="action-performed">{existingData ? 'Edit Car' : 'Add New Car'}</h2>
         <form className={styles.form} onSubmit={handleSubmit} id="add-car-form">
           <label id="name-label">Name:
-            <input name="name" value={form.name} onChange={handleChange} required id="name-input"/>
+            <input name="name" value={form.name} onChange={handleChange} required id="name-input" />
           </label>
           <label id="make-label">Make:
-            <input name="make" value={form.make} onChange={handleChange} required id="make-input"/>
+            <input name="make" value={form.make} onChange={handleChange} required id="make-input" />
           </label>
           <label id="model-label">Model:
-            <input name="model" value={form.model} onChange={handleChange} required id="model-input"/>
+            <input name="model" value={form.model} onChange={handleChange} required id="model-input" />
           </label>
           <label id="year-label">Year:
             <input type="number" name="year" value={form.year} onChange={handleChange} required min="1900" max={new Date().getFullYear()} id="year-input" />
           </label>
           <label id="license-label">License Plate:
-            <input name="licensePlate" value={form.licensePlate} onChange={handleChange} required id="license-input"/>
+            <input name="licensePlate" value={form.licensePlate} onChange={handleChange} required id="license-input" />
           </label>
           <label id="capacity-label">Battery Capacity (kWh):
-            <input type="number" step="0.1" name="batteryCapacity" value={form.batteryCapacity} onChange={handleChange} required min="0" id="capacity-input"/>
+            <input type="number" step="0.1" name="batteryCapacity" value={form.batteryCapacity} onChange={handleChange} required min="0" id="capacity-input" />
           </label>
           <label id="level-label">Battery Level (kWh):
-            <input type="number" step="0.1" name="batteryLevel" value={form.batteryLevel} onChange={handleChange} required min="0" id="level-input"/>
+            <input type="number" step="0.1" name="batteryLevel" value={form.batteryLevel} onChange={handleChange} required min="0" id="level-input" />
           </label>
           <label id="kilometers-label">Kilometers:
-            <input type="number" step="0.1" name="kilometers" value={form.kilometers} onChange={handleChange} required min="0" id="kilometers-input"/>
+            <input type="number" step="0.1" name="kilometers" value={form.kilometers} onChange={handleChange} required min="0" id="kilometers-input" />
           </label>
           <label id="consumption-label">Consumption (kWh/100km):
-            <input type="number" step="0.1" name="consumption" value={form.consumption} onChange={handleChange} required min="0" id="consumption-input"/>
+            <input type="number" step="0.1" name="consumption" value={form.consumption} onChange={handleChange} required min="0" id="consumption-input" />
           </label>
           <div className={styles.buttons} id="add-car-buttons">
             <button type="submit" className={styles.submitBtn} id="submit-button">{existingData ? 'Edit Car' : 'Add Car'}</button>
