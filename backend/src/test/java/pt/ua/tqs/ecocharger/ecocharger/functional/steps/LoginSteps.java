@@ -5,14 +5,10 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.time.Duration;
 
 public class LoginSteps {
 
@@ -33,15 +29,7 @@ public class LoginSteps {
 
   @Given("I am on the login page")
   public void i_am_on_the_login_page() {
-    FirefoxOptions options = new FirefoxOptions();
-    options.addArguments("--headless");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
-
-    driver = new FirefoxDriver(options);
-    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     driver.get("http://localhost:5000/");
-
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
   }
 
@@ -54,7 +42,7 @@ public class LoginSteps {
 
   @And("I click the {string}")
   public void i_click_the_button(String buttonId) {
-    WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By.id(buttonId)));
+    WebElement button = driver.findElement(By.id(buttonId));
     button.click();
   }
 
