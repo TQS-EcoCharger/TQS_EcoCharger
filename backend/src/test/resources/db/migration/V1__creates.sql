@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS car (
     battery_level DOUBLE NOT NULL,
     kilometers DOUBLE NOT NULL,
     consumption DOUBLE NOT NULL,
-    enabled BOOLEAN NOT NULL,
+    enabled BOOLEAN NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS driver_cars (
