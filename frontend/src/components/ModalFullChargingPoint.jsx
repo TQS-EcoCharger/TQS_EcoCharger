@@ -188,14 +188,28 @@ export default function ModalFullChargingPoint({ stationId, onClose, onSuccess, 
           <button onClick={addConnector}>Add connector</button>
         </div>
 
-        {form.connectors.map((conn, idx) => (
-  <div key={`${conn.connectorType}-${conn.ratedPowerKW}-${idx}`} className={styles.connectorItem}>
+        <div className={styles.connectorList}>
+          {form.connectors.map((conn) => (
+  <div
+    key={`${conn.connectorType}-${conn.ratedPowerKW}-${conn.voltageV}-${conn.currentA}-${conn.currentType}`}
+    className={styles.connectorItem}
+  >
     <FiZap /> {conn.connectorType} |
     <FiPower /> {conn.ratedPowerKW}kW |
     <TbBatteryCharging2 /> {conn.voltageV}V |
     <GiElectric /> {conn.currentA}A ({conn.currentType})
     <button
-      onClick={() => removeConnector(idx)}
+      onClick={() =>
+        removeConnector(
+          form.connectors.findIndex((c) =>
+            c.connectorType === conn.connectorType &&
+            c.ratedPowerKW === conn.ratedPowerKW &&
+            c.voltageV === conn.voltageV &&
+            c.currentA === conn.currentA &&
+            c.currentType === conn.currentType
+          )
+        )
+      }
       title="Remove connector"
       style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
     >
@@ -204,6 +218,7 @@ export default function ModalFullChargingPoint({ stationId, onClose, onSuccess, 
   </div>
 ))}
 
+        </div>
 
         <div className={styles.actions}>
           {error && <div className={styles.errorMessage}>{error}</div>}
