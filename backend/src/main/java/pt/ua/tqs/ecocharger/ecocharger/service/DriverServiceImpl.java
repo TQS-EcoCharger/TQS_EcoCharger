@@ -89,7 +89,7 @@ public class DriverServiceImpl implements DriverService {
     existingCar.setName(car.getName());
     existingCar.setMake(car.getMake());
     existingCar.setModel(car.getModel());
-    existingCar.setYear(car.getYear());
+    existingCar.setManufactureYear(car.getManufactureYear());
     existingCar.setLicensePlate(car.getLicensePlate());
     existingCar.setBatteryCapacity(car.getBatteryCapacity());
     existingCar.setBatteryLevel(car.getBatteryLevel());

@@ -19,6 +19,8 @@ public interface DriverService {
 
   Driver addCarToDriver(Long id, Car car);
 
+  Driver editCarFromDriver(Long id, Long carId, Car car);
+
   Driver removeCarFromDriver(Long id, Long carId);
 
   void deleteDriver(Long id);

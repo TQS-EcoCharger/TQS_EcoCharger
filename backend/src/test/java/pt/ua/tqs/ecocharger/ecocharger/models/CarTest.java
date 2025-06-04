@@ -23,7 +23,7 @@ public class CarTest {
     assertEquals("", newCar.getName());
     assertEquals("", newCar.getMake());
     assertEquals("", newCar.getModel());
-    assertEquals(Year.now().getValue(), newCar.getManufacture_year());
+    assertEquals(Year.now().getValue(), newCar.getManufactureYear());
     assertEquals("", newCar.getLicensePlate());
     assertEquals(0.0, newCar.getBatteryCapacity());
     assertEquals(0.0, newCar.getBatteryLevel());
@@ -36,7 +36,7 @@ public class CarTest {
     assertEquals("Car 1", newCar2.getName());
     assertEquals("Make 1", newCar2.getMake());
     assertEquals("Model 1", newCar2.getModel());
-    assertEquals(2020, newCar2.getManufacture_year());
+    assertEquals(2020, newCar2.getManufactureYear());
     assertEquals("AB-C1-23", newCar2.getLicensePlate());
     assertEquals(50.0, newCar2.getBatteryCapacity());
     assertEquals(30.0, newCar2.getBatteryLevel());
@@ -68,10 +68,10 @@ public class CarTest {
     car1.setModel("New Model");
     assertEquals("New Model", car1.getModel());
 
-    assertThrows(IllegalArgumentException.class, () -> car1.setManufacture_Year(-1));
-    assertThrows(IllegalArgumentException.class, () -> car1.setManufacture_Year(0));
-    car1.setManufacture_Year(2023);
-    assertEquals(2023, car1.getManufacture_year());
+    assertThrows(IllegalArgumentException.class, () -> car1.setManufactureYear(-1));
+    assertThrows(IllegalArgumentException.class, () -> car1.setManufactureYear(0));
+    car1.setManufactureYear(2023);
+    assertEquals(2023, car1.getManufactureYear());
 
     assertThrows(IllegalArgumentException.class, () -> car1.setLicensePlate(null));
     assertThrows(IllegalArgumentException.class, () -> car1.setLicensePlate(""));
