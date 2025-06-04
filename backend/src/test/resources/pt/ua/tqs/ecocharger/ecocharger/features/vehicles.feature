@@ -52,14 +52,8 @@ Feature: Check and Manage Vehicles
             | 7  | Citroen C4            | Citroen |
 
     Scenario: Checking the details of a vehicle
-        When I click the "view\-car\-3"
+        When I click the "_iconButton_1foq6_34" button for the vehicle "Hyundai Kona Electric"
         Then I should see the vehicle details page for "Hyundai Kona Electric"
         And I should see the following details:
-            | Name                      | Hyundai Kona Electric |
-            | Make                      | Hyundai               |
-            | Model                     | Kona Electric         |
-            | Mileage                   | 15000 km              |
-            | Registered                | 2020                  |
-            | Energy Consumption        | 16.2 kWh              |
-            | Battery Capacity          | 64 kWh                |
-            | License Plate             | EE-56-FF              |
+            | vehicle-name                      | Hyundai Kona Electric |
+

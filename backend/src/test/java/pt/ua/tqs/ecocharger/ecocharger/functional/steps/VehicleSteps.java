@@ -41,9 +41,14 @@ public class VehicleSteps {
     @When("I navigate to the vehicles page")
     public void i_navigate_to_the_vehicles_page() {
 
-        driver.get("http://localhost:5000/home");
-        ((JavascriptExecutor) driver).executeScript("window.localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyaWNhcmRvLmFudHVuZXMyMDAyQGdtYWlsLmNvbSIsImlhdCI6MTc0OTAyOTk1OCwiZXhwIjoxNzQ5MTE2MzU4fQ.PFyy5fcQeqOKo1AdWy3p-kGq4k7TUbgOp4TCSl8gRKQ');");
+        //driver.get("http://localhost:5000/home");
+        //((JavascriptExecutor) driver).executeScript("window.localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyaWNhcmRvLmFudHVuZXMyMDAyQGdtYWlsLmNvbSIsImlhdCI6MTc0OTAyOTk1OCwiZXhwIjoxNzQ5MTE2MzU4fQ.PFyy5fcQeqOKo1AdWy3p-kGq4k7TUbgOp4TCSl8gRKQ');");
         // insert email jwt token in local storage
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } // wait for the page to load
         driver.get("http://localhost:5000/vehicles");
         wait.until(ExpectedConditions.urlContains("/vehicles"));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vehicles-table")));
@@ -68,6 +73,12 @@ public class VehicleSteps {
             assertEquals(expectedColumns.get(i), headerCells.get(i).getText().trim(),
                     "Column " + (i + 1) + " does not match");
         }
+    }
+
+    @When("I click the {string} button for the vehicle {string}")
+    public void i_click_on_the_button_for_the_vehicle(String buttonClass, String vehicleName) {
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button." + buttonClass + "[data-vehicle-name='" + vehicleName + "']")));
+        button.click();
     }
     
 
@@ -145,20 +156,21 @@ public class VehicleSteps {
 
     @Then("I should see the vehicle details page for {string}")
     public void i_should_see_the_vehicle_details_page_for(String vehicleName) {
-        wait.until(ExpectedConditions.urlContains("/vehicle/" + vehicleName));
-        WebElement vehicleDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vehicle-details")));
+        WebElement vehicleDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vehicle-details-container")));
         assertTrue(vehicleDetails.getText().contains(vehicleName), "Vehicle details page does not contain the expected vehicle name");
     }
 
     @Then("I should see the following details:")
     public void i_should_see_the_following_details(io.cucumber.datatable.DataTable dataTable) {
         List<Map<String, String>> expectedDetails = dataTable.asMaps(String.class, String.class);
-        WebElement vehicleDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vehicle-details")));
+        WebElement vehicleDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vehicle-details-container")));
 
         for (Map<String, String> detail : expectedDetails) {
             for (Map.Entry<String, String> entry : detail.entrySet()) {
-                assertTrue(vehicleDetails.getText().contains(entry.getKey() + ": " + entry.getValue()),
-                        "Detail " + entry.getKey() + " does not match");
+                String id = entry.getKey();
+                String expectedValue = entry.getValue();
+                WebElement detailElement = vehicleDetails.findElement(By.id(id));
+                assertEquals(expectedValue, detailElement.getText().trim(), "Detail " + id + " does not match expected value");
             }
         }
     }

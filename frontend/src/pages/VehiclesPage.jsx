@@ -162,13 +162,14 @@ export default function VehiclesPage() {
                 car.make,
                 <div
                   className={styles.actionButtons}
-                  id={`car-actions-${car.id}`}
+                  id={`car_actions_${car.id}`}
                 >
                   <button
                     className={styles.iconButton}
                     onClick={() => openVehicleDetails(car)}
                     title="View Details"
-                    id={`view-car-${car.id}`}
+                    data-vehicle-name={car.name}
+                    id={`view_car_${car.id}`}
                   >
                     <FontAwesomeIcon icon={faEye} />
                   </button>
@@ -176,7 +177,7 @@ export default function VehiclesPage() {
                     className={styles.iconButton}
                     onClick={() => handleDelete(car.id)}
                     title="Delete Car"
-                    id={`delete-car-${car.id}`}
+                    id={`delete_car_${car.id}`}
                   >
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
