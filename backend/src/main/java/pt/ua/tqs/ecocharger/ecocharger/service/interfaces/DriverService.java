@@ -1,19 +1,25 @@
 package pt.ua.tqs.ecocharger.ecocharger.service.interfaces;
 
 import java.util.List;
-import java.util.Optional;
 
 import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
 
 public interface DriverService {
-    
-    List<Driver> getAllDrivers();
-    Driver getDriverById(Long id);
-    Driver saveDriver(Driver driver);
-    Driver createDriver(Driver driver);
-    Driver updateDriver(Long id, Driver driver);
-    Driver addCarToDriver(Long id, Car car);
-    Driver removeCarFromDriver(Long id, Long carId);
-    void deleteDriver(Long id);
+
+  List<Driver> getAllDrivers();
+
+  Driver getDriverById(Long id);
+
+  Driver saveDriver(Driver driver);
+
+  Driver createDriver(Driver driver);
+
+  Driver updateDriver(Long id, Driver driver);
+
+  Driver addCarToDriver(Long id, Car car);
+
+  Driver removeCarFromDriver(Long id, Long carId);
+
+  void deleteDriver(Long id);
 }

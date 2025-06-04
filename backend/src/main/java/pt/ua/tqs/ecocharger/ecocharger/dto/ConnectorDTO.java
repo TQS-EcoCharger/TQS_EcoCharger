@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConnectorDTO {
 
-    private Long id;
-    private String connectorType;
-    private Integer ratedPowerKW;
-    private Integer voltageV;
-    private Integer currentA;
-
+  private Long id;
+  private String connectorType;
+  private Integer ratedPowerKW;
+  private Integer voltageV;
+  private Integer currentA;
 }

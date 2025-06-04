@@ -95,12 +95,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         throw new IllegalArgumentException("User is disabled");
       }
 
-    return user;
-  } catch (SignatureVerificationException e) {
-    throw new IllegalArgumentException("Invalid token signature (the police is on the way)");
-  } catch (IllegalArgumentException e) {
-    throw new IllegalArgumentException("Invalid token format");
+      return user;
+    } catch (SignatureVerificationException e) {
+      throw new IllegalArgumentException("Invalid token signature (the police is on the way)");
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException("Invalid token format");
+    }
   }
-  }
-    
 }

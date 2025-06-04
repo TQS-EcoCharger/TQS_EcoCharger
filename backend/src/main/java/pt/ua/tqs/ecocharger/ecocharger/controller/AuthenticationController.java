@@ -68,6 +68,5 @@ public class AuthenticationController {
     } catch (NotFoundException e) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
-
   }
 }

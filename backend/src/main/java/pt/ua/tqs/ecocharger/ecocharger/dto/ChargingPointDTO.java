@@ -11,11 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 public class ChargingPointDTO {
 
-    private Long id;
-    private String brand;
-    private boolean available;
-    private Double pricePerKWh;
-    private Double pricePerMinute;
-    private List<ConnectorDTO> connectors;
-    private ChargingStationDTO chargingStation; 
+  private Long id;
+  private String brand;
+  private boolean available;
+  private Double pricePerKWh;
+  private Double pricePerMinute;
+  private List<ConnectorDTO> connectors;
+  private ChargingStationDTO chargingStation;
 }

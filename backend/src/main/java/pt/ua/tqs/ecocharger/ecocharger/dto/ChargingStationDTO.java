@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChargingStationDTO {
-    private Long id;
-    private String cityName;
-    private String address;
-    private Double latitude;
-    private Double longitude;
+  private Long id;
+  private String cityName;
+  private String address;
+  private Double latitude;
+  private Double longitude;
 }
