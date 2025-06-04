@@ -1,0 +1,29 @@
+.pageContainer {
+    display: flex;
+    min-height: 100vh;
+    color: white;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  .addCarButton {
+    background-color: #0a3a10;
+    color: #f4f9f4;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .addCarButton:hover {
+    background-color: #07400d;
+  }
+  
+  
