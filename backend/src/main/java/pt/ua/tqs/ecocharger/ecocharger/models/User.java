@@ -18,7 +18,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
   @JsonSubTypes.Type(value = Driver.class, name = "drivers")
 })
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {

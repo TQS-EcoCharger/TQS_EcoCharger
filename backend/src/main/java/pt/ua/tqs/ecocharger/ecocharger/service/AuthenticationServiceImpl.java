@@ -106,31 +106,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       throw new IllegalArgumentException("Invalid token format");
     }
   }
-
-  @Override
-  public User getCurrentUser(String token) {
-    try {
-      String email = jwtUtil.getEmailFromToken(token);
-
-      if (email == null) {
-        throw new IllegalArgumentException("Invalid token");
-      }
-
-      Optional<User> userOpt = userRepository.findByEmail(email);
-      if (userOpt.isEmpty()) {
-        throw new NotFoundException("User not found");
-      }
-
-      User user = userOpt.get();
-      if (!user.isEnabled()) {
-        throw new IllegalArgumentException("User is disabled");
-      }
-
-      return user;
-    } catch (SignatureVerificationException e) {
-      throw new IllegalArgumentException("Invalid token signature (the police is on the way)");
-    } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException("Invalid token format");
-    }
-  }
 }
