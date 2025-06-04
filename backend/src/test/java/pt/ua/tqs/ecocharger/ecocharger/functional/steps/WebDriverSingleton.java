@@ -1,6 +1,5 @@
 package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 
-
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
