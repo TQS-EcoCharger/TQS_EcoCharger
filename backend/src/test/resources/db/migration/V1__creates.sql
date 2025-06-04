@@ -73,8 +73,14 @@ CREATE TABLE IF NOT EXISTS car (
     kilometers DOUBLE NOT NULL,
     consumption DOUBLE NOT NULL,
     enabled BOOLEAN NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS driver_cars (
     driver_id BIGINT NOT NULL,
-    CONSTRAINT fk_car_driver FOREIGN KEY (driver_id) REFERENCES driver(id) ON DELETE CASCADE
+    cars_id BIGINT NOT NULL,
+    PRIMARY KEY (driver_id, cars_id),
+    FOREIGN KEY (driver_id) REFERENCES driver(id) ON DELETE CASCADE,
+    FOREIGN KEY (cars_id) REFERENCES car(id) ON DELETE CASCADE
 );
 
 
