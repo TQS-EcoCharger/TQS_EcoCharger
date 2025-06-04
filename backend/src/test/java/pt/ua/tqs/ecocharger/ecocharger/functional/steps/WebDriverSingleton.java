@@ -16,7 +16,6 @@ public class WebDriverSingleton {
   private static WebDriver driver;
   private static WebDriverWait wait;
 
-
   public static void initialize() {
     if (driver == null) {
       WebDriverManager.chromedriver().setup();
@@ -36,7 +35,6 @@ public class WebDriverSingleton {
       wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
   }
-
 
   public static WebDriver getDriver() {
     return driver;
