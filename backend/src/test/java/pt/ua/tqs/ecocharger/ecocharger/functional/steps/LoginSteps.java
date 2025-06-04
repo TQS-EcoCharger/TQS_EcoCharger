@@ -33,13 +33,6 @@ public class LoginSteps {
 
   @Given("I am on the login page")
   public void i_am_on_the_login_page() {
-    FirefoxOptions options = new FirefoxOptions();
-    options.addArguments("--headless");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
-
-    driver = new FirefoxDriver(options);
-    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     driver.get("http://localhost:5000/");
 
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));

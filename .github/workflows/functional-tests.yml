@@ -80,16 +80,20 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Install Firefox and GeckoDriver
+      - name: Install Firefox and GeckoDriver manually
         run: |
           sudo apt-get update
-          sudo apt-get install -y firefox wget unzip jq
-          
-          GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
-          wget "$GECKO_URL" -O geckodriver.tar.gz
-          tar -xzf geckodriver.tar.gz
-          sudo mv geckodriver /usr/bin/geckodriver
-          sudo chmod +x /usr/bin/geckodriver
+          sudo apt-get install -y wget gnupg2 lsb-release
+          echo "deb http://deb.debian.org/debian buster-backports main" | sudo tee /etc/apt/sources.list.d/buster-backports.list
+          sudo apt-get update
+          sudo apt-get install -y firefox-esr
+
+          GECKO_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.tag_name')
+          wget "https://github.com/mozilla/geckodriver/releases/download/$GECKO_VERSION/geckodriver-$GECKO_VERSION-linux64.tar.gz"
+          tar -xzf "geckodriver-$GECKO_VERSION-linux64.tar.gz"
+          chmod +x geckodriver
+          sudo mv geckodriver /usr/local/bin/
+
 
       - name: Build backend
         working-directory: ./backend
