@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
@@ -13,10 +14,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
   @JsonSubTypes.Type(value = Client.class, name = "clients"),
-  @JsonSubTypes.Type(value = Administrator.class, name = "administrators")
+  @JsonSubTypes.Type(value = Administrator.class, name = "administrators"),
+  @JsonSubTypes.Type(value = Driver.class, name = "drivers")
 })
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {

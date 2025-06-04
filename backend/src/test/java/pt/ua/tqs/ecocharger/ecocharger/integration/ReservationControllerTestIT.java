@@ -49,7 +49,7 @@ public class ReservationControllerTestIT {
     user = userRepository.save(new User(null, "email@test.com", "pass", "Test User", true));
     ChargingStation station =
         stationRepository.save(
-            new ChargingStation("City", "Addr", 1.0, 1.0, "Street", "CC", "Country", "EV"));
+            new ChargingStation("City", "Addr", 1.0, 1.0, "CC", "Country"));
     point =
         pointRepository.save(new ChargingPoint(station, true, "BrandX", Collections.emptyList()));
 

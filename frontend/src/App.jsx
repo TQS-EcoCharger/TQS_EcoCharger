@@ -8,6 +8,7 @@ import ReservationsPage from "./pages/ReservationsPage";
 
 export default function App() {
   return (
+    <UserProvider>
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
@@ -17,5 +18,6 @@ export default function App() {
         <Route path="/reservations" element={<ReservationsPage />} />
       </Routes>
     </Router>
+    </UserProvider>
   );
 }
