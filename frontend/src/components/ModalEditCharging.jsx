@@ -28,8 +28,6 @@ function ModalEditCharging({ station, onClose, onSuccess }) {
     }
   }, [station]);
 
-  const token = localStorage.getItem('token');
-
   const countryOptions = [
     { code: 'PT', name: 'Portugal' },
     { code: 'ES', name: 'Espanha' },

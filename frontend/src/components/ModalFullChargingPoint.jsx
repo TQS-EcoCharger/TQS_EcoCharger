@@ -201,22 +201,22 @@ const payload = pointToEdit
         </div>
 
         <div className={styles.connectorList}>
-          {form.connectors.map((conn, idx) => (
-            <div key={idx} className={styles.connectorItem}>
-              <FiZap /> {conn.connectorType} |
-              <FiPower /> {conn.ratedPowerKW}kW |
-              <TbBatteryCharging2 /> {conn.voltageV}V |
-              <GiElectric /> {conn.currentA}A ({conn.currentType})
-              <button
-                onClick={() => removeConnector(idx)}
-                title="Remover conector"
-                style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
-              >
-                <FiTrash2 />
-              </button>
-            </div>
-          ))}
-        </div>
+        {form.connectors.map((conn, idx) => (
+          <div key={`${conn.connectorType}-${conn.ratedPowerKW}-${idx}`} className={styles.connectorItem}>
+            <FiZap /> {conn.connectorType} |
+            <FiPower /> {conn.ratedPowerKW}kW |
+            <TbBatteryCharging2 /> {conn.voltageV}V |
+            <GiElectric /> {conn.currentA}A ({conn.currentType})
+            <button
+              onClick={() => removeConnector(idx)}
+              title="Remove connector"
+              style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              <FiTrash2 />
+            </button>
+          </div>
+        ))}
+      </div>
 
         <div className={styles.actions}>
           {error && <div className={styles.errorMessage}>{error}</div>}

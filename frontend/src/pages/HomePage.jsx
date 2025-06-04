@@ -10,13 +10,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { FiZap, FiPower } from 'react-icons/fi';
 import { FaRoad, FaCity } from 'react-icons/fa';
-import { FaRoad, FaCity } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
 
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -372,7 +369,5 @@ export default function HomePage() {
         )}
       </div>
     </div>
-  )}
-</div>
   );
 }

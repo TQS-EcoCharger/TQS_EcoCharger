@@ -1,27 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from '../css/ModalAddChargingPoint.module.css';
 import CONFIG from '../config';
 import axios from 'axios';
 import ModalFullChargingPoint from './ModalFullChargingPoint';
-import { FiZap } from 'react-icons/fi';
+import { FiZap, FiEdit } from 'react-icons/fi';
 import { BsCheckCircle, BsXCircle } from 'react-icons/bs';
-import { FiEdit } from 'react-icons/fi';
 
 export default function ModalAddChargingPoint({ stationId, onClose, onSuccess }) {
   const token = localStorage.getItem('token');
-  const [showFormSlotIndex, setShowFormSlotIndex] = useState(null); 
+  const [showFormSlotIndex, setShowFormSlotIndex] = useState(null);
   const [formData, setFormData] = useState({ brand: '', available: true });
   const [chargingPoints, setChargingPoints] = useState([]);
   const [showFullModal, setShowFullModal] = useState(false);
-  const totalSlots = 8;
   const [editingPoint, setEditingPoint] = useState(null);
+  const totalSlots = 8;
 
+  const handleChargingPoints = useCallback(() => {
+    axios
+      .get(`${CONFIG.API_URL}v1/points/station/${stationId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setChargingPoints(res.data);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch charging points:', err);
+      });
+  }, [stationId, token]);
 
   useEffect(() => {
     if (stationId) {
       handleChargingPoints();
     }
-  }, [stationId]);
+  }, [stationId, handleChargingPoints]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,7 +47,7 @@ export default function ModalAddChargingPoint({ stationId, onClose, onSuccess })
   const handleSubmit = () => {
     const requestBody = {
       point: formData,
-      station: { id: stationId }
+      station: { id: stationId },
     };
 
     axios
@@ -46,65 +59,51 @@ export default function ModalAddChargingPoint({ stationId, onClose, onSuccess })
       .then((res) => {
         setFormData({ brand: '', available: true });
         setShowFormSlotIndex(null);
-        handleChargingPoints(); 
+        handleChargingPoints();
         onSuccess(res.data);
       })
       .catch((err) => {
-        console.error('Erro ao adicionar ponto:', err);
-        alert('Erro ao adicionar ponto');
-      });
-  };
-
-  const handleChargingPoints = () => {
-    axios
-      .get(`${CONFIG.API_URL}v1/points/station/${stationId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setChargingPoints(res.data);
-      })
-      .catch((err) => {
-        console.error('Erro ao buscar pontos de carregamento:', err);
+        console.error('Failed to add charging point:', err);
+        alert('Failed to add charging point');
       });
   };
 
   return (
     <div className={styles.modalBackdrop}>
       <div className={styles.modalContent}>
-        <h2>Adicionar Ponto de Carregamento</h2>
+        <h2>Add Charging Point</h2>
 
         <div className={styles.slotGrid}>
           {Array.from({ length: totalSlots }).map((_, index) => {
             const point = chargingPoints[index];
 
             return (
-              <div key={index} className={styles.slotBox}>
+              <div key={point?.id ?? index} className={styles.slotBox}>
                 {point ? (
                   <div className={styles.occupiedSlot}>
                     <FiZap className={styles.icon} />
-                    <p><strong>{point.brand}</strong></p>
+                    <p>
+                      <strong>{point.brand}</strong>
+                    </p>
                     {point.available ? (
-                      <BsCheckCircle className={styles.availableIcon} title="Disponível" />
+                      <BsCheckCircle className={styles.availableIcon} title="Available" />
                     ) : (
-                      <BsXCircle className={styles.unavailableIcon} title="Indisponível" />
+                      <BsXCircle className={styles.unavailableIcon} title="Unavailable" />
                     )}
                     <FiEdit
                       className={styles.editIcon}
-                      title="Editar ponto"
+                      title="Edit charging point"
                       onClick={() => {
                         setEditingPoint(point);
                         setShowFullModal(true);
                       }}
                     />
                   </div>
-
                 ) : showFormSlotIndex === index ? (
                   <div className={styles.slotForm}>
                     <input
                       type="text"
-                      placeholder="Marca"
+                      placeholder="Brand"
                       name="brand"
                       value={formData.brand}
                       onChange={handleChange}
@@ -116,20 +115,20 @@ export default function ModalAddChargingPoint({ stationId, onClose, onSuccess })
                         checked={formData.available}
                         onChange={handleChange}
                       />
-                      Disponível
+                      Available
                     </label>
                     <div className={styles.formActions}>
-                      <button onClick={handleSubmit}>Salvar</button>
-                      <button onClick={() => setShowFormSlotIndex(null)}>Cancelar</button>
+                      <button onClick={handleSubmit}>Save</button>
+                      <button onClick={() => setShowFormSlotIndex(null)}>Cancel</button>
                     </div>
                   </div>
                 ) : (
                   <button
-                      className={styles.addSlotButton}
-                      onClick={() => setShowFullModal(true)}
-                    >
-                      +
-                    </button>
+                    className={styles.addSlotButton}
+                    onClick={() => setShowFullModal(true)}
+                  >
+                    +
+                  </button>
                 )}
               </div>
             );
@@ -137,9 +136,12 @@ export default function ModalAddChargingPoint({ stationId, onClose, onSuccess })
         </div>
 
         <div className={styles.bottomActions}>
-          <button className={styles.cancelBtn} onClick={onClose}>Fechar</button>
+          <button className={styles.cancelBtn} onClick={onClose}>
+            Close
+          </button>
         </div>
       </div>
+
       {showFullModal && (
         <ModalFullChargingPoint
           stationId={stationId}
@@ -152,8 +154,6 @@ export default function ModalAddChargingPoint({ stationId, onClose, onSuccess })
           pointToEdit={editingPoint}
         />
       )}
-
     </div>
-    
   );
 }
