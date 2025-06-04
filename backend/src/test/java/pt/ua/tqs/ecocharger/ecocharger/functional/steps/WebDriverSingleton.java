@@ -8,8 +8,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import java.time.Duration;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WebDriverSingleton {
   private static WebDriver driver;
