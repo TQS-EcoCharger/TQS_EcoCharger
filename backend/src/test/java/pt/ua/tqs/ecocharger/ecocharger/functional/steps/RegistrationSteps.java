@@ -94,8 +94,4 @@ public class RegistrationSteps {
     assertTrue(
         currentUrl.endsWith("/register"), "Expected to be on /register but was on " + currentUrl);
   }
-
-
 }
-
-

@@ -26,7 +26,8 @@ public class AddStationSteps {
 
   @When("the user clicks on the {string} button")
   public void user_clicks_on_button(String label) {
-    WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By.id("add-charging-station-button")));
+    WebElement button =
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("add-charging-station-button")));
     button.click();
   }
 
@@ -45,7 +46,8 @@ public class AddStationSteps {
 
   @When("the user submits the station form")
   public void user_submits_station_form() {
-    WebElement submit = wait.until(ExpectedConditions.elementToBeClickable(By.id("submit-add-station")));
+    WebElement submit =
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("submit-add-station")));
     submit.click();
   }
 }

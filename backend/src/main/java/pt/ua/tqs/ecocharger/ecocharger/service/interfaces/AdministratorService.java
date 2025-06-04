@@ -5,8 +5,11 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 
 public interface AdministratorService {
-    ChargingStation updateChargingStation(ChargingStation station);
-    ChargingStation deleteChargingStation(Long id);
-    Administrator createAdministrator(String email, String password, String name);
-    ChargingPoint updateChargingPoint(ChargingPoint point, Long pointId);
+  ChargingStation updateChargingStation(ChargingStation station);
+
+  ChargingStation deleteChargingStation(Long id);
+
+  Administrator createAdministrator(String email, String password, String name);
+
+  ChargingPoint updateChargingPoint(ChargingPoint point, Long pointId);
 }

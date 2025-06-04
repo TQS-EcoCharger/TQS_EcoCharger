@@ -39,7 +39,7 @@ public class AuthenticationController {
     String password = user.get("password");
     String name = user.get("name");
     if (email == null || password == null || name == null) {
-      AuthResultDTO result = new AuthResultDTO(false, "Missing required fields", null,null);
+      AuthResultDTO result = new AuthResultDTO(false, "Missing required fields", null, null);
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getMessage());
     }
     email = email.strip();
