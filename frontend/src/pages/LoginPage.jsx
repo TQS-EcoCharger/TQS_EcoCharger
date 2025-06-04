@@ -23,7 +23,7 @@ const LoginPage = () => {
         password,
       });
 
-      onsole.log("Login successful:", response.data);
+      console.log("Login successful:", response.data);
       login(response.data.token, response.data.userType);
       navigate("/home");
     
