@@ -112,7 +112,7 @@ jobs:
           spring.security.enabled=false
           jwt.secret=test-secret-key
           EOF
-
+          
       - name: Run full verification lifecycle
         working-directory: ./backend
         env:
@@ -120,7 +120,7 @@ jobs:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
         run: >
-          mvn clean test -Punit-tests
+          mvn verify -Punit-tests,xray-unit
           -Dxray.clientId=${XRAY_CLIENT_ID}
           -Dxray.clientSecret=${XRAY_CLIENT_SECRET}
 
@@ -135,14 +135,3 @@ jobs:
           -Dsonar.organization=tqs-ecocharger
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-
-      - name: Upload Unit Test Results to Xray
-        working-directory: ./backend
-        run: |
-          mvn \
-            -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
-            -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }} \
-            -Dxray.projectKey=ET \
-            -Dxray.reportFormat=junit \
-            -Dxray.reportFile=target/surefire-reports/*.xml \
-            app.getxray:xray-maven-plugin:import-results
