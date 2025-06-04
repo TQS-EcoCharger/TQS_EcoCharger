@@ -38,7 +38,7 @@ public class DriverControllerTestIT {
     @BeforeEach
     public void setUp() {
         driverRepository.deleteAll();
-        savedDriver = driverRepository.save(new Driver(null, "johndoe@example.com", "password1", "John Doe", true));
+        savedDriver = driverRepository.save(new Driver(1L, "johndoe@example.com", "password1", "John Doe", true));
         RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
