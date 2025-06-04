@@ -25,13 +25,6 @@ public class WebDriverSingleton {
       options.addArguments("--disable-dev-shm-usage");
       options.addArguments("--window-size=1920,1080");
 
-      try {
-        Path tempProfile = Files.createTempDirectory("chrome-profile");
-        options.addArguments("--user-data-dir=" + tempProfile.toString());
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to create user-data-dir", e);
-      }
-
       driver = new ChromeDriver(options);
       wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
