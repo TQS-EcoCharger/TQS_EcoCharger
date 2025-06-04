@@ -83,13 +83,10 @@ jobs:
       - name: Install Firefox and GeckoDriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y firefox wget unzip jq
-          
-          GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
-          wget "$GECKO_URL" -O geckodriver.tar.gz
-          tar -xzf geckodriver.tar.gz
-          sudo mv geckodriver /snap/bin/geckodriver
-          sudo chmod +x /snap/bin/geckodriver
+          sudo apt-get install -y firefox-esr  # Use Firefox ESR for stability
+          # Install GeckoDriver via WebDriverManager (let it handle the version)
+          echo "org.openqa.selenium.firefox.FirefoxDriver" > /tmp/browsers
+          export BROWSERS_FILE=/tmp/browsers
 
       - name: Build backend
         working-directory: ./backend
