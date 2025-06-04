@@ -22,6 +22,7 @@
         <sonar.organization>tqs-ecocharger</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <webdrivermanager.version>5.9.3</webdrivermanager.version>
         <xray-junit-extensions.version>0.7.3</xray-junit-extensions.version>
         <xray-maven-plugin.version>0.8.0</xray-maven-plugin.version>
         <cucumber.version>7.21.1</cucumber.version>
@@ -65,6 +66,35 @@
                     <include>**/CucumberTest.java</include>
                 </includes>
                 </configuration>
+            </plugin>
+            </plugins>
+        </build>
+        </profile>
+        <profile>
+        <id>xray-unit</id>
+        <build>
+            <plugins>
+            <plugin>
+                <groupId>app.getxray</groupId>
+                <artifactId>xray-maven-plugin</artifactId>
+                <version>${xray-maven-plugin.version}</version>
+                <executions>
+                <execution>
+                    <id>import-xray-unit-results</id>
+                    <phase>verify</phase>
+                    <goals>
+                    <goal>import-results</goal>
+                    </goals>
+                    <configuration>
+                    <cloud>true</cloud>
+                    <clientId>${xray.clientId}</clientId>
+                    <clientSecret>${xray.clientSecret}</clientSecret>
+                    <projectKey>ET</projectKey>
+                    <reportFormat>junit</reportFormat>
+                    <reportFile>target/TEST-junit-jupiter.xml</reportFile>
+                    </configuration>
+                </execution>
+                </executions>
             </plugin>
             </plugins>
         </build>
@@ -271,12 +301,20 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+			<artifactId>testcontainers</artifactId>
+			<version>1.19.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+			<version>1.19.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>1.19.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -326,11 +364,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency> 
+            <groupId>io.rest-assured</groupId> 
+            <artifactId>spring-mock-mvc</artifactId> 
+            <scope>test</scope> 
+        </dependency>
         <!-- Selenium Java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.20.0</version>
+            <version>4.30.0</version>
             <scope>test</scope>
         </dependency>
         
@@ -338,7 +381,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>6.1.0</version>
+            <version>${webdrivermanager.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -347,6 +390,24 @@
           <groupId>com.auth0</groupId>
           <artifactId>java-jwt</artifactId>
           <version>4.4.0</version> <!-- Ou a versão mais recente -->
+        </dependency>
+
+        <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-webflux</artifactId>
+    <scope>test</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.data</groupId>
+    <artifactId>spring-data-elasticsearch</artifactId>
+    <scope>test</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-oauth2-client</artifactId>
+    <scope>test</scope>
         </dependency>
 
     </dependencies>

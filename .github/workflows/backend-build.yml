@@ -8,10 +8,25 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+
 jobs:
   build-and-analyze:
     name: Build and Analyze Backend
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:15
+        env:
+          POSTGRES_DB: ecocharger
+          POSTGRES_USER: ecocharger
+          POSTGRES_PASSWORD: ecocharger
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ecocharger" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -84,6 +99,20 @@ jobs:
           jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
           EOF
 
+      - name: Write test application.properties
+        run: |
+          mkdir -p backend/src/test/resources
+          cat <<EOF > backend/src/test/resources/application.properties
+          spring.flyway.enabled=true
+          spring.flyway.locations=classpath:db/migration
+          spring.flyway.clean-disabled=false
+          spring.flyway.baseline-on-migrate=true
+          spring.flyway.check-location=false
+          spring.jpa.defer-datasource-initialization=false
+          spring.security.enabled=false
+          jwt.secret=test-secret-key
+          EOF
+          
       - name: Run full verification lifecycle
         working-directory: ./backend
         env:
