@@ -61,6 +61,11 @@ public class Car {
     @Column(nullable = false)
     private boolean enabled;
 
+    public static Car cloneCar(Car car) {
+        return new Car(null, car.name, car.make, car.model, car.year, car.licensePlate,
+                car.batteryCapacity, car.batteryLevel, car.kilometers, car.consumption);
+    }
+
     public Car() {
         this.id = null;
         this.name = "";

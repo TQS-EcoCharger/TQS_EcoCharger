@@ -63,16 +63,7 @@ public class DriverServiceImpl implements DriverService {
     public Driver addCarToDriver(Long driverId, Car car) {
         Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new NotFoundException("Driver not found with id: " + driverId));
         
-        Car newCar = new Car();
-        newCar.setName(car.getName());
-        newCar.setMake(car.getMake());
-        newCar.setModel(car.getModel());
-        newCar.setYear(car.getYear());
-        newCar.setLicensePlate(car.getLicensePlate());
-        newCar.setBatteryCapacity(car.getBatteryCapacity());
-        newCar.setBatteryLevel(car.getBatteryLevel());
-        newCar.setConsumption(car.getConsumption());
-        newCar.setEnabled(true);
+        Car newCar = Car.cloneCar(car);
         carRepository.save(newCar);
         driver.getCars().add(newCar);
         return saveDriver(driver);

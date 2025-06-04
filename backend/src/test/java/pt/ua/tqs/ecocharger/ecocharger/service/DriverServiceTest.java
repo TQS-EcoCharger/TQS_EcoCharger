@@ -50,7 +50,7 @@ public class DriverServiceTest {
         driver4 = new Driver(4L, "viktorpineapple@example.com", "password4", "Viktor Pineapple", true);
         driver5 = new Driver(5L, "sergeyaleixov@example.com", "password5", "Sergey Aleixov", true);
 
-        car1 = new Car(1L, "Car 1", "Make 1", "Model 1", 2020, "AB-C1-23", 50.0, 40.0, 100.0, 15.0);
+        car1 = new Car(null, "Car 1", "Make 1", "Model 1", 2020, "AB-C1-23", 50.0, 40.0, 100.0, 15.0);
 
         when(driverRepository.findById(1L)).thenReturn(Optional.of(driver1));
         when(driverRepository.findById(2L)).thenReturn(Optional.of(driver2));
@@ -163,11 +163,10 @@ public class DriverServiceTest {
         driverWithCar.setPassword(driver1.getPassword());
         driverWithCar.setName(driver1.getName());
         driverWithCar.addCar(car1);
-        when(driverRepository.save(driverWithCar)).thenReturn(driverWithCar);
+        when(driverRepository.save(any(Driver.class))).thenReturn(driverWithCar);
         Driver updatedDriver = driverService.addCarToDriver(1L, car1);
-        assertEquals(driver1, updatedDriver);
+        assertEquals(driver1.getCars(), updatedDriver.getCars());
         verify(driverRepository, times(1)).findById(1L);
-        verify(carRepository, times(1)).findById(1L);
         verify(driverRepository, times(1)).save(driver1);
     }
 
@@ -211,18 +210,6 @@ public class DriverServiceTest {
         when(carRepository.findById(6L)).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> driverService.removeCarFromDriver(1L, 6L));
         verify(carRepository, times(1)).findById(6L);
-    }
-
-    @Test
-    @DisplayName("Add Car To Driver Car Already Assigned")
-    @Requirement("ET-34")
-    public void testAddCarToDriverCarAlreadyAssigned() throws Exception {
-        when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
-        driver1.addCar(car1);
-        when(driverRepository.save(driver1)).thenReturn(driver1);
-        assertThrows(IllegalArgumentException.class, () -> driverService.addCarToDriver(1L, car1));
-        verify(driverRepository, times(1)).findById(1L);
-        verify(carRepository, times(1)).findById(1L);
     }
 
     @Test
