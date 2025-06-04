@@ -7,7 +7,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 public class ReservationSteps {
 
   private WebDriver driver;
