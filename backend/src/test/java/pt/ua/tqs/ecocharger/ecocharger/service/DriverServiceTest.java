@@ -38,7 +38,7 @@ public class DriverServiceTest {
   private Car car1;
 
   @BeforeEach
-   void setUp() {
+  void setUp() {
     MockitoAnnotations.openMocks(this);
 
     driver1 = new Driver(1L, "johndoe@example.com", "password", "John Doe", true);
@@ -62,7 +62,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Get All Drivers")
   @Requirement("ET-34")
-   void testGetAllDrivers() throws Exception {
+  void testGetAllDrivers() throws Exception {
     List<Driver> drivers = driverService.getAllDrivers();
     assertEquals(5, drivers.size());
     assertEquals(driver1, drivers.get(0));
@@ -76,7 +76,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Get Driver By ID")
   @Requirement("ET-34")
-   void testGetDriverById() throws Exception {
+  void testGetDriverById() throws Exception {
     Driver driver = driverService.getDriverById(1L);
     assertEquals(driver1, driver);
     verify(driverRepository, times(1)).findById(1L);
@@ -85,7 +85,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Create Driver")
   @Requirement("ET-34")
-   void testCreateDriver() throws Exception {
+  void testCreateDriver() throws Exception {
     Driver newDriver =
         new Driver(null, "mariahcarey@example.com", "password6", "Mariah Carey", true);
     when(driverRepository.findByEmail(newDriver.getEmail())).thenReturn(Optional.empty());
@@ -98,7 +98,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Update Driver")
   @Requirement("ET-34")
-   void testUpdateDriver() throws Exception {
+  void testUpdateDriver() throws Exception {
     Driver updatedDriver = new Driver(1L, "johndoh@example.com", "newpassword", "John Doh", true);
     when(driverRepository.save(updatedDriver)).thenReturn(updatedDriver);
     Driver result = driverService.updateDriver(1L, updatedDriver);
@@ -110,7 +110,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Delete Driver")
   @Requirement("ET-34")
-   void testDeleteDriver() throws Exception {
+  void testDeleteDriver() throws Exception {
     driverService.deleteDriver(1L);
     verify(driverRepository, times(1)).deleteById(1L);
   }
@@ -118,7 +118,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Get Driver By ID Not Found")
   @Requirement("ET-34")
-   void testGetDriverByIdNotFound() throws Exception {
+  void testGetDriverByIdNotFound() throws Exception {
     when(driverRepository.findById(6L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> driverService.getDriverById(6L));
     verify(driverRepository, times(1)).findById(6L);
@@ -127,7 +127,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Create Driver Already Exists")
   @Requirement("ET-34")
-   void testCreateDriverAlreadyExists() throws Exception {
+  void testCreateDriverAlreadyExists() throws Exception {
     when(driverRepository.findByEmail(driver1.getEmail())).thenReturn(Optional.of(driver1));
     assertThrows(IllegalArgumentException.class, () -> driverService.createDriver(driver1));
     verify(driverRepository, times(1)).findByEmail(driver1.getEmail());
@@ -136,7 +136,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Update Driver Not Found")
   @Requirement("ET-34")
-   void testUpdateDriverNotFound() throws Exception {
+  void testUpdateDriverNotFound() throws Exception {
     when(driverRepository.findById(6L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> driverService.updateDriver(6L, driver1));
     verify(driverRepository, times(1)).findById(6L);
@@ -145,7 +145,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Delete Driver Not Found")
   @Requirement("ET-34")
-   void testDeleteDriverNotFound() throws Exception {
+  void testDeleteDriverNotFound() throws Exception {
     when(driverRepository.findById(6L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> driverService.deleteDriver(6L));
     verify(driverRepository, times(1)).findById(6L);
@@ -154,7 +154,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Add Car To Driver")
   @Requirement("ET-34")
-   void testAddCarToDriver() throws Exception {
+  void testAddCarToDriver() throws Exception {
     when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
     Driver driverWithCar = new Driver();
     driverWithCar.setId(driver1.getId());
@@ -172,7 +172,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Add Car To Driver Not Found")
   @Requirement("ET-34")
-   void testAddCarToDriverNotFound() throws Exception {
+  void testAddCarToDriverNotFound() throws Exception {
     when(driverRepository.findById(6L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> driverService.addCarToDriver(6L, car1));
     verify(driverRepository, times(1)).findById(6L);
@@ -181,7 +181,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Edit a car in a driver")
   @Requirement("ET-34")
-   void testEditCarFromDriver() throws Exception {
+  void testEditCarFromDriver() throws Exception {
     driver1.addCar(car1);
     when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
     when(driverRepository.save(driver1)).thenReturn(driver1);
@@ -208,7 +208,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Remove Car From Driver")
   @Requirement("ET-34")
-   void testRemoveCarFromDriver() throws Exception {
+  void testRemoveCarFromDriver() throws Exception {
     driver1.addCar(car1);
     when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
     when(driverRepository.save(driver1)).thenReturn(driver1);
@@ -223,7 +223,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Remove Car From Driver Not Found")
   @Requirement("ET-34")
-   void testRemoveCarFromDriverNotFound() throws Exception {
+  void testRemoveCarFromDriverNotFound() throws Exception {
     when(driverRepository.findById(6L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> driverService.removeCarFromDriver(6L, 1L));
     verify(driverRepository, times(1)).findById(6L);
@@ -232,7 +232,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Remove Car From Driver Car Not Found")
   @Requirement("ET-34")
-   void testRemoveCarFromDriverCarNotFound() throws Exception {
+  void testRemoveCarFromDriverCarNotFound() throws Exception {
     when(carRepository.findById(6L)).thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> driverService.removeCarFromDriver(1L, 6L));
     verify(carRepository, times(1)).findById(6L);
@@ -241,7 +241,7 @@ public class DriverServiceTest {
   @Test
   @DisplayName("Remove Car From Driver Car Not Assigned")
   @Requirement("ET-34")
-   void testRemoveCarFromDriverCarNotAssigned() throws Exception {
+  void testRemoveCarFromDriverCarNotAssigned() throws Exception {
     when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
     driver1.removeCar(car1);
     when(driverRepository.save(driver1)).thenReturn(driver1);
