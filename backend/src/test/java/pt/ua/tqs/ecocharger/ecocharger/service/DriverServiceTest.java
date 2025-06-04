@@ -73,8 +73,6 @@ public class DriverServiceTest {
     verify(driverRepository, times(1)).findAll();
   }
 
-
-
   @Test
   @DisplayName("Get Driver By ID")
   @Requirement("ET-34")
@@ -187,7 +185,18 @@ public class DriverServiceTest {
     driver1.addCar(car1);
     when(carRepository.findById(1L)).thenReturn(Optional.of(car1));
     when(driverRepository.save(driver1)).thenReturn(driver1);
-    Car updatedCar = new Car(1L, "Updated Car", "Updated Make", "Updated Model", 2021, "AB-C2-34", 60.0, 50.0, 120.0, 18.0);
+    Car updatedCar =
+        new Car(
+            1L,
+            "Updated Car",
+            "Updated Make",
+            "Updated Model",
+            2021,
+            "AB-C2-34",
+            60.0,
+            50.0,
+            120.0,
+            18.0);
     Driver updatedDriver = driverService.editCarFromDriver(1L, 1L, updatedCar);
     assertEquals(1, updatedDriver.getCars().size());
     assertEquals(updatedCar.getName(), updatedDriver.getCars().get(0).getName());
