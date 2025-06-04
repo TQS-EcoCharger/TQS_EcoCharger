@@ -214,7 +214,8 @@
   font-size: 16px;
   border: none;
   border-top: 1px solid #ddd;
-  border-radius: 0 0 10px 10px;
+  margin-top: 15px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -276,4 +277,149 @@
     margin-right: 0;
     margin-top: 0;
   }
+}
+
+
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal Box */
+.modal {
+  background: #383838;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Fields */
+.modal label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.modal input[type="datetime-local"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+/* Modal Buttons */
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.modalButtons button {
+  flex: 1;
+  margin: 0 0.25rem;
+  padding: 0.6rem 1rem;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modalButtons button:hover {
+  background-color: #a78d45;
+}
+
+/* Message styling */
+.message {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #d9534f;
+  background-color: #f8d7da;
+  text-align: center;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+/* Optional fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.existingReservations {
+  margin-top: 1.5rem;
+  background: #f4cc5d;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #000000;
+}
+
+.reservationList {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 0;
+}
+
+.reservationItem {
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #2d2d2d;
+}
+
+.confirmButton {
+  background-color: #68a375;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.confirmButton:hover {
+  background-color: #218838 !important;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: #c82333 !important;
+}
+
+h2 {
+  margin-top: 0;
 }
