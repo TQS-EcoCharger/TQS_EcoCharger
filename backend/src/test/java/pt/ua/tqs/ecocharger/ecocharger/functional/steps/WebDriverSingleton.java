@@ -21,8 +21,7 @@ public class WebDriverSingleton {
       options.addArguments("--headless=new");
       options.addArguments("--no-sandbox");
       options.addArguments("--disable-dev-shm-usage");
-      options.addArguments("--disable-gpu");
-      options.addArguments("--window-size=1200,800");
+      options.addArguments("--window-size=1920,1080");
 
       driver = new ChromeDriver(options);
       wait = new WebDriverWait(driver, Duration.ofSeconds(10));
