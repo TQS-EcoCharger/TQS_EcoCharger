@@ -10,7 +10,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
-import io.cucumber.java.an.E;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingStationDTO;
