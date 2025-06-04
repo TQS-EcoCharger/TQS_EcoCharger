@@ -66,5 +66,4 @@ public class UserTest {
     driver.removeCar(car);
     assertTrue(driver.getCars().isEmpty());
   }
-
 }

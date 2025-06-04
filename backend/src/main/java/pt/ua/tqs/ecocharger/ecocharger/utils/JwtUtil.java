@@ -24,9 +24,6 @@ public class JwtUtil {
   }
 
   public String getEmailFromToken(String token) {
-    return JWT.require(Algorithm.HMAC256(jwtSecret.getBytes()))
-        .build()
-        .verify(token)
-        .getSubject();
+    return JWT.require(Algorithm.HMAC256(jwtSecret.getBytes())).build().verify(token).getSubject();
   }
 }

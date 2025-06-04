@@ -23,43 +23,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/v1/driver")
 public class DriverController {
 
-    private final DriverService driverService;
+  private final DriverService driverService;
 
-    public DriverController(DriverService driverService) {
-        this.driverService = driverService;
-    }
-    
-    @GetMapping("/")
-    public ResponseEntity<List<Driver>> getAllDrivers() {
-        return ResponseEntity.ok(driverService.getAllDrivers());
-    }
+  public DriverController(DriverService driverService) {
+    this.driverService = driverService;
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getDriverById(@PathVariable Long id) {
-        try {
-            Driver existingDriver = driverService.getDriverById(id);
-            System.out.println("Driver found: " + existingDriver);
-            return ResponseEntity.ok(existingDriver);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
+  @GetMapping("/")
+  public ResponseEntity<List<Driver>> getAllDrivers() {
+    return ResponseEntity.ok(driverService.getAllDrivers());
+  }
 
-    @PostMapping("/")
-    public ResponseEntity<Object> createDriver(@RequestBody Driver driver) {
-        Driver newDriver = driverService.createDriver(driver);
-        return ResponseEntity.ok(newDriver);
+  @GetMapping("/{id}")
+  public ResponseEntity<Object> getDriverById(@PathVariable Long id) {
+    try {
+      Driver existingDriver = driverService.getDriverById(id);
+      System.out.println("Driver found: " + existingDriver);
+      return ResponseEntity.ok(existingDriver);
+    } catch (NotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
     }
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updateDriver(@PathVariable Long id, @RequestBody Driver driver) {
-        try {
-            Driver updatedDriver = driverService.updateDriver(id, driver);
-            return ResponseEntity.ok(updatedDriver);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+  @PostMapping("/")
+  public ResponseEntity<Object> createDriver(@RequestBody Driver driver) {
+    Driver newDriver = driverService.createDriver(driver);
+    return ResponseEntity.ok(newDriver);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Object> updateDriver(@PathVariable Long id, @RequestBody Driver driver) {
+    try {
+      Driver updatedDriver = driverService.updateDriver(id, driver);
+      return ResponseEntity.ok(updatedDriver);
+    } catch (NotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
     }
+  }
 
     @PatchMapping("{id}/cars/")
     public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @RequestBody Car car) {
@@ -93,13 +93,13 @@ public class DriverController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteDriver(@PathVariable Long id) {
-        try {
-            driverService.deleteDriver(id);
-            return ResponseEntity.noContent().build();
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Object> deleteDriver(@PathVariable Long id) {
+    try {
+      driverService.deleteDriver(id);
+      return ResponseEntity.noContent().build();
+    } catch (NotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
     }
+  }
 }

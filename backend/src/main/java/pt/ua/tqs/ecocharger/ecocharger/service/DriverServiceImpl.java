@@ -14,37 +14,38 @@ import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 @Service
 public class DriverServiceImpl implements DriverService {
 
-    private final DriverRepository driverRepository;
-    private final CarRepository carRepository;
+  private final DriverRepository driverRepository;
+  private final CarRepository carRepository;
 
-    public DriverServiceImpl(DriverRepository driverRepository, CarRepository carRepository) {
-        this.carRepository = carRepository;
-        this.driverRepository = driverRepository;
-    }
+  public DriverServiceImpl(DriverRepository driverRepository, CarRepository carRepository) {
+    this.carRepository = carRepository;
+    this.driverRepository = driverRepository;
+  }
 
-    @Override
-    public List<Driver> getAllDrivers() {
-        return driverRepository.findAll();
-    }
+  @Override
+  public List<Driver> getAllDrivers() {
+    return driverRepository.findAll();
+  }
 
-    @Override
-    public Driver getDriverById(Long id) {
-        Optional<Driver> driver = driverRepository.findById(id);
-        if (driver.isPresent()) {
-            return driver.get();
-        } else {
-            throw new NotFoundException("Driver not found with id: " + id);
-        }
+  @Override
+  public Driver getDriverById(Long id) {
+    Optional<Driver> driver = driverRepository.findById(id);
+    if (driver.isPresent()) {
+      return driver.get();
+    } else {
+      throw new NotFoundException("Driver not found with id: " + id);
     }
+  }
 
-    @Override
-    public Driver createDriver(Driver driver) {
-        Optional<Driver> existingDriver = driverRepository.findByEmail(driver.getEmail());
-        if (existingDriver.isPresent()) {
-            throw new IllegalArgumentException("Driver with email " + driver.getEmail() + " already exists");
-        }
-        return saveDriver(driver);
+  @Override
+  public Driver createDriver(Driver driver) {
+    Optional<Driver> existingDriver = driverRepository.findByEmail(driver.getEmail());
+    if (existingDriver.isPresent()) {
+      throw new IllegalArgumentException(
+          "Driver with email " + driver.getEmail() + " already exists");
     }
+    return saveDriver(driver);
+  }
 
     @Override
     public Driver updateDriver(Long id, Driver driver) {
@@ -92,29 +93,34 @@ public class DriverServiceImpl implements DriverService {
         return saveDriver(driver);
     }
 
-    @Override
-    public Driver removeCarFromDriver(Long id, Long carId) {
-        Driver driver = driverRepository.findById(id).orElseThrow(() -> new NotFoundException("Driver not found with id: " + id));
-        Car car = carRepository.findById(carId).orElseThrow(() -> new NotFoundException("Car not found with id: " + carId));
-        if (!driver.getCars().contains(car)) {
-            throw new IllegalArgumentException("Car not assigned to driver");
-        }
-        driver.getCars().remove(car);
-        return saveDriver(driver);
+  @Override
+  public Driver removeCarFromDriver(Long id, Long carId) {
+    Driver driver =
+        driverRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("Driver not found with id: " + id));
+    Car car =
+        carRepository
+            .findById(carId)
+            .orElseThrow(() -> new NotFoundException("Car not found with id: " + carId));
+    if (!driver.getCars().contains(car)) {
+      throw new IllegalArgumentException("Car not assigned to driver");
     }
+    driver.getCars().remove(car);
+    return saveDriver(driver);
+  }
 
-    @Override
-    public Driver saveDriver(Driver driver) {
-        return driverRepository.save(driver);
-    }
+  @Override
+  public Driver saveDriver(Driver driver) {
+    return driverRepository.save(driver);
+  }
 
-    @Override
-    public void deleteDriver(Long id) {
-        Optional<Driver> driver = driverRepository.findById(id);
-        if (driver.isEmpty()) {
-            throw new NotFoundException("Driver not found with id: " + id);
-        }
-        driverRepository.deleteById(id);
+  @Override
+  public void deleteDriver(Long id) {
+    Optional<Driver> driver = driverRepository.findById(id);
+    if (driver.isEmpty()) {
+      throw new NotFoundException("Driver not found with id: " + id);
     }
-    
+    driverRepository.deleteById(id);
+  }
 }
