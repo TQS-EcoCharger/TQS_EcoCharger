@@ -33,7 +33,7 @@ public class DriverControllerTestIT {
   private Driver savedDriver;
 
   @BeforeEach
-  public void setUp() {
+   void setUp() {
     driverRepository.deleteAll();
     savedDriver =
         driverRepository.save(
@@ -44,7 +44,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test get all drivers")
-  public void testGetAllDrivers() {
+   void testGetAllDrivers() {
     RestAssuredMockMvc.given()
         .when()
         .get("/api/v1/driver/")
@@ -55,7 +55,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test get driver by id")
-  public void testGetDriverById() {
+   void testGetDriverById() {
     RestAssuredMockMvc.given()
         .when()
         .get("/api/v1/driver/" + savedDriver.getId())
@@ -66,13 +66,13 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test get driver by id not found")
-  public void testGetDriverByIdNotFound() {
+   void testGetDriverByIdNotFound() {
     RestAssuredMockMvc.given().when().get("/api/v1/drivers/99999").then().statusCode(404);
   }
 
   @Test
   @DisplayName("Test create driver")
-  public void testCreateDriver() {
+   void testCreateDriver() {
     String newDriverJson =
         """
             { "email": "marcelorodriguez@example.com", "password": "password6", "name": "Marcelo Rodriguez", "enabled": true }
@@ -89,7 +89,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test update driver")
-  public void testUpdateDriver() {
+   void testUpdateDriver() {
     String updatedDriverJson =
         """
             { "email": "johndoe@example.com", "password": "newpassword", "name": "John Doe Updated", "enabled": true }
@@ -106,7 +106,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test delete driver")
-  public void testDeleteDriver() {
+   void testDeleteDriver() {
     RestAssuredMockMvc.given()
         .when()
         .delete("/api/v1/driver/" + savedDriver.getId())
@@ -116,13 +116,13 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test delete driver not found")
-  public void testDeleteDriverNotFound() {
+   void testDeleteDriverNotFound() {
     RestAssuredMockMvc.given().when().delete("/api/v1/drivers/99999/").then().statusCode(404);
   }
 
   @Test
   @DisplayName("Test create driver already exists")
-  public void testCreateDriverAlreadyExists() {
+   void testCreateDriverAlreadyExists() {
     String existingDriverJson =
         """
             { "email": "johndoe@example.com", "password": "password1", "name": "John Doe", "enabled": true }
@@ -138,7 +138,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test update driver not found")
-  public void testUpdateDriverNotFound() {
+   void testUpdateDriverNotFound() {
     String updatedDriverJson =
         """
             { "email": "joanadoe@example.com", "password": "newpassword", "name": "Joana Doe Updated", "enabled": true }
@@ -154,7 +154,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test add car to driver")
-  public void testAddCarToDriver() {
+   void testAddCarToDriver() {
     String newCarJson =
         """
             { "name": "Tesla Model S", "make": "Tesla", "model": "Model S", "year": 2022, "licensePlate": "ABC123", "batteryCapacity": 100.0, "currentCharge": 50.0, "mileage": 0.0, "consumption": 0.0 }
@@ -171,7 +171,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test remove car from driver")
-  public void testRemoveCarFromDriver() {
+   void testRemoveCarFromDriver() {
     testAddCarToDriver(); // ensure car exists
     RestAssuredMockMvc.given()
         .when()
@@ -182,7 +182,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test remove car from driver not found")
-  public void testRemoveCarFromDriverNotFound() {
+   void testRemoveCarFromDriverNotFound() {
     RestAssuredMockMvc.given()
         .when()
         .delete("/api/v1/drivers/99999/cars/999")
@@ -192,7 +192,7 @@ public class DriverControllerTestIT {
 
   @Test
   @DisplayName("Test add car to driver not found")
-  public void testAddCarToDriverNotFound() {
+   void testAddCarToDriverNotFound() {
     String newCarJson =
         """
             { "make": "Ford", "model": "Raptor", "year": 2022, "licensePlate": "NEW999", "batteryCapacity": 100.0, "currentCharge": 50.0, "mileage": 0.0, "consumption": 0.0 }
