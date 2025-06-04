@@ -23,25 +23,11 @@ public class AdministratorController {
 
     @Operation(summary = "Create a new administrator")
     @PostMapping
-    public ResponseEntity<Administrator> createAdministrator(@RequestParam String email,
-                                                             @RequestParam String password,
-                                                             @RequestParam String name) {
-        return ResponseEntity.ok(administratorService.createAdministrator(email, password, name));
-    }
-
-    @Operation(summary = "Assign a charging station to an administrator")
-    @PutMapping("/{adminId}/stations/{stationId}")
-    public ResponseEntity<ChargingStation> assignStation(@PathVariable Long adminId,
-                                                         @PathVariable Long stationId) {
-        return ResponseEntity.ok(administratorService.assignChargingToAdmin(stationId, adminId));
-    }
-
-    @Operation(summary = "Unassign a charging station from an administrator")
-    @DeleteMapping("/{adminId}/stations/{stationId}")
-    public ResponseEntity<ChargingStation> unassignStation(@PathVariable Long adminId,
-                                                           @PathVariable Long stationId) {
-        return ResponseEntity.ok(administratorService.unsignChargingStation(stationId, adminId));
-    }
+    public ResponseEntity<Administrator> createAdministrator(@RequestBody Administrator admin) {
+    return ResponseEntity.ok(
+        administratorService.createAdministrator(admin.getEmail(), admin.getPassword(), admin.getName())
+    );
+}
 
     @Operation(summary = "Update a charging station")
     @PutMapping("/stations/{stationId}")

@@ -48,55 +48,8 @@ public class AdministratorServiceImpl implements AdministratorService{
         }
     }
 
-	@Override
-	public ChargingStation assignChargingToAdmin(Long id, Long adminId) {
-        Optional<ChargingStation> station = chargingStationRepository.findById(id);
-        if (station.isPresent()) {
-            ChargingStation chargingStation = station.get();
-            Optional<Administrator> admin = administratorRepository.findById(adminId);
-            if (admin.isPresent()) {
-                if(chargingStation.getAddedBy() != null && chargingStation.getAddedBy().getId() == adminId) {
-                    throw new RuntimeException("Charging Station already assigned to an administrator");
-                } else {
-                    chargingStation.setAddedBy(admin.get());
-                    admin.get().getAddedStations().add(chargingStation);
-                    administratorRepository.save(admin.get());
-                    return chargingStationRepository.save(chargingStation);
-                }
-            } else {
-                throw new RuntimeException("Administrator not found");
-            }
-        } else {
-            throw new RuntimeException("Charging Station not found");
-        }
-    }
-
-	@Override
-	public ChargingStation unsignChargingStation(Long id, Long adminId) {
-        Optional<ChargingStation> station = chargingStationRepository.findById(id);
-        if (station.isPresent()) {
-            ChargingStation chargingStation = station.get();
-            Optional<Administrator> admin = administratorRepository.findById(adminId);
-            if (admin.isPresent()) {
-                if (chargingStation.getAddedBy() == null && !chargingStation.getAddedBy().getId().equals(adminId)) {
-                    throw new RuntimeException("Charging Station is not assigned to this administrator");
-                } else {
-                    chargingStation.setAddedBy(null);
-                    admin.get().getAddedStations().remove(chargingStation);
-                    administratorRepository.save(admin.get());
-                    return chargingStationRepository.save(chargingStation);
-                }
-            } else {
-                throw new RuntimeException("Administrator not found");
-            }
-        } else {
-            throw new RuntimeException("Charging Station not found");
-        }
-	}
-
     @Override
     public ChargingStation updateChargingStation(ChargingStation station) {
-        System.out.println("Updating Charging Station: " + station);
         Optional<ChargingStation> existingStation = chargingStationRepository.findById(station.getId());
         if (existingStation.isPresent()) {
             ChargingStation updatedStation = existingStation.get();
@@ -115,8 +68,6 @@ public class AdministratorServiceImpl implements AdministratorService{
 
     @Override
     public ChargingPoint updateChargingPoint(ChargingPoint point, Long pointId) {
-        System.out.println("Updating Charging Point with ID: " + pointId);
-    
         Optional<ChargingPoint> existingPointOpt = chargingPointRepository.findById(pointId);
         if (existingPointOpt.isEmpty()) {
             throw new RuntimeException("Charging Point not found");
