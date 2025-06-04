@@ -24,6 +24,7 @@
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <xray-junit-extensions.version>0.7.3</xray-junit-extensions.version>
         <xray-maven-plugin.version>0.8.0</xray-maven-plugin.version>
+        <webdrivermanager.version>5.9.3</webdrivermanager.version>
         <cucumber.version>7.21.1</cucumber.version>
         <surefire.jacoco.args>${argLine}</surefire.jacoco.args>
         <skip.xray.unit>true</skip.xray.unit> <!-- Default: don't run -->
@@ -330,15 +331,21 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.20.0</version>
+            <version>4.29.0</version>
             <scope>test</scope>
         </dependency>
         
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-devtools-v137</artifactId> 
+            <version>4.25.0</version>
+        </dependency>
+
         <!-- WebDriverManager (for managing browser drivers automatically) -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>6.1.0</version>
+            <version>${webdrivermanager.version}</version>
             <scope>test</scope>
         </dependency>
 
