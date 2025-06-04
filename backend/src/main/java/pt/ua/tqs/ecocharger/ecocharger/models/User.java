@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
   @JsonSubTypes.Type(value = Administrator.class, name = "administrators")
 })
 @Data
+@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -33,5 +34,12 @@ public class User {
   @Column(nullable = false)
   private String name;
 
+  @Column(nullable = false)
   private boolean enabled = true;
+
+  public User(String email, String password, String name) {
+    this.email = email;
+    this.password = password;
+    this.name = name;
+  }
 }

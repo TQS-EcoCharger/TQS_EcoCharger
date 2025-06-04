@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.LoginRequest;
+import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -50,5 +52,19 @@ public class AuthenticationController {
     }
 
     return ResponseEntity.ok(result);
+  }
+
+  @GetMapping("/me")
+  public ResponseEntity<Object> getCurrentUser(@RequestHeader("Authorization") String token) {
+    System.out.println("Received token: " + token);
+    String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+    try {
+      User currentUser = authService.getCurrentUser(jwtToken);
+      return ResponseEntity.ok(currentUser);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    } catch (NotFoundException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
   }
 }

@@ -9,11 +9,14 @@ import Sidebar from '../components/Sidebar';
 import { useNavigate } from 'react-router-dom';
 
 import { FiZap, FiPower } from 'react-icons/fi';
-import { FaRoad } from 'react-icons/fa';
-import { FaCity } from 'react-icons/fa';
+import { FaRoad, FaCity } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import Chargingicon from '../../public/ChargingStation.png';
 import { useUser } from "../context/UserContext";
 import ModalAddCharging from '../components/ModalAddCharging';
@@ -33,6 +36,15 @@ const customIcon = new L.Icon({
 export default function HomePage() {
   const [stations, setStations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
+  const [selectedPoint, setSelectedPoint] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [message, setMessage] = useState('');
+  const [userLocation, setUserLocation] = useState(null);
+
+  const [existingReservations, setExistingReservations] = useState([]);
+
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
   const { userType } = useUser();
@@ -45,12 +57,54 @@ export default function HomePage() {
     setStations(prev => [...prev, newStation]);
   };
 
- useEffect(() => {
-  if (!token) {
-    console.warn("Nenhum token encontrado. Redirecionando para login...");
-    navigate("/");
+   useEffect(() => {
+    const fetchSelf = async () => {
+      if (localStorage.getItem("me") === null) {
+        try {
+          const response = await axios.get(`${CONFIG.API_URL}auth/me`, {
+            headers: {
+              "Authorization": localStorage.getItem("token")
+            }
+          });
+          console.log("User data fetched successfully:", response.data);
+          localStorage.setItem("me", JSON.stringify(response.data));
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        console.log("User data already exists in localStorage.");
+      }
+    };
+
+    fetchSelf();
+  }, []);
+
+  useEffect(() => {
+  if (!navigator.geolocation) {
+    console.warn('Geolocation is not supported by your browser.');
     return;
   }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setUserLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    },
+    (error) => {
+      console.error('Error getting user location:', error);
+    }
+  );
+}, []);
+
+
+   useEffect(() => {
+    if (!token) {
+      console.warn('No token found. Redirecting to login...');
+      navigate('/');
+      return;
+    }
 
   axios
     .get(`${CONFIG.API_URL}v1/chargingStations`, {
@@ -92,17 +146,51 @@ export default function HomePage() {
   }
 };
 
-  return (
-    <div className={styles.page}>
-      <Sidebar />
+const handleReservation = () => {
+    if (!selectedPoint || !startTime || !endTime) {
+      setMessage('Please fill in all fields.');
+      return;
+    }
 
-      <div className={styles.wrapper}>
-        <div className={styles.stationDetails}>
-          <h2>Charging Station Details</h2>
+    const me = JSON.parse(localStorage.getItem('me'));
+    const payload = {
+      userId: parseInt(me.id),
+      chargingPointId: selectedPoint.id,
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
+    };
+
+    axios
+      .post(`${CONFIG.API_URL}v1/reservation`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        setMessage('Reservation successfully created!');
+        setTimeout(() => {
+          setIsModalOpen(false);
+          setSelectedPoint(null); 
+          setMessage('');
+          setStartTime(new Date());
+          setEndTime(new Date());
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error('Reservation error:', error.response || error.message);
+        setMessage((error.response?.data || error.message));
+      });
+  };
+
+  return (
+<div className={styles.page} id="homepage">
+  <Sidebar />
+
+      <div className={styles.wrapper} id="map-and-details-wrapper">
+        <div className={styles.stationDetails} id="station-details-panel">
+          <h2 id="station-details-header">Charging Station Details</h2>
           {selectedStation ? (
-              <div className={styles.cardScrollable}>
+              <div className={styles.cardScrollable} id="station-card-scrollable">
                 <div className={styles.cardContent}>
-                  <div className={styles.stationInfo}>
+                  <div className={styles.stationInfo}  id="station-info">
                     <p><strong><FaCity /> City:</strong> {selectedStation.cityName}</p>
                     <p><strong><FaRoad /> Address:</strong> {selectedStation.address}</p>
                     <p><strong>Country:</strong> {selectedStation.country || 'N/A'}</p>
@@ -111,17 +199,17 @@ export default function HomePage() {
                     <p><strong>Longitude:</strong> {selectedStation.longitude}</p>
                   </div>
 
-                  <h3 className={styles.sectionTitle}>Charging Points</h3>
+                  <h3 className={styles.sectionTitle} id="charging-points-header">Charging Points</h3>
                     {selectedStation.chargingPoints && selectedStation.chargingPoints.length > 0 ? (
                       selectedStation.chargingPoints.map((point) => (
-                        <div key={point.id} className={styles.chargingCard}>
+                        <div key={point.id} className={styles.chargingCard} id={`charging-point-${point.id}`}>
                           <div className={styles.chargingHeader}>
                             <BsPlug className={styles.icon} />
                             <span><strong>{point.brand}</strong></span>
                             {point.available ? (
-                              <BsCheckCircle className={styles.available} title="Disponível" />
+                              <BsCheckCircle className={styles.available} title="Available" />
                             ) : (
-                              <BsXCircle className={styles.unavailable} title="Indisponível" />
+                              <BsXCircle className={styles.unavailable} title="Unavailable" />
                             )}
                           </div>
                           
@@ -141,6 +229,26 @@ export default function HomePage() {
                               No connectors available for this charging point.
                             </p>
                           )}
+                          <button
+                  className={styles.reserveBtn}
+                  id={`reserve-button-${point.id}`}
+                  onClick={() => {
+                    setSelectedPoint(point);
+                    setIsModalOpen(true);
+
+                    axios
+                      .get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                      })
+                      .then((res) => setExistingReservations(res.data))
+                      .catch((err) => {
+                        console.error('Failed to fetch existing reservations:', err);
+                        setExistingReservations([]);
+                      });
+                  }}
+                >
+                  Reserve
+                </button>
                         </div>
                       ))
                     ) : (
@@ -252,5 +360,7 @@ export default function HomePage() {
 
       </div>
     </div>
+  )}
+</div>
   );
 }
