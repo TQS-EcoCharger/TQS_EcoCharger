@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import java.time.Duration;
+import java.util.UUID;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -26,8 +27,7 @@ public class WebDriverSingleton {
       options.addArguments("--window-size=1920,1080");
 
       try {
-        Path tempProfile = Files.createTempDirectory("chrome-profile");
-        options.addArguments("--user-data-dir=" + tempProfile.toAbsolutePath().toString());
+        Path tempProfile = Files.createTempDirectory("chrome-profile-" + UUID.randomUUID());
       } catch (Exception e) {
         throw new RuntimeException("Failed to create temp user-data-dir", e);
       }
