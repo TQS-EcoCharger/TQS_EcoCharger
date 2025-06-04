@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReservationResponseDTO {
 
-    private Long id;
-    private Long userId;
-    private ChargingPointDTO chargingPoint;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private ReservationStatus status;
+  private Long id;
+  private Long userId;
+  private ChargingPointDTO chargingPoint;
+  private LocalDateTime startTime;
+  private LocalDateTime endTime;
+  private ReservationStatus status;
 }

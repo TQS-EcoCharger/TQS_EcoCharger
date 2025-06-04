@@ -7,6 +7,7 @@ import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, Long> {
-    List<Car> findByLicensePlate(String licensePlate);
-    List<Car> findByMakeAndModel(String make, String model);
+  List<Car> findByLicensePlate(String licensePlate);
+
+  List<Car> findByMakeAndModel(String make, String model);
 }
