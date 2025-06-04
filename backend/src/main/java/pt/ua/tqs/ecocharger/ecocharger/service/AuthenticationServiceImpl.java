@@ -43,7 +43,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       return new AuthResultDTO(false, "Invalid password", null, null);
     }
 
-
     String token = jwtUtil.generateToken(user.getEmail());
     String userType = user instanceof Administrator ? "administrator" : "client";
 
@@ -71,7 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     User user = new User();
     user.setEmail(email);
     user.setName(name);
-    user.setPassword(password); 
+    user.setPassword(password);
     user.setEnabled(true);
 
     userRepository.save(user);

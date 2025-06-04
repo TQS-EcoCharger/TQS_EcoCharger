@@ -15,8 +15,7 @@ class ChargingStationTest {
   @Requirement("ET-18")
   void testChargingStationConstructorAndGetters() {
     ChargingStation station =
-        new ChargingStation(
-            "Aveiro", "Rua Central", 40.6405, -8.6538, "PT", "Portugal");
+        new ChargingStation("Aveiro", "Rua Central", 40.6405, -8.6538, "PT", "Portugal");
     station.setId(1L);
 
     assertEquals(1L, station.getId());
@@ -61,8 +60,7 @@ class ChargingStationTest {
   @Requirement("ET-18")
   void testChargingStationToString() {
     ChargingStation station =
-        new ChargingStation(
-            "Porto", "Rua das Flores", 41.1496, -8.6109,"PT", "Portugal");
+        new ChargingStation("Porto", "Rua das Flores", 41.1496, -8.6109, "PT", "Portugal");
     station.setId(3L);
 
     String result = station.toString();

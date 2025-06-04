@@ -13,17 +13,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Client extends User {
 
-    public Client(Long id, String email, String password, String name, boolean enabled) {
-        super(id, email, password, name, enabled);
-    }
+  public Client(Long id, String email, String password, String name, boolean enabled) {
+    super(id, email, password, name, enabled);
+  }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "id=" + getId() +
-                ", email='" + getEmail() + '\'' +
-                ", name='" + getName() + '\'' +
-                ", enabled=" + isEnabled() +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Client{"
+        + "id="
+        + getId()
+        + ", email='"
+        + getEmail()
+        + '\''
+        + ", name='"
+        + getName()
+        + '\''
+        + ", enabled="
+        + isEnabled()
+        + '}';
+  }
 }

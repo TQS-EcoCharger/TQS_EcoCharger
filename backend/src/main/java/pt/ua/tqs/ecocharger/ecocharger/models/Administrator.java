@@ -18,20 +18,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Administrator extends User {
 
-    @OneToMany(mappedBy = "addedBy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChargingStation> addedStations = new ArrayList<>();
+  @OneToMany(mappedBy = "addedBy", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ChargingStation> addedStations = new ArrayList<>();
 
-    public Administrator(Long id, String email, String password, String name, boolean enabled) {
-        super(id, email, password, name, enabled);
-    }
+  public Administrator(Long id, String email, String password, String name, boolean enabled) {
+    super(id, email, password, name, enabled);
+  }
 
-    @Override
-    public String toString() {
-        return "Administrator{" +
-                "id=" + getId() +
-                ", email='" + getEmail() + '\'' +
-                ", name='" + getName() + '\'' +
-                ", enabled=" + isEnabled() +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Administrator{"
+        + "id="
+        + getId()
+        + ", email='"
+        + getEmail()
+        + '\''
+        + ", name='"
+        + getName()
+        + '\''
+        + ", enabled="
+        + isEnabled()
+        + '}';
+  }
 }

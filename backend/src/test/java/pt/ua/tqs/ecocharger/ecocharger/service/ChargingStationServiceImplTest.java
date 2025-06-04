@@ -32,8 +32,7 @@ class ChargingStationServiceImplTest {
   @Test
   @Requirement("ET-18")
   void testCreateStation_NewStation() {
-    ChargingStation station =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
+    ChargingStation station = new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
 
     when(chargingStationRepository.findByCityName("Aveiro")).thenReturn(Optional.empty());
     when(chargingStationRepository.save(station)).thenReturn(station);
@@ -62,10 +61,8 @@ class ChargingStationServiceImplTest {
   @Test
   @Requirement("ET-18")
   void testGetAllStationsByCityName() {
-    ChargingStation s1 =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
-    ChargingStation s2 =
-        new ChargingStation("Lisboa", "Rua B", 38.0, -9.0, "PT", "Portugal");
+    ChargingStation s1 = new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
+    ChargingStation s2 = new ChargingStation("Lisboa", "Rua B", 38.0, -9.0, "PT", "Portugal");
 
     when(chargingStationRepository.findAll()).thenReturn(Arrays.asList(s1, s2));
 
@@ -78,8 +75,7 @@ class ChargingStationServiceImplTest {
   @Test
   @Requirement("ET-18")
   void testDeleteStation_Exists() {
-    ChargingStation station =
-        new ChargingStation("Porto", "Rua C", 41.0, -8.5, "PT", "Portugal");
+    ChargingStation station = new ChargingStation("Porto", "Rua C", 41.0, -8.5, "PT", "Portugal");
     station.setId(1L);
 
     when(chargingStationRepository.findById(1L)).thenReturn(Optional.of(station));
@@ -108,10 +104,8 @@ class ChargingStationServiceImplTest {
   @Test
   @Requirement("ET-18")
   void testGetAllStations() {
-    ChargingStation s1 =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
-    ChargingStation s2 =
-        new ChargingStation("Lisboa", "Rua B", 38.0, -9.0, "PT", "Portugal");
+    ChargingStation s1 = new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
+    ChargingStation s2 = new ChargingStation("Lisboa", "Rua B", 38.0, -9.0, "PT", "Portugal");
 
     when(chargingStationRepository.findAll()).thenReturn(Arrays.asList(s1, s2));
 

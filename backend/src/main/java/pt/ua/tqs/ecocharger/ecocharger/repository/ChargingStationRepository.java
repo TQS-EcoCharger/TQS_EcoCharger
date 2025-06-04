@@ -11,5 +11,6 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 @Repository
 public interface ChargingStationRepository extends JpaRepository<ChargingStation, Long> {
   Optional<List<ChargingStation>> findByCityName(String cityName);
+
   List<ChargingStation> findAll();
 }
