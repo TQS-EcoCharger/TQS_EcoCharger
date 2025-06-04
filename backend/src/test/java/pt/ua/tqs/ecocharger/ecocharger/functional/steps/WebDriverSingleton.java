@@ -11,25 +11,24 @@ public class WebDriverSingleton {
   private static WebDriver driver;
   private static WebDriverWait wait;
 
-  public static void initialize() {
-    if (driver == null) {
-      // REMOVE this line – it's unnecessary and causes problems on GitHub CI
-      // WebDriverManager.firefoxdriver().setup();
+public static void initialize() {
+  if (driver == null) {
+    System.setProperty("webdriver.firefox.logfile", "/dev/null");
 
-      System.setProperty("webdriver.firefox.logfile", "/dev/null");
+    FirefoxOptions options = new FirefoxOptions();
+    options.setBinary("/usr/bin/firefox"); // ✅ Explicitly set the binary path
+    options.addArguments(
+        "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
 
-      FirefoxOptions options = new FirefoxOptions();
-      options.addArguments(
-          "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
+    driver = new FirefoxDriver(options);
+    driver.manage().window().setSize(new Dimension(1400, 1200));
+    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+    driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
 
-      driver = new FirefoxDriver(options);
-      driver.manage().window().setSize(new Dimension(1400, 1200));
-      driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-      driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
-
-      wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    }
+    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
   }
+}
+
 
   public static WebDriver getDriver() {
     return driver;
