@@ -13,7 +13,5 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 @ConfigurationParameter(
     key = GLUE_PROPERTY_NAME,
     value = "pt.ua.tqs.ecocharger.ecocharger.functional.steps")
-@ConfigurationParameter(
-    key = PLUGIN_PROPERTY_NAME,
-    value = "pretty, html:target/cucumber-report.html, json:target/cucumber-report.json")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
 public class CucumberTest {}
