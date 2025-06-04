@@ -52,7 +52,7 @@ public class ViewChargingSteps {
 
   @Then("deve ver a mensagem {string}")
   public void deve_ver_mensagem(String mensagem) {
-    WebElement painel = driver.findElement(By.className("stationDetails"));
+    WebElement painel = driver.findElement(By.className("_stationDetails_1vrj7_29"));
     assertTrue(painel.getText().contains(mensagem));
   }
 
@@ -65,13 +65,13 @@ public class ViewChargingSteps {
 
   @When("o utilizador clica num marcador de estação no mapa")
   public void o_utilizador_clica_marcador() {
-    WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(0);
+    WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(2);
     marker.click();
   }
 
   @Then("os detalhes da estação devem aparecer no painel lateral")
   public void detalhes_aparecem() {
-    WebElement painel = driver.findElement(By.className("stationDetails"));
+    WebElement painel = driver.findElement(By.className("_stationDetails_1vrj7_29"));
     wait.until(
         driver -> painel.getText().contains("Município") && painel.getText().contains("Morada"));
   }
