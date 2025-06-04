@@ -88,8 +88,8 @@ jobs:
           GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
           wget "$GECKO_URL" -O geckodriver.tar.gz
           tar -xzf geckodriver.tar.gz
-          sudo mv geckodriver /usr/bin/geckodriver
-          sudo chmod +x /usr/bin/geckodriver
+          sudo mv geckodriver /snap/bin/geckodriver
+          sudo chmod +x /snap/bin/geckodriver
 
       - name: Build backend
         working-directory: ./backend
