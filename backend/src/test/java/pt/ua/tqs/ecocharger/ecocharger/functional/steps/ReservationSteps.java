@@ -69,7 +69,7 @@ public class ReservationSteps {
   public void i_set_start_time() {
     JavascriptExecutor js = (JavascriptExecutor) driver;
     String futureEnd = java.time.LocalDateTime.now().minusMinutes(80).toString();
-
+    System.out.println(futureEnd);
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
         futureEnd);
@@ -89,7 +89,7 @@ public class ReservationSteps {
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))",
         futureEnd);
-
+    takeScreenshot(driver, "screenshots/newreservation.png");
     try {
       Thread.sleep(100);
     } catch (InterruptedException ignored) {
