@@ -1,8 +1,8 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -39,7 +39,7 @@ public class OTPServiceImpl implements OTPService {
         .findByReservation(reservation)
         .ifPresent(existingOtp -> otpCodeRepository.delete(existingOtp));
 
-    String code = String.format("%06d", new Random().nextInt(1000000));
+    String code = String.format("%06d", new SecureRandom().nextInt(1000000));
     LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(1);
 
     OTPCode newOtp = new OTPCode(null, code, expirationTime, reservation);
