@@ -152,6 +152,7 @@ public class ReservationSteps {
 
   @Then("I store the OTP code for later use")
   public void storeOtp() {
+    takeScreenshot(driver, "screenshots/storeOtpCode.png");
     assertNotNull(storedOtpCode);
   }
 
