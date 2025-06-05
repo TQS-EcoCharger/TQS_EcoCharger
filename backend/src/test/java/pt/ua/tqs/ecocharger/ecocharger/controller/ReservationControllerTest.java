@@ -15,9 +15,11 @@ import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingStationDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ConnectorDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationRequestDTO;
+
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.ReservationStatus;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ReservationService;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.OTPService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +38,8 @@ public class ReservationControllerTest {
 
   @Autowired @MockitoBean private ReservationService reservationService;
 
+  @MockitoBean @Autowired private OTPService otpService;
+
   private ReservationResponseDTO reservationResponse;
 
   @BeforeEach
@@ -44,7 +48,8 @@ public class ReservationControllerTest {
         new ChargingStationDTO(1L, "Station A", "Location A", 50.1234, -8.1234);
     List<ConnectorDTO> connectors = List.of(new ConnectorDTO(1L, "Type 2", 50, 2, 3));
     ChargingPointDTO chargingPoint =
-        new ChargingPointDTO(2L, "ChargingBrand", true, 100.0, 10.0, connectors, chargingStation);
+        new ChargingPointDTO(
+            2L, "ChargingBrand", true, 100.0, 10.0, 20.0, connectors, chargingStation);
     reservationResponse =
         new ReservationResponseDTO(
             1L,
@@ -52,7 +57,7 @@ public class ReservationControllerTest {
             chargingPoint,
             LocalDateTime.parse("2023-05-28T10:00:00"),
             LocalDateTime.parse("2023-05-28T12:00:00"),
-            ReservationStatus.PENDING);
+            ReservationStatus.TO_BE_USED);
 
     when(reservationService.getAllReservations()).thenReturn(List.of(reservationResponse));
     when(reservationService.getReservationsByUserId(1L)).thenReturn(List.of(reservationResponse));
