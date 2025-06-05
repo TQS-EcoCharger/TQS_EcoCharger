@@ -117,9 +117,11 @@ class ChargingStationServiceImplTest {
   @Test
   @Requirement("ET-22")
   void testUpdateStation_Exists() {
-    ChargingStation existingStation = new ChargingStation("Porto", "Rua C", 41.0, -8.5, "PT", "Portugal");
+    ChargingStation existingStation =
+        new ChargingStation("Porto", "Rua C", 41.0, -8.5, "PT", "Portugal");
     existingStation.setId(1L);
-    ChargingStation updatedStation = new ChargingStation("Porto", "Rua D", 41.0, -8.5, "PT", "Portugal");
+    ChargingStation updatedStation =
+        new ChargingStation("Porto", "Rua D", 41.0, -8.5, "PT", "Portugal");
     updatedStation.setId(1L);
 
     when(chargingStationRepository.findById(1L)).thenReturn(Optional.of(existingStation));
