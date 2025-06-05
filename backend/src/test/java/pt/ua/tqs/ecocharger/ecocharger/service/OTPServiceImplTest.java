@@ -83,7 +83,7 @@ public class OTPServiceImplTest {
   @DisplayName("Deletes existing OTP if one already exists for reservation")
   void generateOtpDeletesExistingOtp() {
     OTPCode existingOtp =
-        new OTPCode(10L, "123456", LocalDateTime.now().plusMinutes(5), mockReservation);
+        new OTPCode(10L, "123456", LocalDateTime.now().plusMinutes(6), mockReservation);
     when(reservationRepository.findById(1L)).thenReturn(Optional.of(mockReservation));
     when(otpCodeRepository.findByReservation(mockReservation)).thenReturn(Optional.of(existingOtp));
     when(otpCodeRepository.save(any(OTPCode.class))).thenAnswer(i -> i.getArgument(0));
@@ -99,7 +99,7 @@ public class OTPServiceImplTest {
   @DisplayName("Returns true if OTP is valid and not expired")
   void validateOtpSuccess() {
     OTPCode validOtp =
-        new OTPCode(1L, "999999", LocalDateTime.now().plusMinutes(5), mockReservation);
+        new OTPCode(1L, "999999", LocalDateTime.now().plusMinutes(6), mockReservation);
     when(otpCodeRepository.findByCodeAndReservation("999999", mockReservation))
         .thenReturn(Optional.of(validOtp));
 
@@ -113,7 +113,7 @@ public class OTPServiceImplTest {
   @DisplayName("Returns false if OTP is expired")
   void validateOtpExpired() {
     OTPCode expiredOtp =
-        new OTPCode(1L, "111111", LocalDateTime.now().minusMinutes(1), mockReservation);
+        new OTPCode(1L, "111111", LocalDateTime.now().minusMinutes(6), mockReservation);
     when(otpCodeRepository.findByCodeAndReservation("111111", mockReservation))
         .thenReturn(Optional.of(expiredOtp));
 

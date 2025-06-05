@@ -40,7 +40,7 @@ public class OTPServiceImpl implements OTPService {
         .ifPresent(existingOtp -> otpCodeRepository.delete(existingOtp));
 
     String code = String.format("%06d", new SecureRandom().nextInt(1000000));
-    LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(1);
+    LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(5);
 
     OTPCode newOtp = new OTPCode(null, code, expirationTime, reservation);
     return otpCodeRepository.save(newOtp);

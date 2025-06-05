@@ -34,7 +34,7 @@ export default function ReservationsPage() {
       const code = res.data;
 
       setOtpData((prev) => ({ ...prev, [reservationId]: code }));
-      setTimers((prev) => ({ ...prev, [reservationId]: 60 }));
+      setTimers((prev) => ({ ...prev, [reservationId]: 300 }));
 
       const intervalId = setInterval(() => {
         setTimers((prev) => {

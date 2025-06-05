@@ -83,7 +83,7 @@ export default function SlotPage() {
         setCars(carRes.data.cars || []);
         setMessage('');
       } else {
-        setMessage(res.data.message || 'Invalid or expired OTP.');
+        setMessage(res.data.reason || 'Invalid or expired OTP.');
       }
     } catch (err) {
       console.error('OTP validation failed:', err);
