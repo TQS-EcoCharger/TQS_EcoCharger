@@ -59,7 +59,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #2c3e50;
+  color: #000000;
 }
 
 /* Connector styles */
@@ -84,11 +84,11 @@
 }
 
 .confirmed {
-  background-color: #4e6b49;
+  background-color: #dbffd7;
 }
 
 .cancelled {
-  background-color: #ef9a9a;
+  background-color: #ffa1a1;
 }
 
 /* Add spacing between field groups */

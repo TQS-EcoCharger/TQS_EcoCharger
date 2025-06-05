@@ -116,6 +116,26 @@ export default function HomePage() {
       });
   }, [navigate, token]);
 
+  useEffect(() => {
+  const handleCustomEndTime = (e) => {
+    const date = new Date(e.detail);
+    setEndTime(date);
+  };
+  const handleCustomStartTime = (e) => {
+    const date = new Date(e.detail);
+    setStartTime(date);
+  };
+
+  window.addEventListener('set-test-end-time', handleCustomEndTime);
+  window.addEventListener('set-test-start-time', handleCustomStartTime);
+
+  return () => {
+    window.removeEventListener('set-test-end-time', handleCustomEndTime);
+    window.removeEventListener('set-test-start-time', handleCustomStartTime);
+  };
+}, []);
+
+
   const handleEditButtonClick = () => {
     if (selectedStation) setShowEditModal(true);
     else alert("Select a charging station to edit.");
@@ -261,7 +281,7 @@ export default function HomePage() {
                     }
                   }}
                 >
-                  <Popup data-testid={`marker-popup-${station.id}`}>
+                  <Popup id={`marker-popup-${station.id}`}>
                     <div className={styles.popupContent}>
                       <p><FaCity className={styles.popupIcon} /> <strong>City Name:</strong> {station.cityName}</p>
                       <p><strong>Latitude:</strong> {station.latitude}</p>

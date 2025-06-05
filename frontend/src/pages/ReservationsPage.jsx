@@ -7,40 +7,39 @@ import Sidebar from '../components/Sidebar';
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [error, setError] = useState('');
-  const [me, setMe] = useState(null); 
+  const [me, setMe] = useState(null);
   const token = localStorage.getItem('token');
 
   const [otpData, setOtpData] = useState({});
   const [timers, setTimers] = useState({});
 
-const handleGenerateOtp = async (reservationId) => {
-  try {
-    const res = await axios.post(
-      `${CONFIG.API_URL}v1/reservation/${reservationId}/otp`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    const code = res.data;
+  const handleGenerateOtp = async (reservationId) => {
+    try {
+      const res = await axios.post(
+        `${CONFIG.API_URL}v1/reservation/${reservationId}/otp`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const code = res.data;
 
-    setOtpData((prev) => ({ ...prev, [reservationId]: code }));
-    setTimers((prev) => ({ ...prev, [reservationId]: 60 }));
+      setOtpData((prev) => ({ ...prev, [reservationId]: code }));
+      setTimers((prev) => ({ ...prev, [reservationId]: 60 }));
 
-    const intervalId = setInterval(() => {
-      setTimers((prev) => {
-        const newTime = (prev[reservationId] || 0) - 1;
-        if (newTime <= 0) {
-          clearInterval(intervalId);
-          setOtpData((prevOtp) => ({ ...prevOtp, [reservationId]: null }));
-          return { ...prev, [reservationId]: 0 };
-        }
-        return { ...prev, [reservationId]: newTime };
-      });
-    }, 1000);
-  } catch (err) {
-    console.error('Failed to generate OTP:', err);
-  }
-};
-
+      const intervalId = setInterval(() => {
+        setTimers((prev) => {
+          const newTime = (prev[reservationId] || 0) - 1;
+          if (newTime <= 0) {
+            clearInterval(intervalId);
+            setOtpData((prevOtp) => ({ ...prevOtp, [reservationId]: null }));
+            return { ...prev, [reservationId]: 0 };
+          }
+          return { ...prev, [reservationId]: newTime };
+        });
+      }, 1000);
+    } catch (err) {
+      console.error('Failed to generate OTP:', err);
+    }
+  };
 
   useEffect(() => {
     const localMe = localStorage.getItem('me');
@@ -62,7 +61,7 @@ const handleGenerateOtp = async (reservationId) => {
     }
   }, [token]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!token || !me) return;
 
     axios
@@ -76,80 +75,81 @@ const handleGenerateOtp = async (reservationId) => {
       });
   }, [token, me]);
 
-
   if (error) {
     return <div className={styles.message}>{error}</div>;
   }
 
   return (
-<div className={styles.page} data-testid="reservations-page">
-  <Sidebar />
-  <div className={styles.container}>
-    <h2 className={styles.title} data-testid="reservations-title">My Reservations</h2>
+    <div className={styles.page} id="reservations-page">
+      <Sidebar />
+      <div className={styles.container}>
+        <h2 className={styles.title} id="reservations-title">My Reservations</h2>
 
-    {reservations.length === 0 ? (
-      <p className={styles.message} data-testid="no-reservations">You have no reservations.</p>
-    ) : (
-      <div className={styles.grid} data-testid="reservations-list">
-      {reservations.map((reservation) => {
-        const cp = reservation.chargingPoint;
-        const cs = cp?.chargingStation;
+        {reservations.length === 0 ? (
+          <p className={styles.message} id="no-reservations">You have no reservations.</p>
+        ) : (
+          <div className={styles.grid} id="reservations-list">
+            {reservations.map((reservation) => {
+              const cp = reservation.chargingPoint;
+              const cs = cp?.chargingStation;
 
-        return (
-          <div
-            key={reservation.id}
-            className={`${styles.card} ${
-              reservation.status === 'TO_BE_USED'
-                ? styles.TO_BE_USED
-                : reservation.status === 'USED'
-                ? styles.confirmed
-                : reservation.status === 'CANCELLED'
-                ? styles.cancelled
-                : ''
-            }`}
-            data-testid={`reservation-card-${reservation.id}`}
-          >
-            <h3 className={styles.cardTitle}>
-              {cp?.brand || 'Charging Point'}
-            </h3>
-
-            <p><strong>Status:</strong> {reservation.status}</p>
-            <p><strong>Start:</strong> {new Date(reservation.startTime).toLocaleString()}</p>
-            <p><strong>End:</strong> {new Date(reservation.endTime).toLocaleString()}</p>
-
-            <p><strong>Price per kWh:</strong> €{cp?.pricePerKWh?.toFixed(2) ?? 'N/A'}</p>
-            <p><strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}</p>
-            <p><strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}</p>
-
-            {cs && (
-              <p><strong>Location:</strong> {cs.address}, {cs.cityName}</p>
-            )}
-
-            {reservation.status === 'TO_BE_USED' && (
-              <div style={{ marginTop: '10px' }}>
-                <button
-                  className={styles.confirmButton}
-                  onClick={() => handleGenerateOtp(reservation.id)}
+              return (
+                <div
+                  data-charging-point-id={cp?.id}  // <-- THIS LINE IS NEW
+                  key={reservation.id}
+                  className={`${styles.card} ${
+                    reservation.status === 'TO_BE_USED'
+                      ? styles.TO_BE_USED
+                      : reservation.status === 'USED'
+                      ? styles.confirmed
+                      : reservation.status === 'CANCELLED'
+                      ? styles.cancelled
+                      : ''
+                  }`}
+                  id={`reservation-card-${reservation.id}`}
                 >
-                  Generate Start Code
-                </button>
+                  <h3 className={styles.cardTitle} id={`reservation-brand-${reservation.id}`}>
+                    {cp?.brand || 'Charging Point'}
+                  </h3>
 
-                {otpData[reservation.id] && (
-                  <div className={styles.message} style={{ marginTop: '0.5rem' }}>
-                    <p><strong>OTP Code:</strong> {otpData[reservation.id]?.code}</p>
-                    <p><strong>Expires in:</strong> {timers[reservation.id]}s</p>
-                  </div>
-                )}
-              </div>
-            )}
+                  <p id={`reservation-status-${reservation.id}`}><strong>Status:</strong> {reservation.status}</p>
+                  <p id={`reservation-start-${reservation.id}`}><strong>Start:</strong> {new Date(reservation.startTime).toLocaleString()}</p>
+                  <p id={`reservation-end-${reservation.id}`}><strong>End:</strong> {new Date(reservation.endTime).toLocaleString()}</p>
+
+                  <p><strong>Price per kWh:</strong> €{cp?.pricePerKWh?.toFixed(2) ?? 'N/A'}</p>
+                  <p><strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}</p>
+                  <p><strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}</p>
+
+                  {cs && (
+                    <p><strong>Location:</strong> {cs.address}, {cs.cityName}</p>
+                  )}
+
+                  {reservation.status === 'TO_BE_USED' && (
+                    <div style={{ marginTop: '10px' }}>
+                      <button
+                        className={styles.confirmButton}
+                        id={`generate-otp-button-${reservation.id}`}
+                        data-testid="generate-otp-button"
+                        onClick={() => handleGenerateOtp(reservation.id)}
+
+                      >
+                        Generate Start Code
+                      </button>
+
+                      {otpData[reservation.id] && (
+                        <div className={styles.message} style={{ marginTop: '0.5rem' }}>
+                          <p id={`otp-code-${reservation.id}`}><strong>OTP Code:</strong> {otpData[reservation.id]?.code}</p>
+                          <p id={`otp-expiry-${reservation.id}`}><strong>Expires in:</strong> {timers[reservation.id]}s</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
-
-
+        )}
       </div>
-    )}
-  </div>
-</div>
+    </div>
   );
 }

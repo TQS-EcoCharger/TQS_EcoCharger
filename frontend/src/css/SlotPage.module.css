@@ -474,3 +474,60 @@ h2 {
   padding: 5px;
 }
 
+
+
+/* Redesigned session info card */
+.sessionCard {
+  background: #2a2a2a;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+  border: 2px solid #f4cc5d;
+  transition: transform 0.2s ease;
+}
+
+.sessionCard:hover {
+  transform: translateY(-3px);
+}
+
+.sessionCard h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  color: #f4cc5d;
+}
+
+.sessionCard p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sessionIcon {
+  color: #f4cc5d;
+  font-size: 1.1rem;
+}
+
+.endChargingBtn {
+  background-color: #f4cc5d;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.endChargingBtn:hover {
+  background-color: #d6b23e;
+}

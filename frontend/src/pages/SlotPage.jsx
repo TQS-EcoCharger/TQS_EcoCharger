@@ -6,6 +6,7 @@ import styles from '../css/SlotPage.module.css';
 
 import { FaCar, FaClock, FaBolt, FaPowerOff, FaUser, FaKey } from 'react-icons/fa';
 import { BsBatteryCharging } from 'react-icons/bs';
+import Sidebar from '../components/Sidebar';
 
 export default function SlotPage() {
   const { id: chargingPointId } = useParams();
@@ -130,35 +131,35 @@ export default function SlotPage() {
 
   return (
     <div className={styles.page}>
+      <Sidebar />
       <div className={styles.wrapper}>
         <div className={styles.stationDetails1} style={{ width: '50%', margin: '5% auto' }}>
-          <h2 data-testid="title">Charging Slot #{chargingPointId}</h2>
 
           {loading ? (
-            <p data-testid="loading">Loading...</p>
+            <p id="loading">Loading...</p>
           ) : session ? (
-            <div data-testid="session-info">
-              <p data-testid="session-car"><FaCar /> <strong>Car:</strong> {session.carName || session.car.model}</p>
-              <p data-testid="session-battery"><BsBatteryCharging /> <strong>Battery now:</strong> {(session.currentBatteryLevel ?? 0).toFixed(2)}%</p>
-              <p data-testid="session-energy"><FaBolt /> <strong>Energy delivered:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
-              <p data-testid="session-duration"><FaClock /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
-              <p data-testid="session-cost"><FaBolt /> <strong>Total cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
+            <div className={styles.sessionCard} id="session-info">
+              <h2>Charging Slot #{chargingPointId}</h2>
+              <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
+              <p><BsBatteryCharging className={styles.sessionIcon} /> <strong>Battery:</strong> {(session.batteryPercentage ?? 0).toFixed(2)}%</p>
+              <p><FaBolt className={styles.sessionIcon} /> <strong>Energy:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
+              <p><FaClock className={styles.sessionIcon} /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
+              <p><FaBolt className={styles.sessionIcon} /> <strong>Cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
 
-              <div className={styles.modalButtons} style={{ marginTop: '2rem' }}>
-                <button
-                  onClick={handleEndCharging}
-                  className={styles.confirmButton1}
-                  data-testid="end-charging-button"
-                >
-                  <FaPowerOff /> End Charging
-                </button>
-              </div>
+              <button
+                onClick={handleEndCharging}
+                className={styles.endChargingBtn}
+                id="end-charging-button"
+              >
+                <FaPowerOff /> End Charging
+              </button>
             </div>
+
           ) : (
-            <div data-testid="no-session-info">
+            <div id="no-session-info">
               <p>No active session.</p>
               <p><FaKey /> OTP Code:</p>
-              <div className={styles.otpContainer} data-testid="otp-container">
+              <div className={styles.otpContainer} id="otp-container">
                 {otp.map((digit, i) => (
                   <input
                     key={i}
@@ -168,7 +169,7 @@ export default function SlotPage() {
                     maxLength={1}
                     className={styles.otpBox}
                     value={digit}
-                    data-testid={`otp-digit-${i}`}
+                    id={`otp-digit-${i}`}
                     onChange={(e) => handleOtpChange(e.target.value, i)}
                     onKeyDown={(e) => handleKeyDown(e, i)}
                   />
@@ -179,39 +180,61 @@ export default function SlotPage() {
                 <button
                   onClick={handleValidateOtp}
                   className={styles.confirmButton}
-                  data-testid="validate-otp-button"
+                  id="validate-otp-button"
                 >
                   Validate OTP
                 </button>
               ) : (
                 <>
-                  <label htmlFor="carId"><FaCar /> Select Vehicle:</label>
-                  <select
-                    id="carId"
-                    value={carId}
-                    onChange={(e) => setCarId(e.target.value)}
-                    className={styles.datePicker}
-                    data-testid="car-select"
-                  >
-                    <option value="">-- Choose your vehicle --</option>
-                    {cars.map((car) => (
-                      <option key={car.id} value={car.id} data-testid={`car-option-${car.id}`}>
-                        {car.make} {car.model} (ID: {car.id})
-                      </option>
-                    ))}
-                  </select>
+                  <label htmlFor="car-select" style={{ marginBottom: '0.5rem', display: 'block', color: 'white' }}>
+                    <FaCar /> Select Vehicle:
+                  </label>
+                  <Select
+                    id="car-select"
+                    inputId="car-select"
+                    value={cars.find(c => c.id.toString() === carId)}
+                    onChange={(selected) => setCarId(selected?.id.toString())}
+                    options={cars.map(car => ({
+                      value: car.id,
+                      label: `${car.make} ${car.model} (ID: ${car.id})`,
+                      id: car.id
+                    }))}
+                    placeholder="-- Choose your vehicle --"
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        backgroundColor: '#2a2a2a',
+                        borderColor: '#f4cc5d',
+                        color: 'white',
+                      }),
+                      singleValue: (provided) => ({
+                        ...provided,
+                        color: 'white'
+                      }),
+                      option: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: state.isFocused ? '#f4cc5d' : '#1e1e1e',
+                        color: state.isFocused ? '#000' : '#fff',
+                        cursor: 'pointer',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        backgroundColor: '#1e1e1e',
+                      }),
+                    }}
+                  />
                   <button
                     onClick={handleStartCharging}
                     className={styles.confirmButton}
                     style={{ marginTop: '1rem' }}
-                    data-testid="start-charging-button"
+                    id="start-charging-button"
                   >
                     Start Charging
                   </button>
                 </>
               )}
               {message && (
-                <p className={styles.message} data-testid="status-message">
+                <p className={styles.message} id="status-message">
                   {message}
                 </p>
               )}
