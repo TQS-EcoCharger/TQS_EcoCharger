@@ -124,7 +124,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: selenium-screenshots
-          path: screenshots/
+          path: backend/target/screenshots/screenshots/
                 
       - name: Stop containers
         run: docker compose -f docker-compose.yml down
