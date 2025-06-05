@@ -128,8 +128,6 @@ class AdministratorControllerTest {
         .andExpect(jsonPath("$.country").value("Portugal"));
     verify(administratorService, times(1)).deleteChargingStation(1L);
   }
-  
-
 
   @Test
   @DisplayName("Should update a charging point")
@@ -144,7 +142,8 @@ class AdministratorControllerTest {
     when(administratorService.updateChargingPoint(any(ChargingPoint.class), eq(1L)))
         .thenReturn(point);
 
-    String requestBody = """
+    String requestBody =
+        """
         {
           "available": true,
           "brand": "Tesla",
@@ -153,13 +152,13 @@ class AdministratorControllerTest {
         }
         """;
 
-    mockMvc.perform(put("/api/v1/admin/stations/1/points/1")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody))
+    mockMvc
+        .perform(
+            put("/api/v1/admin/stations/1/points/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.brand").value("Tesla"))
         .andExpect(jsonPath("$.available").value(true));
   }
-
-
 }
