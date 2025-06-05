@@ -1,5 +1,5 @@
 .openModalBtn {
-  width: 200%;
+  width: 155%;
   padding: 16px;
   background-color: #fdc459;
   color: #000;
@@ -11,6 +11,11 @@
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+}
+
+.faicon {
+  margin-right: 0.5vw;
+  color: #000; /* gold color for icon */
 }
 
 .openModalBtn:hover {

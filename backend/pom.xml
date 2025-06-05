@@ -29,6 +29,7 @@
         <surefire.jacoco.args>${argLine}</surefire.jacoco.args>
         <skip.xray.unit>true</skip.xray.unit> <!-- Default: don't run -->
         <skip.xray.cucumber>true</skip.xray.cucumber> <!-- Default: don't run -->
+        <springdoc.version>2.2.0</springdoc.version>
     </properties>
 
     <profiles>
@@ -242,7 +243,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.2.0</version>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- Development -->

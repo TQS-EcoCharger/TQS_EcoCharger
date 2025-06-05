@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 
-public class UserTest {
+class UserTest {
 
   @Test
   @DisplayName("Test User constructor and getters")

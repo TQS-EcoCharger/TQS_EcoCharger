@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import styles from "../css/ChargingPointReservations.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarXmark } from "@fortawesome/free-solid-svg-icons";
+
 
 export default function ChargingPointReservations({ reservations, chargingPointId }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,6 +40,7 @@ export default function ChargingPointReservations({ reservations, chargingPointI
         className={styles.openModalBtn}
         onClick={() => setModalOpen(true)}
       >
+        <FontAwesomeIcon icon={faCalendarXmark} className={styles.faicon} />
         Schedule
       </button>
 
