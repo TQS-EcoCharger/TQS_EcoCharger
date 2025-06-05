@@ -168,7 +168,8 @@ class AuthenticationControllerTest {
   }
 
   @Test
-  @DisplayName("Usuário não encontrado retorna 403 Forbidden")
+  @DisplayName("User details retrieval success returns 200 OK and user details in JSON")
+  @Requirement("ET-52")
   void testGetCurrentUserNotFound() throws Exception {
     when(authService.getCurrentUser("unknown.token"))
         .thenThrow(new NotFoundException("User not found"));

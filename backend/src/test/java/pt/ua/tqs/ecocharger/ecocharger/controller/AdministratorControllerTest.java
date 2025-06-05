@@ -131,6 +131,7 @@ class AdministratorControllerTest {
 
   @Test
   @DisplayName("Should update a charging point")
+  @Requirement("ET-20")
   void testUpdateChargingPoint() throws Exception {
     ChargingPoint point = new ChargingPoint();
     point.setId(1L);
