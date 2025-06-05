@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
+import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -179,4 +180,48 @@ class AuthenticationControllerTest {
         .andExpect(status().isForbidden())
         .andExpect(content().string("User not found"));
   }
+
+
+  @Test
+  @DisplayName("Registering with missing fields returns 400 Bad Request and error message")
+  @Requirement("ET-52")
+  void testRegisterMissingFields() throws Exception {
+    String requestBody = "{ \"email\": \"user@example.com\" }"; // falta password e name
+
+    mockMvc
+        .perform(post("/api/auth/register").contentType("application/json").content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Missing required fields")));
+}
+
+  @Test
+  @DisplayName("Get current user returns 200 OK and user info")
+  @Requirement("ET-52")
+  void testGetCurrentUserSuccess() throws Exception {
+      User mockUser = new User(); 
+      mockUser.setId(1L);
+      mockUser.setEmail("user@example.com");
+  
+      Mockito.when(authService.getCurrentUser("valid.token")).thenReturn(mockUser);
+  
+      mockMvc
+          .perform(get("/api/auth/me").header("Authorization", "Bearer valid.token"))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.email").value("user@example.com"));
+  }
+  
+  @Test
+  @DisplayName("Get current user with invalid token throws 401")
+  @Requirement("ET-52")
+  void testGetCurrentUserInvalidToken() throws Exception {
+      Mockito.when(authService.getCurrentUser("")).thenThrow(new IllegalArgumentException("Invalid token"));
+  
+      mockMvc
+          .perform(get("/api/auth/me").header("Authorization", "Bearer "))
+          .andExpect(status().isUnauthorized())
+          .andExpect(content().string("Invalid token"));
+  }
+  
+  
+
 }

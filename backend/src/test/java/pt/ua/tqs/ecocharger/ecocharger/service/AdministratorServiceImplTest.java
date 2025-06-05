@@ -8,11 +8,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
+import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
+import pt.ua.tqs.ecocharger.ecocharger.models.Connectors;
 import pt.ua.tqs.ecocharger.ecocharger.repository.AdministratorRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingPointRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingStationRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -110,6 +113,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
+   @Requirement("ET-20")
   @DisplayName("Successfully delete a charging station")
   void testDeleteChargingStationSuccess() {
     Administrator admin = new Administrator();
@@ -131,6 +135,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
+   @Requirement("ET-20")
   @DisplayName("Fail to delete charging station: not found")
   void testDeleteChargingStationNotFound() {
     when(chargingStationRepository.findById(1L)).thenReturn(Optional.empty());
@@ -142,6 +147,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
+   @Requirement("ET-20")
   @DisplayName("Fail to delete charging station: admin not found")
   void testDeleteChargingStationAdminNotFound() {
     Administrator admin = new Administrator();
@@ -159,4 +165,46 @@ class AdministratorServiceImplTest {
 
     assertEquals("Administrator not found", ex.getMessage());
   }
+
+
+  @Test
+   @Requirement("ET-20")
+@DisplayName("Successfully update a charging point")
+void testUpdateChargingPointSuccess() {
+    ChargingPoint existingPoint = new ChargingPoint();
+    existingPoint.setId(1L);
+    existingPoint.setBrand("OldBrand");
+
+    ChargingPoint updateData = new ChargingPoint();
+    updateData.setBrand("NewBrand");
+    updateData.setAvailable(true);
+    updateData.setPricePerKWh(0.3);
+    updateData.setPricePerMinute(0.1);
+    updateData.setConnectors(List.of(new Connectors())); // Adicionar conector válido
+
+    when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(existingPoint));
+    when(chargingPointRepository.save(any(ChargingPoint.class))).thenReturn(existingPoint);
+
+    ChargingPoint result = administratorService.updateChargingPoint(updateData, 1L);
+
+    assertEquals("NewBrand", result.getBrand());
+    verify(chargingPointRepository).save(existingPoint);
+}
+
+@Test
+ @Requirement("ET-20")
+@DisplayName("Fail to update non-existent charging point")
+void testUpdateChargingPointNotFound() {
+    ChargingPoint updateData = new ChargingPoint();
+    updateData.setId(999L);
+
+    when(chargingPointRepository.findById(999L)).thenReturn(Optional.empty());
+
+    RuntimeException ex = assertThrows(RuntimeException.class,
+        () -> administratorService.updateChargingPoint(updateData, 999L));
+
+    assertEquals("Charging Point not found", ex.getMessage());
+}
+
+
 }
