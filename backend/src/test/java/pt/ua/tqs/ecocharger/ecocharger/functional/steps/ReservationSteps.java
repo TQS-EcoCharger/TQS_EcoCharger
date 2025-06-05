@@ -84,7 +84,7 @@ public class ReservationSteps {
   public void i_set_end_time() {
 
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    String futureEnd = java.time.LocalDateTime.now().plusMinutes(30).toString();
+    String futureEnd = java.time.LocalDateTime.now().plusMinutes(90).toString();
 
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))",
