@@ -230,17 +230,16 @@ public class ReservationSteps {
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("session-info")));
   }
 
-public static void takeScreenshot(WebDriver driver, String name) {
-  try {
-    File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-    String path = "target/screenshots/" + name;
-    File dest = new File(path);
-    dest.getParentFile().mkdirs();
-    Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-    System.out.println("Saved screenshot to: " + dest.getAbsolutePath());
-  } catch (IOException e) {
-    e.printStackTrace();
+  public static void takeScreenshot(WebDriver driver, String name) {
+    try {
+      File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+      String path = "target/screenshots/" + name;
+      File dest = new File(path);
+      dest.getParentFile().mkdirs();
+      Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      System.out.println("Saved screenshot to: " + dest.getAbsolutePath());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
-}
-
 }
