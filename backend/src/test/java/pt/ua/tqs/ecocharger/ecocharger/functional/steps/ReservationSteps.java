@@ -5,12 +5,22 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReservationSteps {
 
   private WebDriver driver;
   private WebDriverWait wait;
+
+  private static String storedOtpCode;
+  private static String storedChargingPointId;
 
   @Before
   public void setUp() {
@@ -38,40 +48,52 @@ public class ReservationSteps {
     wait.until(ExpectedConditions.presenceOfElementLocated(By.className("leaflet-marker-icon")));
     WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(4);
     marker.click();
-
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("station-details-panel")));
   }
 
   @When("I click the \"Reserve\" button on a charging point")
   public void i_click_the_reserve_button_on_charging_point() {
-    wait.until(
+    WebElement reserveButton =
+        wait.until(
             ExpectedConditions.elementToBeClickable(
-                By.cssSelector("button[id^='reserve-button-']")))
-        .click();
+                By.cssSelector("button[id^='reserve-button-']")));
+
+    String pointId = reserveButton.getAttribute("id").replace("reserve-button-", "");
+    TestMemoryContext.put("chargingPointId", pointId);
+
+    reserveButton.click();
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-modal")));
   }
 
   @When("I set the reservation start time")
   public void i_set_start_time() {
-    WebElement startPicker = driver.findElement(By.id("start-time-picker"));
-
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    String nowDate = java.time.ZonedDateTime.now().toLocalDateTime().toString();
-    js.executeScript("arguments[0].value = arguments[1]", startPicker, nowDate);
+    String futureEnd = java.time.LocalDateTime.now().minusMinutes(80).toString();
+    System.out.println(futureEnd);
     js.executeScript(
-        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", startPicker);
+        "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
+        futureEnd);
+
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignored) {
+    }
   }
 
   @When("I set the reservation end time")
   public void i_set_end_time() {
-    WebElement endPicker = driver.findElement(By.id("end-time-picker"));
 
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    String futureDate = java.time.ZonedDateTime.now().plusMinutes(15).toLocalDateTime().toString();
-    js.executeScript("arguments[0].value = arguments[1]", endPicker, futureDate);
+    String futureEnd = java.time.LocalDateTime.now().plusMinutes(90).toString();
 
     js.executeScript(
-        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", endPicker);
+        "window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))",
+        futureEnd);
+    takeScreenshot(driver, "screenshots/newreservation.png");
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignored) {
+    }
   }
 
   @Then("I should see the message {string}")
@@ -84,33 +106,143 @@ public class ReservationSteps {
   @When("I visit the reservations page")
   public void i_visit_the_reservations_page() {
     driver.get("http://localhost:5000/reservations");
-    wait.until(
-        ExpectedConditions.visibilityOfElementLocated(
-            By.cssSelector("[data-testid='reservations-page']")));
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservations-page")));
   }
 
   @Then("I should see at least one reservation with details")
   public void i_should_see_at_least_one_reservation_with_details() {
     WebElement list =
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("[data-testid='reservations-list']")));
-
-    java.util.List<WebElement> cards =
-        list.findElements(By.cssSelector("[data-testid^='reservation-card-']"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservations-list")));
+    List<WebElement> cards = list.findElements(By.cssSelector("[id^='reservation-card-']"));
     assertFalse(cards.isEmpty(), "Expected at least one reservation card.");
 
     WebElement firstCard = cards.get(0);
+    String fullId = firstCard.getAttribute("id"); // e.g., reservation-card-42
+    String reservationId = fullId.replace("reservation-card-", "");
+    TestMemoryContext.put("reservationId", reservationId);
 
-    WebElement brand = firstCard.findElement(By.cssSelector("[data-testid^='reservation-brand-']"));
-    WebElement status =
-        firstCard.findElement(By.cssSelector("[data-testid^='reservation-status-']"));
-    WebElement start = firstCard.findElement(By.cssSelector("[data-testid^='reservation-start-']"));
-    WebElement end = firstCard.findElement(By.cssSelector("[data-testid^='reservation-end-']"));
+    assertFalse(
+        firstCard.findElement(By.cssSelector("[id^='reservation-brand-']")).getText().isEmpty());
+    assertFalse(
+        firstCard.findElement(By.cssSelector("[id^='reservation-status-']")).getText().isEmpty());
+    assertFalse(
+        firstCard.findElement(By.cssSelector("[id^='reservation-start-']")).getText().isEmpty());
+    assertFalse(
+        firstCard.findElement(By.cssSelector("[id^='reservation-end-']")).getText().isEmpty());
+  }
 
-    assertFalse(brand.getText().isEmpty(), "Brand should not be empty.");
-    assertFalse(status.getText().isEmpty(), "Status should not be empty.");
-    assertFalse(start.getText().isEmpty(), "Start time should not be empty.");
-    assertFalse(end.getText().isEmpty(), "End time should not be empty.");
+  @When("I click the \"generate-otp-button\" for the first reservation")
+  public void clickFirstOtpButton() {
+    WebElement firstCard =
+        wait.until(
+            ExpectedConditions.presenceOfElementLocated(
+                By.cssSelector("[id^='reservation-card-']")));
+
+    String reservationId = firstCard.getAttribute("id").replace("reservation-card-", "");
+
+    WebElement button = firstCard.findElement(By.id("generate-otp-button-" + reservationId));
+    button.click();
+
+    // Extract charging point ID from data attribute
+    String chargingPointId = firstCard.getAttribute("data-charging-point-id");
+    TestMemoryContext.put("chargingPointId", chargingPointId);
+
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("otp-code-" + reservationId)));
+    WebElement otpEl = driver.findElement(By.id("otp-code-" + reservationId));
+    storedOtpCode = otpEl.getText().replaceAll("[^\\d]", ""); // Extract digits only
+  }
+
+  @Then("I store the OTP code for later use")
+  public void storeOtp() {
+    takeScreenshot(driver, "screenshots/storeOtpCode.png");
+    assertNotNull(storedOtpCode);
+  }
+
+  @When("I enter the stored OTP code into the inputs")
+  public void enterStoredOtp() {
+    for (int i = 0; i < storedOtpCode.length(); i++) {
+      WebElement input =
+          wait.until(ExpectedConditions.elementToBeClickable(By.id("otp-digit-" + i)));
+      input.clear();
+      input.sendKeys(Character.toString(storedOtpCode.charAt(i)));
+    }
+  }
+
+  @Then("I should see the OTP digits filled")
+  public void checkOtpFilled() {
+    for (int i = 0; i < 6; i++) {
+      WebElement input =
+          wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("otp-digit-" + i)));
+      String val = input.getAttribute("value");
+      assertFalse(val == null || val.isEmpty(), "OTP digit " + i + " is not filled");
+    }
+  }
+
+  @When("I visit the slot page for the reserved charging point")
+  public void visitSlotPage() {
+    String pointId = TestMemoryContext.get("chargingPointId").toString();
+    driver.get("http://localhost:5000/slots/" + pointId);
+  }
+
+  @When("I click the \"Validate OTP\" button")
+  public void clickValidateOtp() {
+    driver.findElement(By.id("validate-otp-button")).click();
+  }
+
+  @Then("I should see the car selection dropdown")
+  public void verifyCarDropdown() {
+    try {
+      WebElement control =
+          wait.until(
+              driver -> {
+                try {
+                  WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
+                  return (el.isDisplayed() && el.isEnabled()) ? el : null;
+                } catch (NoSuchElementException | StaleElementReferenceException e) {
+                  return null;
+                }
+              });
+
+      assertNotNull(control, "Car dropdown control not visible or enabled");
+
+    } catch (Exception e) {
+      takeScreenshot(driver, "screenshots/verifyCarDropdown_failed.png");
+      throw e;
+    }
+  }
+
+  @When("I select a vehicle from the list")
+  public void selectCar() {
+    By dropdownSelector = By.cssSelector(".custom-car-select__control");
+    By optionSelector = By.cssSelector(".custom-car-select__menu .custom-car-select__option");
+
+    WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(dropdownSelector));
+    dropdown.click();
+
+    WebElement option = wait.until(ExpectedConditions.elementToBeClickable(optionSelector));
+    option.click();
+  }
+
+  @When("I click the \"Start Charging\" button")
+  public void clickStartCharging() {
+    driver.findElement(By.id("start-charging-button")).click();
+  }
+
+  @Then("I should see the charging session information")
+  public void verifyChargingSessionStarted() {
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("session-info")));
+  }
+
+  public static void takeScreenshot(WebDriver driver, String name) {
+    try {
+      File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+      String path = "target/screenshots/" + name;
+      File dest = new File(path);
+      dest.getParentFile().mkdirs();
+      Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      System.out.println("Saved screenshot to: " + dest.getAbsolutePath());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
