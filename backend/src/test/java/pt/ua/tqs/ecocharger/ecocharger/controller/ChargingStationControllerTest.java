@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -57,6 +57,27 @@ class ChargingStationControllerTest {
         .andExpect(jsonPath("$.id").value(1L))
         .andExpect(jsonPath("$.cityName").value("Aveiro"));
   }
+
+  @Test
+  @DisplayName("Successfully edit station")
+  @Requirement("ET-22")
+    void testEditStation() throws Exception {
+    ChargingStation mockStation =
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
+    mockStation.setId(1L);
+    mockStation.setCityName("Updated City");
+
+    Mockito.when(chargingStationService.updateStation(eq(1L), any(ChargingStation.class)))
+        .thenReturn(mockStation);
+    mockMvc
+        .perform(
+            put("/api/v1/chargingStations/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mockStation)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1L))
+        .andExpect(jsonPath("$.cityName").value("Updated City"));
+  } 
 
   @Test
   @DisplayName("Return 404 when station not found")

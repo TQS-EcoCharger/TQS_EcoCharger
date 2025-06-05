@@ -190,4 +190,23 @@ class ChargingPointServiceImplTest {
 
     assertEquals("No points found for this station", exception.getMessage());
   }
+
+  @Test
+  @DisplayName("Update point with valid information")
+  @Requirement("ET-22")
+  void testUpdatePoint_Valid() {
+    ChargingPoint updatedPoint = new ChargingPoint();
+    updatedPoint.setId(1L);
+    updatedPoint.setBrand("Updated Brand");
+    updatedPoint.setAvailable(false);
+
+    when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
+    when(chargingPointRepository.save(any(ChargingPoint.class))).thenReturn(updatedPoint);
+
+    ChargingPoint result = chargingPointService.updatePoint(1L, updatedPoint);
+
+    assertEquals("Updated Brand", result.getBrand());
+    assertFalse(result.isAvailable());
+    verify(chargingPointRepository).save(updatedPoint);
+  }
 }
