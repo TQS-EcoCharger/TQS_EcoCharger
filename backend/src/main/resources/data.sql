@@ -1,12 +1,18 @@
 -- Inserir utilizadores (drivers)
 INSERT INTO users (email, password, name, enabled, user_type) VALUES
 ('afonso@gmail.com', 'pass', 'Afonso Ferreira', true, 'drivers'),
-('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'drivers');
+('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'drivers'),
+('tomascliente@gmail.com', 'pass2', 'Tomás Cliente', true, 'drivers'),
+('tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators');
 
 -- Criar drivers com IDs iguais aos criados em "users"
 INSERT INTO drivers (id) VALUES
 (1),
-(2);
+(2),
+(3);
+
+INSERT INTO administrators (id) VALUES
+(4);
 
 -- Inserir carros
 INSERT INTO car (name, make, model, manufacture_year, license_plate, battery_capacity, battery_level, kilometers, consumption, enabled) VALUES
@@ -22,14 +28,6 @@ INSERT INTO driver_cars (driver_id, cars_id) VALUES
 (2, 3),
 (2, 4);
 
--- Inserir utilizadores (admin e client)
-INSERT INTO users (email, password, name, enabled, user_type) VALUES
-('tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators'),
-('tomascliente@gmail.com', 'pass2', 'Tomás Cliente', true, 'clients');
-
--- Criar admin e cliente
-INSERT INTO administrators (id) SELECT id FROM users WHERE email = 'tomas@gmail.com';
-INSERT INTO clients (id) SELECT id FROM users WHERE email = 'tomascliente@gmail.com';
 
 -- Estações de carregamento
 INSERT INTO charging_stations (municipality, address, latitude, longitude, countryCode, country) VALUES
