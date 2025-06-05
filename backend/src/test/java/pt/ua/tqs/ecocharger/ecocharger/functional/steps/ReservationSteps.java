@@ -53,9 +53,10 @@ public class ReservationSteps {
 
   @When("I click the \"Reserve\" button on a charging point")
   public void i_click_the_reserve_button_on_charging_point() {
-    WebElement reserveButton = wait.until(
-        ExpectedConditions.elementToBeClickable(
-            By.cssSelector("button[id^='reserve-button-']")));
+    WebElement reserveButton =
+        wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.cssSelector("button[id^='reserve-button-']")));
 
     String pointId = reserveButton.getAttribute("id").replace("reserve-button-", "");
     TestMemoryContext.put("chargingPointId", pointId);
@@ -95,7 +96,8 @@ public class ReservationSteps {
 
   @Then("I should see the message {string}")
   public void i_should_see_the_message(String expectedMessage) {
-    WebElement messageEl = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-message")));
+    WebElement messageEl =
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-message")));
     assertTrue(messageEl.getText().contains(expectedMessage));
   }
 
@@ -107,7 +109,8 @@ public class ReservationSteps {
 
   @Then("I should see at least one reservation with details")
   public void i_should_see_at_least_one_reservation_with_details() {
-    WebElement list = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservations-list")));
+    WebElement list =
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservations-list")));
     List<WebElement> cards = list.findElements(By.cssSelector("[id^='reservation-card-']"));
     assertFalse(cards.isEmpty(), "Expected at least one reservation card.");
 
@@ -128,9 +131,10 @@ public class ReservationSteps {
 
   @When("I click the \"generate-otp-button\" for the first reservation")
   public void clickFirstOtpButton() {
-    WebElement firstCard = wait.until(
-        ExpectedConditions.presenceOfElementLocated(
-            By.cssSelector("[id^='reservation-card-']")));
+    WebElement firstCard =
+        wait.until(
+            ExpectedConditions.presenceOfElementLocated(
+                By.cssSelector("[id^='reservation-card-']")));
 
     String reservationId = firstCard.getAttribute("id").replace("reservation-card-", "");
 
@@ -154,7 +158,8 @@ public class ReservationSteps {
   @When("I enter the stored OTP code into the inputs")
   public void enterStoredOtp() {
     for (int i = 0; i < storedOtpCode.length(); i++) {
-      WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.id("otp-digit-" + i)));
+      WebElement input =
+          wait.until(ExpectedConditions.elementToBeClickable(By.id("otp-digit-" + i)));
       input.clear();
       input.sendKeys(Character.toString(storedOtpCode.charAt(i)));
     }
@@ -163,7 +168,8 @@ public class ReservationSteps {
   @Then("I should see the OTP digits filled")
   public void checkOtpFilled() {
     for (int i = 0; i < 6; i++) {
-      WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("otp-digit-" + i)));
+      WebElement input =
+          wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("otp-digit-" + i)));
       String val = input.getAttribute("value");
       assertFalse(val == null || val.isEmpty(), "OTP digit " + i + " is not filled");
     }
@@ -183,14 +189,16 @@ public class ReservationSteps {
   @Then("I should see the car selection dropdown")
   public void verifyCarDropdown() {
     try {
-      WebElement control = wait.until(driver -> {
-        try {
-          WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
-          return (el.isDisplayed() && el.isEnabled()) ? el : null;
-        } catch (NoSuchElementException | StaleElementReferenceException e) {
-          return null;
-        }
-      });
+      WebElement control =
+          wait.until(
+              driver -> {
+                try {
+                  WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
+                  return (el.isDisplayed() && el.isEnabled()) ? el : null;
+                } catch (NoSuchElementException | StaleElementReferenceException e) {
+                  return null;
+                }
+              });
 
       assertNotNull(control, "Car dropdown control not visible or enabled");
 
