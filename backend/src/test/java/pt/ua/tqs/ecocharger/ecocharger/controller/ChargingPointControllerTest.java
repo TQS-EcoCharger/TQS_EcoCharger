@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ChargingPointController.class)
 @Import(SecurityDisableConfig.class)
-public class ChargingPointControllerTest {
+class ChargingPointControllerTest {
 
   @Autowired private MockMvc mockMvc;
 

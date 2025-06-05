@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import org.junit.jupiter.api.Test;
 
-public class ConnectorsTest {
+class ConnectorsTest {
 
   @Test
   @DisplayName("Test Connectors constructor and basic field values")

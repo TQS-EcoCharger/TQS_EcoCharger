@@ -46,8 +46,7 @@ public class ReservationServiceTest {
             new Connectors("Type1", 1, 5, 10, "Voltage"),
             new Connectors("Type2", 7, 15, 22, "Voltage"));
 
-    ChargingStation station =
-        new ChargingStation("City", "Address", 10.0, 20.0, "Street", "2000", "Country", "EV");
+    ChargingStation station = new ChargingStation("City", "Address", 10.0, 20.0, "2000", "Country");
 
     chargingPoint = new ChargingPoint(station, true, "BrandX", connectors);
     chargingPoint.setId(2L);
