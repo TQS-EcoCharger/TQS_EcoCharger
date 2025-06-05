@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-
 @WebMvcTest(AuthenticationController.class)
 @Import(SecurityDisableConfig.class)
 class AuthenticationControllerTest {
@@ -174,8 +173,8 @@ class AuthenticationControllerTest {
     when(authService.getCurrentUser("unknown.token"))
         .thenThrow(new NotFoundException("User not found"));
 
-    mockMvc.perform(get("/api/auth/me")
-            .header("Authorization", "Bearer unknown.token"))
+    mockMvc
+        .perform(get("/api/auth/me").header("Authorization", "Bearer unknown.token"))
         .andExpect(status().isForbidden())
         .andExpect(content().string("User not found"));
   }
