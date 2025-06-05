@@ -6,6 +6,10 @@ import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,27 +67,29 @@ public class ReservationSteps {
 
   @When("I set the reservation start time")
   public void i_set_start_time() {
-    WebElement startPicker = driver.findElement(By.id("start-time-picker"));
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    String nowDate = java.time.ZonedDateTime.now().toLocalDateTime().toString();
-    js.executeScript("arguments[0].value = arguments[1]", startPicker, nowDate);
+    String futureEnd = java.time.LocalDateTime.now().minusMinutes(80).toString();
+    System.out.println(futureEnd);
     js.executeScript(
-        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", startPicker);
+        "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
+        futureEnd);
+
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignored) {
+    }
   }
 
   @When("I set the reservation end time")
   public void i_set_end_time() {
 
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    String futureEnd = java.time.LocalDateTime.now().plusMinutes(30).toString();
+    String futureEnd = java.time.LocalDateTime.now().plusMinutes(90).toString();
 
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))",
         futureEnd);
-    js.executeScript(
-        "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
-        java.time.LocalDateTime.now().toString());
-
+    takeScreenshot(driver, "screenshots/newreservation.png");
     try {
       Thread.sleep(100);
     } catch (InterruptedException ignored) {
@@ -148,6 +154,7 @@ public class ReservationSteps {
 
   @Then("I store the OTP code for later use")
   public void storeOtp() {
+    takeScreenshot(driver, "screenshots/storeOtpCode.png");
     assertNotNull(storedOtpCode);
   }
 
@@ -175,7 +182,6 @@ public class ReservationSteps {
   public void visitSlotPage() {
     String pointId = TestMemoryContext.get("chargingPointId").toString();
     driver.get("http://localhost:5000/slots/" + pointId);
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("title")));
   }
 
   @When("I click the \"Validate OTP\" button")
@@ -185,13 +191,36 @@ public class ReservationSteps {
 
   @Then("I should see the car selection dropdown")
   public void verifyCarDropdown() {
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("car-select")));
+    try {
+      WebElement control =
+          wait.until(
+              driver -> {
+                try {
+                  WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
+                  return (el.isDisplayed() && el.isEnabled()) ? el : null;
+                } catch (NoSuchElementException | StaleElementReferenceException e) {
+                  return null;
+                }
+              });
+
+      assertNotNull(control, "Car dropdown control not visible or enabled");
+
+    } catch (Exception e) {
+      takeScreenshot(driver, "screenshots/verifyCarDropdown_failed.png");
+      throw e;
+    }
   }
 
   @When("I select a vehicle from the list")
   public void selectCar() {
-    WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(By.id("car-select")));
-    new Select(dropdown).selectByIndex(1);
+    By dropdownSelector = By.cssSelector(".custom-car-select__control");
+    By optionSelector = By.cssSelector(".custom-car-select__menu .custom-car-select__option");
+
+    WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(dropdownSelector));
+    dropdown.click();
+
+    WebElement option = wait.until(ExpectedConditions.elementToBeClickable(optionSelector));
+    option.click();
   }
 
   @When("I click the \"Start Charging\" button")
@@ -202,5 +231,18 @@ public class ReservationSteps {
   @Then("I should see the charging session information")
   public void verifyChargingSessionStarted() {
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("session-info")));
+  }
+
+  public static void takeScreenshot(WebDriver driver, String name) {
+    try {
+      File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+      String path = "target/screenshots/" + name;
+      File dest = new File(path);
+      dest.getParentFile().mkdirs();
+      Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      System.out.println("Saved screenshot to: " + dest.getAbsolutePath());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

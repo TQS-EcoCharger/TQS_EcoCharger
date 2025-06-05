@@ -34,7 +34,7 @@ export default function ReservationsPage() {
       const code = res.data;
 
       setOtpData((prev) => ({ ...prev, [reservationId]: code }));
-      setTimers((prev) => ({ ...prev, [reservationId]: 60 }));
+      setTimers((prev) => ({ ...prev, [reservationId]: 300 }));
 
       const intervalId = setInterval(() => {
         setTimers((prev) => {
@@ -136,12 +136,12 @@ export default function ReservationsPage() {
 
                     <p id={`reservation-start-${reservation.id}`}>
                       <FaClock className={styles.inlineIcon} />
-                      <strong>Start:</strong> {new Date(reservation.startTime).toLocaleString()}
+                      <strong>Start:</strong> {new Date(reservation.startTime).toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' })}
                     </p>
 
                     <p id={`reservation-end-${reservation.id}`}>
                       <FaClock className={styles.inlineIcon} />
-                      <strong>End:</strong> {new Date(reservation.endTime).toLocaleString()}
+                      <strong>End:</strong> {new Date(reservation.endTime).toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' })}
                     </p>
 
                     <p>
@@ -178,11 +178,14 @@ export default function ReservationsPage() {
                         >
                           Generate Start Code
                         </button>
-
                         {otpData[reservation.id] && (
                           <div className={styles.otpCard}>
-                            <p className={styles.otpCode}><strong>OTP:</strong> {otpData[reservation.id].code}</p>
-                            <p className={styles.expiry}><strong>Expires in:</strong> {timers[reservation.id]}s</p>
+                            <p id={`otp-code-${reservation.id}`} className={styles.otpCode}>
+                              <strong>OTP:</strong> {otpData[reservation.id].code}
+                            </p>
+                            <p className={styles.expiry}>
+                              <strong>Expires in:</strong> {timers[reservation.id]}s
+                            </p>
                           </div>
                         )}
                       </>

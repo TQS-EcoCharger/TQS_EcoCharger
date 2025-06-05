@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
+import pt.ua.tqs.ecocharger.ecocharger.models.OTPCode;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingStationDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ConnectorDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationRequestDTO;
@@ -114,5 +115,33 @@ public class ReservationControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", hasSize(1)))
         .andExpect(jsonPath("$[0].chargingPoint.id").value(2));
+  }
+
+  @Test
+  @Requirement("ET-30")
+  @DisplayName("Generate OTP for reservation returns 200 OK with OTP details")
+  void testGenerateOtpSuccess() throws Exception {
+    OTPCode otpCode = new OTPCode();
+    otpCode.setId(10L);
+    otpCode.setCode("654321");
+    otpCode.setExpirationTime(LocalDateTime.now().plusMinutes(10));
+
+    when(otpService.generateOtp(1L)).thenReturn(otpCode);
+
+    mockMvc
+        .perform(post("/api/v1/reservation/1/otp"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(10))
+        .andExpect(jsonPath("$.code").value("654321"));
+  }
+
+  @Test
+  @Requirement("ET-30")
+  @DisplayName("Generate OTP fails with 400 if reservation is invalid")
+  void testGenerateOtpFailure() throws Exception {
+    when(otpService.generateOtp(999L))
+        .thenThrow(new IllegalArgumentException("Invalid reservation"));
+
+    mockMvc.perform(post("/api/v1/reservation/999/otp")).andExpect(status().isBadRequest());
   }
 }
