@@ -15,7 +15,6 @@ export default function SlotPage() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [otp, setOtp] = useState(Array(6).fill(''));
-  const [carId, setCarId] = useState('');
   const [cars, setCars] = useState([]);
   const [isOtpValid, setIsOtpValid] = useState(false);
   const token = localStorage.getItem('token');
