@@ -1,0 +1,116 @@
+.openModalBtn {
+  width: 200%;
+  padding: 16px;
+  background-color: #fdc459;
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-top: 1px solid #ddd;
+  margin-top: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.openModalBtn:hover {
+  background-color: #e4ac3d;
+}
+
+.closeModalBtn {
+  position: absolute;
+  top: 1vh;
+  right: 1vw;
+  border: none;
+  color: #000000; /* gold color for close button */
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Keyframes for fade in + scale animation */
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalContent {
+  background-color: #222; /* dark modal background */
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: auto;
+  box-sizing: border-box;
+  color: white; /* text color for modal title etc */
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* Add fade-in animation */
+  animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+.modalContent .title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fdc459; /* gold color for title */
+  margin-bottom: 1rem;
+}
+
+.modalContent table {
+  background-color: white; /* make table background white */
+  color: black; /* table text should be black */
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.modalContent th,
+.modalContent .cell {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: center;
+  height: 1vh;
+}
+
+.modalContent th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: black;
+}
+
+.modalContent td.available {
+  background-color: #c8e6c9; /* light green */
+  color: black;
+}
+
+.modalContent td.reserved {
+  background-color: #ffcdd2; /* light red */
+  color: black;
+}
+
+.modalContent td.hourLabel {
+  background-color: #f9f9f9;
+  font-weight: 500;
+  color: black;
+  width: 60px;
+}

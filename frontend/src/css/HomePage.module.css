@@ -206,7 +206,7 @@
 }
 
 .reserveBtn {
-  width: 100%;
+  width: 50%;
   padding: 16px;
   background-color: #fdc459;
   color: #000;
@@ -422,4 +422,10 @@
 
 h2 {
   margin-top: 0;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1vh;
 }

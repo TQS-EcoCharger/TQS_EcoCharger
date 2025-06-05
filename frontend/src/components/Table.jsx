@@ -8,9 +8,9 @@ export default function Table({ headers, rows }) {
     <div className={styles.tableContainer}>
       <table className={styles.table} id="vehicles-table">
         <thead id="vehicles-table-header">
-          <tr>
+          <tr className={styles.row}>
             {headers.map((header) => (
-              <th key={header}>{header}</th>
+              <th key={header} className={styles.headerCell}>{header}</th>
             ))}
           </tr>
         </thead>
@@ -19,15 +19,15 @@ export default function Table({ headers, rows }) {
             rows.map((row) => {
               const rowKey = row.join('-');
               return (
-                <tr key={rowKey}>
+                <tr key={rowKey} className={styles.row}>
                   {row.map((cell, i) => (
-                    <td key={`${rowKey}-${headers[i]}`}>{cell}</td>
+                    <td key={`${rowKey}-${headers[i]}`} className={styles.cell}>{cell}</td>
                   ))}
                 </tr>
               );
             })
           ) : (
-            <tr>
+            <tr className={styles.row}>
               <td colSpan={headers.length} className={styles.emptyRow} id="table-empty-row">
                 No data available
               </td>

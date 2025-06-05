@@ -18,6 +18,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Chargingicon from '../../public/ChargingStation.png';
+import ChargingPointReservations from '../components/ChargingPointReservations';
 
 const customIcon = new L.Icon({
   iconUrl: Chargingicon,
@@ -38,6 +39,9 @@ export default function HomePage() {
   const [endTime, setEndTime] = useState(new Date());
   const [message, setMessage] = useState('');
   const [userLocation, setUserLocation] = useState(null);
+  const [currentReservations, setCurrentReservations] = useState([]);
+
+
 
   const [existingReservations, setExistingReservations] = useState([]);
 
@@ -45,12 +49,27 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+
+    const fetchCurrentReservations = async () => {
+      console.log(`${CONFIG.API_URL}v1/reservation`);
+      const response = await axios.get(`http://localhost:8080/api/v1/reservation`, 
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      );
+      setCurrentReservations(response.data);
+      console.log("Current reservations fetched successfully:", response.data);
+    }
+
     const fetchSelf = async () => {
       if (localStorage.getItem("me") === null) {
         try {
+          console.log(CONFIG.API_URL);
           const response = await axios.get(`${CONFIG.API_URL}auth/me`, {
             headers: {
-              "Authorization": localStorage.getItem("token")
+              "Authorization": `Bearer ${token}`
             }
           });
           console.log("User data fetched successfully:", response.data);
@@ -64,6 +83,7 @@ export default function HomePage() {
     };
 
     fetchSelf();
+    fetchCurrentReservations();
   }, []);
 
   useEffect(() => {
@@ -122,6 +142,8 @@ export default function HomePage() {
       });
   }, [navigate, token]);
 
+  
+
   const handleReservation = () => {
     if (!selectedPoint || !startTime || !endTime) {
       setMessage('Please fill in all fields.');
@@ -149,6 +171,16 @@ export default function HomePage() {
           setStartTime(new Date());
           setEndTime(new Date());
         }, 2000);
+        setCurrentReservations((prev) => [
+          ...prev,
+          {
+            id: Date.now(), // Temporary ID for optimistic UI update
+            chargingPoint: selectedPoint,
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString(),
+            status: 'PENDING', // Assuming new reservations start as PENDING
+          },
+        ]);
       })
       .catch((error) => {
         console.error('Reservation error:', error.response || error.message);
@@ -197,32 +229,40 @@ export default function HomePage() {
                         <span><GiElectric className={styles.iconSmall} /> <strong>Current:</strong> {connector.currentA} A</span>
                       </div>
                     ))}
+                    
                   </div>
                 ) : (
                   <p style={{ fontStyle: 'italic', color: '#666', paddingLeft: '8px' }}>
                     No connectors available.
                   </p>
                 )}
-                <button
-                  className={styles.reserveBtn}
-                  id={`reserve-button-${point.id}`}
-                  onClick={() => {
-                    setSelectedPoint(point);
-                    setIsModalOpen(true);
+                {point.available ? (
+                <div className={styles.buttonRow}>
+                  <ChargingPointReservations reservations={currentReservations} chargingPointId={point.id} />
+                  <button
+                    className={styles.reserveBtn}
+                    id={`reserve-button-${point.id}`}
+                    onClick={() => {
+                      setSelectedPoint(point);
+                      setIsModalOpen(true);
 
-                    axios
-                      .get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                      })
-                      .then((res) => setExistingReservations(res.data))
-                      .catch((err) => {
-                        console.error('Failed to fetch existing reservations:', err);
-                        setExistingReservations([]);
-                      });
-                  }}
-                >
-                  Reserve
-                </button>
+                      axios
+                        .get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
+                          headers: { Authorization: `Bearer ${token}` },
+                        })
+                        .then((res) => setExistingReservations(res.data))
+                        .catch((err) => {
+                          console.error('Failed to fetch existing reservations:', err);
+                          setExistingReservations([]);
+                        });
+                    }}
+                  >
+                    Reserve
+                  </button>
+                </div>
+                ) : (
+                  <div></div>
+                )}
               </div>
             ))}
           </div>
@@ -273,21 +313,6 @@ export default function HomePage() {
       <div className={styles.modal} id="reservation-modal">
         <h2 id="modal-title">Make a Reservation</h2>
         <p><strong>Point:</strong> {selectedPoint?.brand}</p>
-
-        {existingReservations.length > 0 && (
-          <div className={styles.existingReservations} id="existing-reservations">
-            <h2 style={{ marginTop: "0px" }}>Current Reservations:</h2>
-            <ul className={styles.reservationList}>
-              {existingReservations.map((res, index) => (
-                <li key={res.id} className={styles.reservationItem} id={`reservation-${res.id}`}>
-                  <span><strong>Reservation {index + 1}</strong></span><br />
-                  <span><strong>Start:</strong> {new Date(res.startTime).toLocaleString()}</span><br />
-                  <span><strong>End:</strong> {new Date(res.endTime).toLocaleString()}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
 
         <label htmlFor="start-time-picker">Start:</label>
         <DatePicker
