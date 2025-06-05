@@ -87,7 +87,7 @@ export default function SlotPage() {
       }
     } catch (err) {
       console.error('OTP validation failed:', err);
-      setMessage(err.response?.data?.message || 'OTP validation failed.');
+      setMessage(err.response?.data?.reason || 'OTP validation failed.');
     }
   };
 
