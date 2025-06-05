@@ -67,12 +67,12 @@ public class ReservationSteps {
 
   @When("I set the reservation start time")
   public void i_set_start_time() {
-    WebElement startPicker = driver.findElement(By.id("start-time-picker"));
+    String startTime = java.time.LocalDateTime.now().minusMinutes(70).toString();
+
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    String nowDate = java.time.ZonedDateTime.now().toLocalDateTime().toString();
-    js.executeScript("arguments[0].value = arguments[1]", startPicker, nowDate);
     js.executeScript(
-        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", startPicker);
+        "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
+        startTime);
   }
 
   @When("I set the reservation end time")
