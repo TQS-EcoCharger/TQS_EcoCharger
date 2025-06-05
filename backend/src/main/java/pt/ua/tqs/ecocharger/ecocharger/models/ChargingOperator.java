@@ -25,27 +25,26 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ChargingOperator extends User {
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(
+  @OneToMany(fetch = FetchType.EAGER)
+  @JoinTable(
       name = "charging_operator_stations",
       joinColumns = @JoinColumn(name = "operator_id"),
       inverseJoinColumns = @JoinColumn(name = "stations_id"))
-    private List<ChargingStation> chargingStations = new ArrayList<ChargingStation>();
+  private List<ChargingStation> chargingStations = new ArrayList<ChargingStation>();
 
-    public ChargingOperator(Long id, String email, String password, String name, boolean enabled) {
-        super(id, email, password, name, enabled);
-    }
+  public ChargingOperator(Long id, String email, String password, String name, boolean enabled) {
+    super(id, email, password, name, enabled);
+  }
 
-    public ChargingOperator() {
-        super();
-    }
+  public ChargingOperator() {
+    super();
+  }
 
-    public void addChargingStation(ChargingStation station) {
-        this.chargingStations.add(station);
-    }
+  public void addChargingStation(ChargingStation station) {
+    this.chargingStations.add(station);
+  }
 
-    public void removeChargingStation(ChargingStation station) {
-        this.chargingStations.remove(station);
-    }
-   
+  public void removeChargingStation(ChargingStation station) {
+    this.chargingStations.remove(station);
+  }
 }

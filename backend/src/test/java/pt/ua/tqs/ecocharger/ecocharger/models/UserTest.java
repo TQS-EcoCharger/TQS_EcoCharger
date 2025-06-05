@@ -69,7 +69,8 @@ class UserTest {
 
   @Test
   void createChargingOperator() {
-    ChargingOperator operator = new ChargingOperator(5L, "charging@operator.com", "securepass", "Operator Name", true);
+    ChargingOperator operator =
+        new ChargingOperator(5L, "charging@operator.com", "securepass", "Operator Name", true);
 
     assertEquals(5L, operator.getId());
     assertEquals("charging@operator.com", operator.getEmail());

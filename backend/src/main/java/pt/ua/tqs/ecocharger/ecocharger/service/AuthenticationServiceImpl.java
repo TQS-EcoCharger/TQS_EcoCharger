@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
-import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
@@ -25,13 +24,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private ChargingOperatorService chargingOperatorService;
   private JwtUtil jwtUtil;
 
-  public AuthenticationServiceImpl(UserRepository userRepository, JwtUtil jwtUtil, ChargingOperatorService chargingOperatorService, DriverService driverService) {
+  public AuthenticationServiceImpl(
+      UserRepository userRepository,
+      JwtUtil jwtUtil,
+      ChargingOperatorService chargingOperatorService,
+      DriverService driverService) {
     this.userRepository = userRepository;
     this.jwtUtil = jwtUtil;
     this.chargingOperatorService = chargingOperatorService;
     this.driverService = driverService;
   }
-  
+
   @Override
   public AuthResultDTO authenticate(String email, String password) {
     Optional<User> userOpt = userRepository.findByEmail(email);
@@ -91,8 +94,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     Driver driver = new Driver(null, user.getEmail(), user.getPassword(), user.getName(), true);
     driverService.createDriver(driver);
-
-  
 
     String token = jwtUtil.generateToken(user.getEmail());
 

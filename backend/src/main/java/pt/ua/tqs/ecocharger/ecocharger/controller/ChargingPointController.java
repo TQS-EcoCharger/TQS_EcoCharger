@@ -37,12 +37,12 @@ public class ChargingPointController {
   @PutMapping("/{id}")
   public ResponseEntity<ChargingPoint> updatePoint(
       @PathVariable Long id, @RequestBody ChargingPoint point) {
-        try {
-          ChargingPoint updatedPoint = chargingPointService.updatePoint(id, point);
-          return ResponseEntity.ok(updatedPoint);
-        } catch (NotFoundException e) {
-          return ResponseEntity.notFound().build();
-        }
+    try {
+      ChargingPoint updatedPoint = chargingPointService.updatePoint(id, point);
+      return ResponseEntity.ok(updatedPoint);
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @GetMapping("/available")

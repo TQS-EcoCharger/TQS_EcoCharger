@@ -47,13 +47,12 @@ public class ChargingStationController {
   @PutMapping("/{id}")
   public ResponseEntity<ChargingStation> updateStation(
       @PathVariable Long id, @RequestBody ChargingStation station) {
-        try {
-          ChargingStation updatedStation = chargingStationService.updateStation(id, station);
-          return ResponseEntity.ok(updatedStation);
-        }
-        catch (NotFoundException e) {
-          return ResponseEntity.notFound().build();
-        }    
+    try {
+      ChargingStation updatedStation = chargingStationService.updateStation(id, station);
+      return ResponseEntity.ok(updatedStation);
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @GetMapping

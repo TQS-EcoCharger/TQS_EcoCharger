@@ -105,7 +105,7 @@ class ChargingPointServiceImplTest {
     ChargingPoint updatedPoint = new ChargingPoint();
     updatedPoint.setId(1L);
     updatedPoint.setBrand("Updated Brand");
-    
+
     when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
     when(chargingPointRepository.save(any(ChargingPoint.class))).thenReturn(updatedPoint);
 
@@ -120,10 +120,11 @@ class ChargingPointServiceImplTest {
   void testUpdatePoint_NotFound() {
     ChargingPoint updatedPoint = new ChargingPoint();
     updatedPoint.setId(2L);
-    
+
     when(chargingPointRepository.findById(2L)).thenReturn(Optional.empty());
     Exception exception =
-        assertThrows(NotFoundException.class, () -> chargingPointService.updatePoint(2L, updatedPoint));
+        assertThrows(
+            NotFoundException.class, () -> chargingPointService.updatePoint(2L, updatedPoint));
     assertEquals("Point not found", exception.getMessage());
     verify(chargingPointRepository, never()).save(any());
   }
