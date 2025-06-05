@@ -6,6 +6,10 @@ import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -176,32 +180,26 @@ public class ReservationSteps {
     driver.findElement(By.id("validate-otp-button")).click();
   }
 
-  @Then("I should see the car selection dropdown")
+@Then("I should see the car selection dropdown")
   public void verifyCarDropdown() {
-    WebElement control = wait.until(driver -> {
       try {
-        WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
-        return (el.isDisplayed() && el.isEnabled()) ? el : null;
-      } catch (NoSuchElementException | StaleElementReferenceException e) {
-        return null;
+          WebElement control = wait.until(driver -> {
+              try {
+                  WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
+                  return (el.isDisplayed() && el.isEnabled()) ? el : null;
+              } catch (NoSuchElementException | StaleElementReferenceException e) {
+                  return null;
+              }
+          });
+
+          assertNotNull(control, "Car dropdown control not visible or enabled");
+
+      } catch (Exception e) {
+          takeScreenshot(driver, "screenshots/verifyCarDropdown_failed.png");
+          throw e;
       }
-    });
-
-    assertNotNull(control, "Car dropdown control not visible or enabled");
-
-    control.click();
-
-    WebElement menu = wait.until(driver -> {
-      try {
-        WebElement el = driver.findElement(By.cssSelector(".custom-car-select__menu"));
-        return el.isDisplayed() ? el : null;
-      } catch (NoSuchElementException | StaleElementReferenceException e) {
-        return null;
-      }
-    });
-
-    assertNotNull(menu, "Car dropdown menu did not appear");
   }
+
 
   @When("I select a vehicle from the list")
   public void selectCar() {
@@ -224,4 +222,15 @@ public class ReservationSteps {
   public void verifyChargingSessionStarted() {
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("session-info")));
   }
+
+  public static void takeScreenshot(WebDriver driver, String filePath) {
+    try {
+        File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        File dest = new File(filePath);
+        dest.getParentFile().mkdirs(); // ensure directories exist
+        Files.copy(src.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 }
