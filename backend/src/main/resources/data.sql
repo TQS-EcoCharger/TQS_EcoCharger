@@ -52,17 +52,6 @@ INSERT INTO charging_operator_stations (operator_id, stations_id) VALUES
 (3, 2),
 (3, 7);
 
-SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations));
-
--- Pontos de carregamento
-INSERT INTO charging_points (station_id, available, brand) VALUES
-(1, true, 'Atlante'),
-(1, true, 'Atlante'),
-(5, true, 'Mobi.E'),
-(5, false, 'Mobi.E'),
-(5, true, 'Mobi.E');
-
-SELECT setval('charging_points_id_seq', (SELECT MAX(id) FROM charging_points));
 
 -- Conectores
 INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type) VALUES
@@ -128,12 +117,6 @@ VALUES
 INSERT INTO charging_points (station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
 VALUES 
 (9, true, 'Powerdot', 0.26, 0.06, 0.3667);
-
--- Station 10: Atlante
-INSERT INTO charging_points (station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
-VALUES 
-(10, true, 'Atlante', 0.25, 0.05, 0.8333),
-(10, true, 'Atlante', 0.25, 0.05, 0.8333);
 
 
 INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
