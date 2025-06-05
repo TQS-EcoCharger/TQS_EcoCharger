@@ -44,8 +44,6 @@ INSERT INTO charging_stations (municipality, address, latitude, longitude, count
 ('Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023, 'PT', 'Portugal'),
 ('Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514, 'PT', 'Portugal');
 
-SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations));
-
 -- Station 1: Atlante
 INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
 VALUES 
