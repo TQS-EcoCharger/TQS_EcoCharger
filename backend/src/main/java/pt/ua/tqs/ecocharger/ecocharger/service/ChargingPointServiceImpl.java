@@ -62,7 +62,4 @@ public class ChargingPointServiceImpl implements ChargingPointService {
         chargingPointRepository.findByChargingStationId(stationId);
     return points.orElseThrow(() -> new RuntimeException("No points found for this station"));
   }
-
-
-
 }
