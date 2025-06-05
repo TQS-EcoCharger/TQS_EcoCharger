@@ -27,7 +27,6 @@ export default function AddCarModal({ isOpen, onClose, onAdd, existingData }) {
         consumption: existingData.consumption || ""
       });
     } else if (isOpen) {
-      // Reset form if adding a new car
       setForm({
         name: "",
         make: "",
