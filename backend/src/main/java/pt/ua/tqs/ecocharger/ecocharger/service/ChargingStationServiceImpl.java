@@ -19,13 +19,14 @@ public class ChargingStationServiceImpl implements ChargingStationService {
 
   @Override
   public ChargingStation createStation(ChargingStation station) {
-    Optional<ChargingStation> existingStation =
+    Optional<List<ChargingStation>> existingStations =
         chargingStationRepository.findByCityName(station.getCityName());
-    if (existingStation.isPresent()) {
-      return existingStation.get();
-    } else {
-      return chargingStationRepository.save(station);
+    for (ChargingStation existingStation : existingStations.orElse(List.of())) {
+      if (existingStation.getCityName().equalsIgnoreCase(station.getCityName())) {
+        return existingStation;
+      }
     }
+    return chargingStationRepository.save(station);
   }
 
   @Override
