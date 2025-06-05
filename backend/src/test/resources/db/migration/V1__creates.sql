@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS charging_stations (
     address VARCHAR(255) NOT NULL,
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
-    streetname VARCHAR(255) NOT NULL,
     countrycode VARCHAR(255) NOT NULL,
     country VARCHAR(255) NOT NULL
 );
