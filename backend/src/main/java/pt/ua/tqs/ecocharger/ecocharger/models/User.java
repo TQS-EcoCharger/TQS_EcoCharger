@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 @Table(name = "users")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-  @JsonSubTypes.Type(value = Client.class, name = "clients"),
   @JsonSubTypes.Type(value = Administrator.class, name = "administrators"),
   @JsonSubTypes.Type(value = Driver.class, name = "drivers")
 })

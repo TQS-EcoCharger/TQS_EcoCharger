@@ -45,7 +45,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testLoginSuccess() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "123456"))
-        .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "client"));
+        .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "driver"));
 
     String requestBody =
         """
@@ -61,7 +61,7 @@ class AuthenticationControllerTest {
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Login successful"))
         .andExpect(jsonPath("$.token").value("token123"))
-        .andExpect(jsonPath("$.userType").value("client"));
+        .andExpect(jsonPath("$.userType").value("driver"));
   }
 
   @Test
@@ -90,7 +90,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterSuccess() throws Exception {
     Mockito.when(authService.register("mariah@example.com", "123456", "Mariah"))
-        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123", "client"));
+        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123", "driver"));
 
     String requestBody =
         "{ \"email\": \"mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
@@ -101,7 +101,7 @@ class AuthenticationControllerTest {
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Registration successful"))
         .andExpect(jsonPath("$.token").value("token123"))
-        .andExpect(jsonPath("$.userType").value("client"));
+        .andExpect(jsonPath("$.userType").value("driver"));
   }
 
   @Test
