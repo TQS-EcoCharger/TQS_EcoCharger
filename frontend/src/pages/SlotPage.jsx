@@ -22,6 +22,8 @@ export default function SlotPage() {
   const navigate = useNavigate();
   const inputRefs = useRef([]);
   const otpInputIds = ['otp-1', 'otp-2', 'otp-3', 'otp-4', 'otp-5', 'otp-6'];
+  const [selectedCarOption, setSelectedCarOption] = useState(null);
+
 
 
   const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
@@ -92,15 +94,10 @@ export default function SlotPage() {
 
   const handleStartCharging = async () => {
     const otpCode = otp.join('');
-    if (!isOtpValid || !carId) {
-      setMessage('Please validate OTP and select a vehicle.');
-      return;
-    }
-
     try {
       const res = await axios.post(`${CONFIG.API_URL}v1/sessions`, {
         otp: otpCode,
-        carId: parseInt(carId),
+        carId: parseInt(selectedCarOption?.value),
         chargingPointId: parseInt(chargingPointId)
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -187,23 +184,11 @@ export default function SlotPage() {
                 >
                   Validate OTP
                 </button>
-
-                {message && (
-                  <p className={styles.message} id="status-message">
-                    {message}
-                  </p>
-                )}
               </div>
 
 
               {!isOtpValid ? (
-                <button
-                  onClick={handleValidateOtp}
-                  className={styles.confirmButton}
-                  id="validate-otp-button"
-                >
-                  Validate OTP
-                </button>
+                <></>
               ) : (
                 <>
                   <label htmlFor="car-select" style={{ marginBottom: '0.5rem', display: 'block', color: 'white' }}>
@@ -212,14 +197,14 @@ export default function SlotPage() {
                   <Select
                     id="car-select"
                     inputId="car-select"
-                    value={cars.find(c => c.id.toString() === carId)}
-                    onChange={(selected) => setCarId(selected?.id.toString())}
+                    value={selectedCarOption}
+                    onChange={(selected) => setSelectedCarOption(selected)}
                     options={cars.map(car => ({
                       value: car.id,
-                      label: `${car.make} ${car.model} (ID: ${car.id})`,
-                      id: car.id
+                      label: `${car.make} ${car.model} (ID: ${car.id})`
                     }))}
                     placeholder="-- Choose your vehicle --"
+                    menuPortalTarget={document.body}
                     styles={{
                       control: (provided) => ({
                         ...provided,
@@ -241,8 +226,10 @@ export default function SlotPage() {
                         ...provided,
                         backgroundColor: '#1e1e1e',
                       }),
+                      menuPortal: base => ({ ...base, zIndex: 9999 })
                     }}
                   />
+
                   <button
                     onClick={handleStartCharging}
                     className={styles.confirmButton}
