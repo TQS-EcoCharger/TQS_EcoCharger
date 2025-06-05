@@ -24,10 +24,18 @@ public class ReservationServiceImpl implements ReservationService {
   private final UserRepository userRepository;
   private final ChargingPointRepository chargingPointRepository;
 
-  @Override
-  public ReservationResponseDTO createReservation(ReservationRequestDTO request) {
+@Override
+public ReservationResponseDTO createReservation(ReservationRequestDTO request) {
     if (request.getStartTime().isAfter(request.getEndTime())) {
-      throw new IllegalArgumentException("Start time must be before end time");
+        throw new IllegalArgumentException("Start time must be before end time");
+    }
+
+    long durationMinutes = java.time.Duration.between(request.getStartTime(), request.getEndTime()).toMinutes();
+    if (durationMinutes < 15) {
+        throw new IllegalArgumentException("Reservation must be at least 15 minutes long");
+    }
+    if (durationMinutes > 240) {
+        throw new IllegalArgumentException("Reservation cannot exceed 4 hours");
     }
 
     User user = userRepository
@@ -42,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
         request.getChargingPointId(), request.getStartTime(), request.getEndTime());
 
     if (conflict) {
-      throw new IllegalStateException("Time slot already reserved for this charging point");
+        throw new IllegalStateException("Time slot already reserved for this charging point");
     }
 
     Reservation reservation = new Reservation();
@@ -55,7 +63,7 @@ public class ReservationServiceImpl implements ReservationService {
     Reservation saved = reservationRepository.save(reservation);
 
     return mapToDTO(saved);
-  }
+}
 
   @Override
   public List<ReservationResponseDTO> getAllReservations() {
