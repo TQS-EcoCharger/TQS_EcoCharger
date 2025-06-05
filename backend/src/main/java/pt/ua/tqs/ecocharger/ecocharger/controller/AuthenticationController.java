@@ -41,7 +41,7 @@ public class AuthenticationController {
     String password = user.get("password");
     String name = user.get("name");
     if (email == null || password == null || name == null) {
-      AuthResultDTO result = new AuthResultDTO(false, "Missing required fields", null);
+      AuthResultDTO result = new AuthResultDTO(false, "Missing required fields", null, null);
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getMessage());
     }
     email = email.strip();
@@ -58,7 +58,6 @@ public class AuthenticationController {
 
   @GetMapping("/me")
   public ResponseEntity<Object> getCurrentUser(@RequestHeader("Authorization") String token) {
-    System.out.println("Received token: " + token);
     String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
     try {
       User currentUser = authService.getCurrentUser(jwtToken);

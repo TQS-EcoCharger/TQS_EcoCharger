@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
+import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingOperatorService;
 
 import java.util.Optional;
 
@@ -17,50 +20,70 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-  @Autowired private UserRepository userRepository;
+  private UserRepository userRepository;
+  private DriverService driverService;
+  private ChargingOperatorService chargingOperatorService;
+  private JwtUtil jwtUtil;
 
-  @Autowired private JwtUtil jwtUtil;
-
+  public AuthenticationServiceImpl(UserRepository userRepository,
+                                    DriverService driverService,
+                                    ChargingOperatorService chargingOperatorService,
+                                    JwtUtil jwtUtil) {
+    this.userRepository = userRepository;
+    this.driverService = driverService;
+    this.chargingOperatorService = chargingOperatorService;
+    this.jwtUtil = jwtUtil;
+  }
+  
   @Override
   public AuthResultDTO authenticate(String email, String password) {
     Optional<User> userOpt = userRepository.findByEmail(email);
 
     if (userOpt.isEmpty()) {
-      return new AuthResultDTO(false, "User not found", null);
+      return new AuthResultDTO(false, "User not found", null, null);
     }
 
     User user = userOpt.get();
 
     if (!user.isEnabled()) {
-      return new AuthResultDTO(false, "User is disabled", null);
+      return new AuthResultDTO(false, "User is disabled", null, null);
     }
 
     if (!user.getPassword().equals(password)) {
-      return new AuthResultDTO(false, "Invalid password", null);
+      return new AuthResultDTO(false, "Invalid password", null, null);
     }
 
     String token = jwtUtil.generateToken(user.getEmail());
 
-    return new AuthResultDTO(true, "Login successful", token);
+    String userType;
+    if (driverService.driverExists(user.getId())) {
+      userType = "driver";
+    } else if (chargingOperatorService.chargingOperatorExists(user.getId())) {
+      userType = "chargingOperator";
+    } else {
+      userType = "administrator";
+    }
+
+    return new AuthResultDTO(true, "Login successful", token, userType);
   }
 
   @Override
   public AuthResultDTO register(String email, String password, String name) {
     Optional<User> existingUserOpt = userRepository.findByEmail(email);
     if (existingUserOpt.isPresent()) {
-      return new AuthResultDTO(false, "Email already in use", null);
+      return new AuthResultDTO(false, "Email already in use", null, null);
     }
 
     if (password.length() < 6) {
-      return new AuthResultDTO(false, "Password must be at least 6 characters", null);
+      return new AuthResultDTO(false, "Password must be at least 6 characters", null, null);
     }
 
     if (name.length() < 3) {
-      return new AuthResultDTO(false, "Name must be at least 3 characters", null);
+      return new AuthResultDTO(false, "Name must be at least 3 characters", null, null);
     }
 
     if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-      return new AuthResultDTO(false, "Invalid email format", null);
+      return new AuthResultDTO(false, "Invalid email format", null, null);
     }
 
     User user = new User();
@@ -69,11 +92,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     user.setName(name);
     user.setEnabled(true);
 
-    userRepository.save(user);
+    Driver driver = new Driver(null, user.getEmail(), user.getPassword(), user.getName(), true);
+    driverService.createDriver(driver);
+
+  
 
     String token = jwtUtil.generateToken(user.getEmail());
 
-    return new AuthResultDTO(true, "Registration successful", token);
+    return new AuthResultDTO(true, "Registration successful", token, "driver");
   }
 
   @Override

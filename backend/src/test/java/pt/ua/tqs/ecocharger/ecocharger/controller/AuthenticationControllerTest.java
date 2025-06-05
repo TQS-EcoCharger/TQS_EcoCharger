@@ -45,7 +45,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testLoginSuccess() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "123456"))
-        .thenReturn(new AuthResultDTO(true, "Login successful", "token123"));
+        .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "administrator"));
 
     String requestBody =
         """
@@ -68,7 +68,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testLoginFailure() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "wrongpass"))
-        .thenReturn(new AuthResultDTO(false, "Invalid password", null));
+        .thenReturn(new AuthResultDTO(false, "Invalid password", null, null));
 
     String requestBody =
         """
@@ -89,7 +89,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterSuccess() throws Exception {
     Mockito.when(authService.register("mariah@example.com", "123456", "Mariah"))
-        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123"));
+        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123", "driver"));
 
     String requestBody =
         "{ \"email\": \"mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
@@ -107,7 +107,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterExistingEmail() throws Exception {
     Mockito.when(authService.register("peter@example.com", "123456", "Peter"))
-        .thenReturn(new AuthResultDTO(false, "Email already in use", null));
+        .thenReturn(new AuthResultDTO(false, "Email already in use", null, null));
     String requestBody =
         "{ \"email\": \" peter@example.com\", \"password\": \"123456\", \"name\": \"Peter\" }";
     mockMvc
@@ -121,7 +121,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterShortPassword() throws Exception {
     Mockito.when(authService.register("andrew@example.com", "123", "Andrew"))
-        .thenReturn(new AuthResultDTO(false, "Password must be at least 6 characters", null));
+        .thenReturn(new AuthResultDTO(false, "Password must be at least 6 characters", null, null));
     String requestBody =
         "{ \"email\": \" andrew@example.com\", \"password\": \"123\", \"name\": \"Andrew\" }";
     mockMvc
@@ -135,7 +135,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterInvalidEmail() throws Exception {
     Mockito.when(authService.register("invalid-email", "123456", "Invalid"))
-        .thenReturn(new AuthResultDTO(false, "Invalid email format", null));
+        .thenReturn(new AuthResultDTO(false, "Invalid email format", null, null));
     String requestBody =
         "{ \"email\": \" invalid-email\", \"password\": \"123456\", \"name\": \"Invalid\" }";
     mockMvc
@@ -149,7 +149,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterInvalidName() throws Exception {
     Mockito.when(authService.register("john@example.com", "123456", ""))
-        .thenReturn(new AuthResultDTO(false, "Name must be at least 3 characters", null));
+        .thenReturn(new AuthResultDTO(false, "Name must be at least 3 characters", null, null));
     String requestBody =
         "{ \"email\": \" john@example.com\", \"password\": \"123456\", \"name\": \"\" }";
     mockMvc

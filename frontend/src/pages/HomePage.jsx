@@ -13,6 +13,7 @@ import { FaRoad, FaCity } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
+import { useUser } from "../context/UserProvider.jsx";
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -38,6 +39,7 @@ export default function HomePage() {
   const [endTime, setEndTime] = useState(new Date());
   const [message, setMessage] = useState('');
   const [userLocation, setUserLocation] = useState(null);
+  const { userType } = useUser();
 
   const [existingReservations, setExistingReservations] = useState([]);
 
@@ -46,12 +48,12 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchSelf = async () => {
-      if (localStorage.getItem("me") === null) {
+      if (!localStorage.getItem("me")) {
         try {
           const response = await axios.get(`${CONFIG.API_URL}auth/me`, {
             headers: {
-              "Authorization": localStorage.getItem("token")
-            }
+              "Authorization": token,
+            },
           });
           console.log("User data fetched successfully:", response.data);
           localStorage.setItem("me", JSON.stringify(response.data));
@@ -64,7 +66,7 @@ export default function HomePage() {
     };
 
     fetchSelf();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
   if (!navigator.geolocation) {

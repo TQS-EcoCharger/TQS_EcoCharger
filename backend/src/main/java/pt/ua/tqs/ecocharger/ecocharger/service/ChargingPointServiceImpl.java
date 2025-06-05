@@ -7,6 +7,8 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingPointRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingPointService;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,6 +46,23 @@ public class ChargingPointServiceImpl implements ChargingPointService {
     Optional<List<ChargingPoint>> points =
         chargingPointRepository.findAvailablePointsByChargingStation(station);
     return points.orElseThrow(() -> new RuntimeException("No available points found"));
+  }
+
+  @Override
+  public ChargingPoint updatePoint(Long id, ChargingPoint point) {
+    Optional<ChargingPoint> existingPoint = chargingPointRepository.findById(id);
+    if (existingPoint.isPresent()) {
+      ChargingPoint updatedPoint = existingPoint.get();
+      updatedPoint.setChargingStation(point.getChargingStation());
+      updatedPoint.setAvailable(point.isAvailable());
+      updatedPoint.setBrand(point.getBrand());
+      updatedPoint.setConnectors(point.getConnectors());
+      updatedPoint.setPricePerKWh(point.getPricePerKWh());
+      updatedPoint.setPricePerMinute(point.getPricePerMinute());
+      return chargingPointRepository.save(updatedPoint);
+    } else {
+      throw new NotFoundException("Point not found");
+    }
   }
 
   @Override
