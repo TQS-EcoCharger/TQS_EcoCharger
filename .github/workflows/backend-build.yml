@@ -8,10 +8,25 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+
 jobs:
   build-and-analyze:
-    name: Build and Analyze with Verify
+    name: Build and Analyze Backend
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:15
+        env:
+          POSTGRES_DB: ecocharger
+          POSTGRES_USER: ecocharger
+          POSTGRES_PASSWORD: ecocharger
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ecocharger" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -82,18 +97,51 @@ jobs:
           springdoc.swagger-ui.path=/swagger-ui-custom.html
           springdoc.api-docs.path=/api-docs
           jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
+          management.endpoint.health.show-details=always
+          management.endpoint.health.access=unrestricted
+          management.endpoints.web.exposure.include=health,info,metrics,prometheus
+          management.endpoint.prometheus.show-details=always
+          management.endpoint.info.access=unrestricted
+          management.endpoint.info.show-details=always
+          management.endpoint.metrics.access=unrestricted
+          management.endpoint.metrics.show-details=always
+          management.endpoint.prometheus.enabled=true
+          management.metrics.export.prometheus.enabled=true
           EOF
 
+      - name: Write test application.properties
+        run: |
+          mkdir -p backend/src/test/resources
+          cat <<EOF > backend/src/test/resources/application.properties
+          spring.flyway.enabled=true
+          spring.flyway.locations=classpath:db/migration
+          spring.flyway.clean-disabled=false
+          spring.flyway.baseline-on-migrate=true
+          spring.flyway.check-location=false
+          spring.jpa.defer-datasource-initialization=false
+          spring.security.enabled=false
+          jwt.secret=test-secret-key
+          EOF
+          
       - name: Run full verification lifecycle
         working-directory: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
-        run: mvn verify -Punit-tests \
-          -Dxray.clientId=$XRAY_CLIENT_ID \
-          -Dxray.clientSecret=$XRAY_CLIENT_SECRET \
-          -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger \
-          -Dsonar.organization=tqs-ecocharger \
+        run: >
+          mvn verify -Punit-tests,xray-unit
+          -Dxray.clientId=${XRAY_CLIENT_ID}
+          -Dxray.clientSecret=${XRAY_CLIENT_SECRET}
+
+      - name: Run SonarCloud analysis
+        working-directory: ./backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          mvn sonar:sonar
+          -Dsonar.login=${SONAR_TOKEN}
+          -Dsonar.projectKey=TQS-EcoCharger_TQS_EcoCharger
+          -Dsonar.organization=tqs-ecocharger
+          -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml

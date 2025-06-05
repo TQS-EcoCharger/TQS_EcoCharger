@@ -1,4 +1,4 @@
-name: Run Selenium Tests with Firefox
+name: Run Selenium Tests with Chrome
 
 on:
   workflow_dispatch:
@@ -80,16 +80,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Install Firefox and GeckoDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox wget unzip jq
-          
-          GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
-          wget "$GECKO_URL" -O geckodriver.tar.gz
-          tar -xzf geckodriver.tar.gz
-          sudo mv geckodriver /usr/bin/geckodriver
-          sudo chmod +x /usr/bin/geckodriver
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: '124.0.6367.91'  # Match this with your installed Chrome version
 
       - name: Build backend
         working-directory: ./backend
@@ -110,14 +104,22 @@ jobs:
             sleep 2
           done
           
-      - name: Run functional tests (Firefox)
+      - name: Run Cucumber functional tests
         working-directory: ./backend
-        run: mvn test -Dcucumber.filter.tags="@firefox"
+        run: mvn test -Pcucumber-tests 
 
-      - name: Debug test report
+      - name: Send Xray report
         working-directory: ./backend
         run: |
-          echo "Listing test output:"
-          ls -l target/
-          echo "Showing contents:"
-          head -n 20 target/TEST-junit-jupiter.xml || echo "Report not found!"
+          mvn \
+            -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \
+            -Dxray.clientSecret=${{ secrets.XRAY_CLIENT_SECRET }} \
+            -Dxray.projectKey=ET \
+            -Dxray.reportFormat=junit \
+            -Dxray.reportFile=target/surefire-reports/TEST-pt.ua.tqs.ecocharger.ecocharger.functional.CucumberTest.xml \
+            app.getxray:xray-maven-plugin:import-results
+
+          
+      - name: Stop containers
+        run: docker compose -f docker-compose.yml down
+        

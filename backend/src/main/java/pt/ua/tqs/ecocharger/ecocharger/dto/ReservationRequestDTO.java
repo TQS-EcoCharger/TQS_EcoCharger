@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class ReservationRequestDTO {
-    private Long userId;
-    private Long chargingPointId;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+  private Long userId;
+  private Long chargingPointId;
+  private LocalDateTime startTime;
+  private LocalDateTime endTime;
 }

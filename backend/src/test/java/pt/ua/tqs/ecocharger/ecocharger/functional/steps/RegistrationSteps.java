@@ -66,8 +66,7 @@ public class RegistrationSteps {
 
   @Given("I submit the form")
   public void i_submit_the_form() {
-    WebElement submitButton =
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("register-button")));
+    WebElement submitButton = driver.findElement(By.id("register-button"));
     submitButton.click();
   }
 

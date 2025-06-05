@@ -8,13 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChargingPointTest {
+class ChargingPointTest {
 
   @Test
   @DisplayName("Test ChargingPoint constructor and getters")
   @Requirement("ET-18")
   void testChargingPointConstructorAndGetters() {
-    ChargingStation station = new ChargingStation(); 
+    ChargingStation station = new ChargingStation();
     List<Connectors> connectors = new ArrayList<>();
 
     ChargingPoint chargingPoint = new ChargingPoint(station, true, "Tesla", connectors);

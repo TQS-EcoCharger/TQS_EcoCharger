@@ -2,7 +2,7 @@ package pt.ua.tqs.ecocharger.ecocharger.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,9 +17,14 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@Profile("!test")
 public class SecurityConfig {
 
-  @Autowired private JwtAuthenticationFilter jwtAuthenticationFilter;
+  private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+  public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,11 +37,10 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/api/auth/**")
                     .permitAll()
-                    .requestMatchers("/swagger-ui/**", "/api-docs/**")
+                    .requestMatchers("/swagger-ui/**", "/api-docs/**", "/actuator/**")
                     .permitAll()
                     .anyRequest()
-                    .authenticated() // tudo o resto precisa de token
-            )
+                    .authenticated())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
@@ -45,8 +49,8 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:5000")); // frontend origin
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedOrigins(List.of("http://localhost:5000"));
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
 
