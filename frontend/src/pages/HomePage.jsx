@@ -13,6 +13,8 @@ import { FaRoad, FaCity } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCar } from '@fortawesome/free-solid-svg-icons';
 
 
 import DatePicker from 'react-datepicker';
@@ -23,6 +25,7 @@ import { useUser } from '../context/UserContext';
 import ModalAddCharging from '../components/ModalAddCharging';
 import ModalEditCharging from '../components/ModalEditCharging';
 import ModalChargingPoints from '../components/ModalChargingPoints';
+import ChargingPointReservations from '../components/ChargingPointReservations';
 
 const customIcon = new L.Icon({
   iconUrl: Chargingicon,
@@ -43,6 +46,9 @@ export default function HomePage() {
   const [endTime, setEndTime] = useState(new Date());
   const [message, setMessage] = useState('');
   const [setUserLocation] = useState(null);
+  const [currentReservations, setCurrentReservations] = useState([]);
+
+
   const [existingReservations, setExistingReservations] = useState([]);
 
   const token = localStorage.getItem('token');
@@ -57,13 +63,28 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+
+    const fetchCurrentReservations = async () => {
+      console.log(`${CONFIG.API_URL}v1/reservation`);
+      const response = await axios.get(`http://localhost:8080/api/v1/reservation`, 
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      );
+      setCurrentReservations(response.data);
+      console.log("Current reservations fetched successfully:", response.data);
+    }
+
     const fetchSelf = async () => {
       if (!localStorage.getItem("me")) {
         try {
+          console.log(CONFIG.API_URL);
           const response = await axios.get(`${CONFIG.API_URL}auth/me`, {
             headers: {
-              Authorization: token,
-            },
+              "Authorization": `Bearer ${token}`
+            }
           });
           localStorage.setItem("me", JSON.stringify(response.data));
         } catch (error) {
@@ -72,7 +93,7 @@ export default function HomePage() {
       }
     };
     fetchSelf();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -120,6 +141,8 @@ export default function HomePage() {
     else alert("Select a charging station to edit.");
   };
 
+  
+
   const handleReservation = () => {
     if (!selectedPoint || !startTime || !endTime) {
       setMessage('Please fill in all fields.');
@@ -146,6 +169,16 @@ export default function HomePage() {
           setStartTime(new Date());
           setEndTime(new Date());
         }, 2000);
+        setCurrentReservations((prev) => [
+          ...prev,
+          {
+            id: Date.now(), // Temporary ID for optimistic UI update
+            chargingPoint: selectedPoint,
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString(),
+            status: 'PENDING', // Assuming new reservations start as PENDING
+          },
+        ]);
       })
       .catch((error) => {
         setMessage(error.response?.data || error.message);
@@ -199,24 +232,30 @@ export default function HomePage() {
                         <p className={styles.noConnectors}>No connectors available.</p>
                       )}
 
-                      <button
-                        className={styles.reserveBtn}
-                        id={`reserve-button-${point.id}`}
-                        onClick={() => {
-                          setSelectedPoint(point);
-                          setIsModalOpen(true);
-                          axios.get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                          })
-                          .then((res) => setExistingReservations(res.data))
-                          .catch((err) => {
-                            console.error('Failed to fetch existing reservations:', err);
-                            setExistingReservations([]);
-                          });
-                        }}
-                      >
-                        Reserve
-                      </button>
+                      <div className={styles.buttonRow}>
+                        <ChargingPointReservations reservations={currentReservations} chargingPointId={point.id} />
+                        <button
+                          className={styles.reserveBtn}
+                          id={`reserve-button-${point.id}`}
+                          onClick={() => {
+                            setSelectedPoint(point);
+                            setIsModalOpen(true);
+
+                            axios
+                              .get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                              })
+                              .then((res) => setExistingReservations(res.data))
+                              .catch((err) => {
+                                console.error('Failed to fetch existing reservations:', err);
+                                setExistingReservations([]);
+                              });
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCar} className={styles.faicon}/>
+                          Reserve
+                        </button>
+                      </div>
                     </div>
                   ))
                 ) : (
@@ -236,7 +275,7 @@ export default function HomePage() {
               </div>
             </div>
           ) : (
-            <p id="select-station-placeholder">Select a station on the map</p>          )}
+            <p id="select-station-placeholder">Select a station on the map</p>)}
         </div>
 
         <div className={styles.mapWrapper}>
