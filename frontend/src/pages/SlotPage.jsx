@@ -192,41 +192,45 @@ export default function SlotPage() {
                   <label htmlFor="car-select" style={{ marginBottom: '0.5rem', display: 'block', color: 'white' }}>
                     <FaCar /> Select Vehicle:
                   </label>
-                  <Select
-                    id="car-select"
-                    inputId="car-select"
-                    value={selectedCarOption}
-                    onChange={(selected) => setSelectedCarOption(selected)}
-                    options={cars.map(car => ({
-                      value: car.id,
-                      label: `${car.make} ${car.model} (ID: ${car.id})`
-                    }))}
-                    placeholder="-- Choose your vehicle --"
-                    menuPortalTarget={document.body}
-                    styles={{
-                      control: (provided) => ({
-                        ...provided,
-                        backgroundColor: '#2a2a2a',
-                        borderColor: '#f4cc5d',
-                        color: 'white',
-                      }),
-                      singleValue: (provided) => ({
-                        ...provided,
-                        color: 'white'
-                      }),
-                      option: (provided, state) => ({
-                        ...provided,
-                        backgroundColor: state.isFocused ? '#f4cc5d' : '#1e1e1e',
-                        color: state.isFocused ? '#000' : '#fff',
-                        cursor: 'pointer',
-                      }),
-                      menu: (provided) => ({
-                        ...provided,
-                        backgroundColor: '#1e1e1e',
-                      }),
-                      menuPortal: base => ({ ...base, zIndex: 9999 })
-                    }}
-                  />
+                  <div id="car-select">
+                    <Select
+                      inputId="car-select-input"
+                      classNamePrefix="custom-car-select"
+                      className="custom-car-select-container"
+                      value={selectedCarOption}
+                      onChange={(selected) => setSelectedCarOption(selected)}
+                      options={cars.map(car => ({
+                        value: car.id,
+                        label: `${car.make} ${car.model} (ID: ${car.id})`
+                      }))}
+                      placeholder="-- Choose your vehicle --"
+                      menuPortalTarget={document.body}
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor: '#2a2a2a',
+                          borderColor: '#f4cc5d',
+                          color: 'white',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: 'white'
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isFocused ? '#f4cc5d' : '#1e1e1e',
+                          color: state.isFocused ? '#000' : '#fff',
+                          cursor: 'pointer',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor: '#1e1e1e',
+                        }),
+                        menuPortal: base => ({ ...base, zIndex: 9999 })
+                      }}
+                    />
+                  </div>
+
 
                   <button
                     onClick={handleStartCharging}

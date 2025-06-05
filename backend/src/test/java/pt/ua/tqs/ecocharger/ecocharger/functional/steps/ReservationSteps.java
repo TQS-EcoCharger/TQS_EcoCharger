@@ -175,7 +175,6 @@ public class ReservationSteps {
   public void visitSlotPage() {
     String pointId = TestMemoryContext.get("chargingPointId").toString();
     driver.get("http://localhost:5000/slots/" + pointId);
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("title")));
   }
 
   @When("I click the \"Validate OTP\" button")
@@ -190,8 +189,15 @@ public class ReservationSteps {
 
   @When("I select a vehicle from the list")
   public void selectCar() {
-    WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(By.id("car-select")));
-    new Select(dropdown).selectByIndex(1);
+      // Wait for the custom react-select dropdown to be clickable
+      WebElement dropdownControl = wait.until(ExpectedConditions.elementToBeClickable(
+          By.cssSelector(".custom-car-select__control")));
+      dropdownControl.click();
+
+      // Wait for dropdown menu and click the first available option
+      WebElement firstOption = wait.until(ExpectedConditions.elementToBeClickable(
+          By.cssSelector(".custom-car-select__menu .custom-car-select__option")));
+      firstOption.click();
   }
 
   @When("I click the \"Start Charging\" button")

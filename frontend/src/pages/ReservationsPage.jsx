@@ -178,11 +178,14 @@ export default function ReservationsPage() {
                         >
                           Generate Start Code
                         </button>
-
                         {otpData[reservation.id] && (
                           <div className={styles.otpCard}>
-                            <p className={styles.otpCode}><strong>OTP:</strong> {otpData[reservation.id].code}</p>
-                            <p className={styles.expiry}><strong>Expires in:</strong> {timers[reservation.id]}s</p>
+                            <p id={`otp-code-${reservation.id}`} className={styles.otpCode}>
+                              <strong>OTP:</strong> {otpData[reservation.id].code}
+                            </p>
+                            <p className={styles.expiry}>
+                              <strong>Expires in:</strong> {timers[reservation.id]}s
+                            </p>
                           </div>
                         )}
                       </>
