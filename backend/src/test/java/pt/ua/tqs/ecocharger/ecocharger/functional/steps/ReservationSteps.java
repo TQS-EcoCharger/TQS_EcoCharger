@@ -199,16 +199,14 @@ public class ReservationSteps {
 
   @When("I select a vehicle from the list")
   public void selectCar() {
-    WebElement dropdownControl =
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".custom-car-select__control")));
+    WebElement dropdownControl = wait
+        .until(ExpectedConditions.elementToBeClickable(By.cssSelector(".custom-car-select__control")));
     dropdownControl.click();
 
-    WebElement firstOption =
-        wait.until(ExpectedConditions.elementToBeClickable(
-            By.cssSelector(".custom-car-select__option")));
+    WebElement firstOption = wait.until(ExpectedConditions.elementToBeClickable(
+        By.cssSelector(".custom-car-select__option")));
     firstOption.click();
   }
-
 
   @When("I click the \"Start Charging\" button")
   public void clickStartCharging() {
