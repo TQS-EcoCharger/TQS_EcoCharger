@@ -184,7 +184,8 @@ public class ReservationSteps {
 
   @Then("I should see the car selection dropdown")
   public void verifyCarDropdown() {
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("car-select")));
+    wait.until(ExpectedConditions.elementToBeClickable(
+        By.cssSelector(".custom-car-select__control")));
   }
 
   @When("I select a vehicle from the list")
@@ -212,4 +213,6 @@ public class ReservationSteps {
   public void verifyChargingSessionStarted() {
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("session-info")));
   }
+
+  
 }
