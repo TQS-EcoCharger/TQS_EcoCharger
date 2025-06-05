@@ -17,7 +17,6 @@ import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 import static org.mockito.Mockito.when;
-// TODO: Change wildcard to single imports
 import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.mockito.Mockito.doThrow;
@@ -33,7 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @WebMvcTest(DriverController.class)
 @Import(SecurityDisableConfig.class)
-public class DriverControllerTest {
+class DriverControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
@@ -46,7 +45,7 @@ public class DriverControllerTest {
   private Driver driver5;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     driver1 = new Driver(1L, "johndoe@example.com", "password", "John Doe", true);
     driver2 = new Driver(2L, "katherinedoe@example.com", "password2", "Katherine Doe", true);
     driver3 = new Driver(3L, "paulbrook@example.com", "password3", "Paul Brook", true);
@@ -65,7 +64,7 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Getting all drivers returns 200 OK and list in JSON")
-  public void testGetAllDrivers() throws Exception {
+  void testGetAllDrivers() throws Exception {
     mockMvc
         .perform(get("/api/v1/driver/"))
         .andExpect(status().isOk())
@@ -79,7 +78,7 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Getting driver by ID returns 200 OK and driver in JSON if it exists")
-  public void testGetDriverById() throws Exception {
+  void testGetDriverById() throws Exception {
     mockMvc
         .perform(get("/api/v1/driver/1"))
         .andExpect(status().isOk())
@@ -88,7 +87,7 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Getting driver by ID returns 404 NOT FOUND if it does not exist")
-  public void testGetDriverByIdNotFound() throws Exception {
+  void testGetDriverByIdNotFound() throws Exception {
     mockMvc
         .perform(get("/api/v1/driver/6"))
         .andExpect(status().isNotFound())
@@ -97,12 +96,13 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Updating driver returns 200 OK and updated driver in JSON if it exists")
-  public void testUpdateDriver() throws Exception {
+  void testUpdateDriver() throws Exception {
     Driver updatedDriver =
         new Driver(null, "johnfantastic@example.com", "newpassword", "John Fantastic", true);
     driver1.setEmail(updatedDriver.getEmail());
     driver1.setPassword(updatedDriver.getPassword());
     driver1.setName(updatedDriver.getName());
+    driver1.setEnabled(updatedDriver.isEnabled());
 
     when(driverService.updateDriver(eq(1L), any(Driver.class))).thenReturn(driver1);
 
@@ -111,31 +111,46 @@ public class DriverControllerTest {
             put("/api/v1/driver/1")
                 .contentType("application/json")
                 .content(
-                    "{\"email\":\"johnfantastic@example.com\", \"password\":\"newpassword\","
-                        + " \"name\":\"John Fantastic\", \"enabled\":\"true\"}"))
+                    """
+                    {
+                      "email":"johnfantastic@example.com",
+                      "password":"newpassword",
+                      "name":"John Fantastic",
+                      "enabled": true,
+                      "type": "drivers"
+                    }
+                    """))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.email").value(driver1.getEmail()));
   }
 
   @Test
   @DisplayName("Updating driver returns 404 NOT FOUND if it does not exist")
-  public void testUpdateDriverNotFound() throws Exception {
+  void testUpdateDriverNotFound() throws Exception {
     when(driverService.updateDriver(eq(6L), any(Driver.class)))
         .thenThrow(new NotFoundException("Driver not found"));
+
     mockMvc
         .perform(
             put("/api/v1/driver/6")
                 .contentType("application/json")
                 .content(
-                    "{\"email\":\"johnfantastic@example.com\", \"password\":\"newpassword\","
-                        + " \"name\":\"John Fantastic\"}"))
+                    """
+                    {
+                      "email":"johnfantastic@example.com",
+                      "password":"newpassword",
+                      "name":"John Fantastic",
+                      "enabled": true,
+                      "type": "drivers"
+                    }
+                    """))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$").value("Driver not found"));
   }
 
   @Test
   @DisplayName("Adding car to driver returns 200 OK and updated driver in JSON if it exists")
-  public void testAddCarToDriver() throws Exception {
+  void testAddCarToDriver() throws Exception {
     Car car =
         new Car(1L, "Tesla Model S", "Tesla", "Model S", 2022, "ABC123", 100.0, 50.0, 0.0, 0.0);
     driver1.addCar(car);
@@ -155,7 +170,7 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Adding car to driver returns 404 NOT FOUND if driver does not exist")
-  public void testAddCarToDriverNotFound() throws Exception {
+  void testAddCarToDriverNotFound() throws Exception {
     when(driverService.addCarToDriver(eq(6L), any(Car.class)))
         .thenThrow(new NotFoundException("Driver not found"));
     mockMvc
@@ -172,7 +187,7 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Removing car from driver returns 200 OK and updated driver in JSON if it exists")
-  public void testRemoveCarFromDriver() throws Exception {
+  void testRemoveCarFromDriver() throws Exception {
     when(driverService.removeCarFromDriver(1L, 2L)).thenReturn(driver1);
 
     mockMvc
@@ -183,7 +198,7 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Removing car from driver returns 404 NOT FOUND if driver does not exist")
-  public void testRemoveCarFromDriverNotFound() throws Exception {
+  void testRemoveCarFromDriverNotFound() throws Exception {
     when(driverService.removeCarFromDriver(6L, 2L))
         .thenThrow(new NotFoundException("Driver not found"));
     mockMvc
@@ -197,7 +212,7 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Removing car from driver returns 404 NOT FOUND if car does not exist")
-  public void testRemoveCarFromDriverCarNotFound() throws Exception {
+  void testRemoveCarFromDriverCarNotFound() throws Exception {
     when(driverService.removeCarFromDriver(1L, 6L))
         .thenThrow(new NotFoundException("Car not found"));
     mockMvc
@@ -211,13 +226,13 @@ public class DriverControllerTest {
 
   @Test
   @DisplayName("Deleting driver returns 200 OK if it exists")
-  public void testDeleteDriver() throws Exception {
+  void testDeleteDriver() throws Exception {
     mockMvc.perform(delete("/api/v1/driver/1")).andExpect(status().isNoContent());
   }
 
   @Test
   @DisplayName("Deleting driver returns 404 NOT FOUND if it does not exist")
-  public void testDeleteDriverNotFound() throws Exception {
+  void testDeleteDriverNotFound() throws Exception {
     doThrow(new NotFoundException("Driver not found")).when(driverService).deleteDriver(6L);
     mockMvc
         .perform(delete("/api/v1/driver/6"))
