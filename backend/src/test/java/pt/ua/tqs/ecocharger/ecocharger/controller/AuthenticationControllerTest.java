@@ -14,11 +14,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.web.servlet.MockMvc;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
-
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 
 @WebMvcTest(AuthenticationController.class)
 @Import(SecurityDisableConfig.class)
@@ -163,5 +166,17 @@ class AuthenticationControllerTest {
         .perform(post("/api/auth/register").content(requestBody).contentType("application/json"))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Name must be at least 3 characters")));
+  }
+
+  @Test
+  @DisplayName("Usuário não encontrado retorna 403 Forbidden")
+  void testGetCurrentUserNotFound() throws Exception {
+    when(authService.getCurrentUser("unknown.token"))
+        .thenThrow(new NotFoundException("User not found"));
+
+    mockMvc.perform(get("/api/auth/me")
+            .header("Authorization", "Bearer unknown.token"))
+        .andExpect(status().isForbidden())
+        .andExpect(content().string("User not found"));
   }
 }
