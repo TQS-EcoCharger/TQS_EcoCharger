@@ -272,7 +272,7 @@ export default function HomePage() {
                     <p className={styles.noChargingPoints}>No charging points available.</p>
                   </div>
                 )}
-                {userType === 'administrator' && (
+                {userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id)) && (
                   <>
                     <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
                     {selectedStation.chargingPoints?.length > 0 && (
