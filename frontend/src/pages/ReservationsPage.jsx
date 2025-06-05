@@ -136,12 +136,12 @@ export default function ReservationsPage() {
 
                     <p id={`reservation-start-${reservation.id}`}>
                       <FaClock className={styles.inlineIcon} />
-                      <strong>Start:</strong> {new Date(reservation.startTime).toLocaleString()}
+                      <strong>Start:</strong> {new Date(reservation.startTime).toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' })}
                     </p>
 
                     <p id={`reservation-end-${reservation.id}`}>
                       <FaClock className={styles.inlineIcon} />
-                      <strong>End:</strong> {new Date(reservation.endTime).toLocaleString()}
+                      <strong>End:</strong> {new Date(reservation.endTime).toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' })}
                     </p>
 
                     <p>
