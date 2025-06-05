@@ -39,10 +39,8 @@ public class ChargingStationServiceImpl implements ChargingStationService {
       updatedStation.setAddress(station.getAddress());
       updatedStation.setLatitude(station.getLatitude());
       updatedStation.setLongitude(station.getLongitude());
-      updatedStation.setStreetName(station.getStreetName());
       updatedStation.setCountryCode(station.getCountryCode());
       updatedStation.setCountry(station.getCountry());
-      updatedStation.setVehicleType(station.getVehicleType());
       updatedStation.setChargingPoints(station.getChargingPoints());
       return chargingStationRepository.save(updatedStation);
     } else {

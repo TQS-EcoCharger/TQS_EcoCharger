@@ -97,7 +97,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) return userLocation;
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
