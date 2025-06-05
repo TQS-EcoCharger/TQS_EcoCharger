@@ -215,6 +215,7 @@ class ChargingPointServiceImplTest {
     assertEquals("Updated Brand", result.getBrand());
     assertFalse(result.isAvailable());
     verify(chargingPointRepository).save(updatedPoint);
+  }
 
   @Test
   @Requirement("ET-43")
