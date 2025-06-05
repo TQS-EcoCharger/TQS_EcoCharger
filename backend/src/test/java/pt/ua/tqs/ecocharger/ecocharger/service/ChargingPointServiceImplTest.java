@@ -170,56 +170,61 @@ class ChargingPointServiceImplTest {
   @Requirement("ET-43")
   @DisplayName("Should return active session DTO for a charging point")
   void testGetActiveSessionForPoint_Success() {
-      ChargingSession session = new ChargingSession();
-      session.setId(100L);
-      session.setStartTime(LocalDateTime.now().minusMinutes(30));
-      session.setInitialBatteryLevel(10.0);
-      session.setCar(new Car());
-      session.getCar().setId(5L);
-      session.getCar().setBatteryCapacity(50.0);
-      session.getCar().setName("Model Y");
+    ChargingSession session = new ChargingSession();
+    session.setId(100L);
+    session.setStartTime(LocalDateTime.now().minusMinutes(30));
+    session.setInitialBatteryLevel(10.0);
+    session.setCar(new Car());
+    session.getCar().setId(5L);
+    session.getCar().setBatteryCapacity(50.0);
+    session.getCar().setName("Model Y");
 
-      point.setId(1L);
-      point.setChargingRateKWhPerMinute(1.0);
-      point.setPricePerKWh(0.2);
-      point.setPricePerMinute(0.1);
+    point.setId(1L);
+    point.setChargingRateKWhPerMinute(1.0);
+    point.setPricePerKWh(0.2);
+    point.setPricePerMinute(0.1);
 
-      when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
-      when(chargingSessionRepository.findByChargingPointAndEndTimeIsNull(point)).thenReturn(Optional.of(session));
+    when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
+    when(chargingSessionRepository.findByChargingPointAndEndTimeIsNull(point))
+        .thenReturn(Optional.of(session));
 
-      ActiveSessionDTO dto = chargingPointService.getActiveSessionForPoint(1L);
+    ActiveSessionDTO dto = chargingPointService.getActiveSessionForPoint(1L);
 
-      assertNotNull(dto);
-      assertEquals(100L, dto.getSessionId());
-      assertEquals(5L, dto.getCarId());
-      assertEquals("Model Y", dto.getCarName());
-      assertTrue(dto.getBatteryPercentage() > 0);
-      assertTrue(dto.getEnergyDelivered() > 0);
-      assertTrue(dto.getTotalCost() > 0);
+    assertNotNull(dto);
+    assertEquals(100L, dto.getSessionId());
+    assertEquals(5L, dto.getCarId());
+    assertEquals("Model Y", dto.getCarName());
+    assertTrue(dto.getBatteryPercentage() > 0);
+    assertTrue(dto.getEnergyDelivered() > 0);
+    assertTrue(dto.getTotalCost() > 0);
   }
 
   @Test
   @Requirement("ET-43")
   @DisplayName("Should throw when no active session on the point")
   void testGetActiveSessionForPoint_NoSession() {
-      when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
-      when(chargingSessionRepository.findByChargingPointAndEndTimeIsNull(point)).thenReturn(Optional.empty());
+    when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
+    when(chargingSessionRepository.findByChargingPointAndEndTimeIsNull(point))
+        .thenReturn(Optional.empty());
 
-      Exception ex = assertThrows(IllegalStateException.class,
-          () -> chargingPointService.getActiveSessionForPoint(1L));
+    Exception ex =
+        assertThrows(
+            IllegalStateException.class, () -> chargingPointService.getActiveSessionForPoint(1L));
 
-      assertEquals("No active session on this point", ex.getMessage());
+    assertEquals("No active session on this point", ex.getMessage());
   }
 
   @Test
   @Requirement("ET-43")
   @DisplayName("Should throw when charging point does not exist")
   void testGetActiveSessionForPoint_PointNotFound() {
-      when(chargingPointRepository.findById(99L)).thenReturn(Optional.empty());
+    when(chargingPointRepository.findById(99L)).thenReturn(Optional.empty());
 
-      Exception ex = assertThrows(IllegalArgumentException.class,
-          () -> chargingPointService.getActiveSessionForPoint(99L));
+    Exception ex =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> chargingPointService.getActiveSessionForPoint(99L));
 
-      assertEquals("Charging point not found", ex.getMessage());
+    assertEquals("Charging point not found", ex.getMessage());
   }
 }

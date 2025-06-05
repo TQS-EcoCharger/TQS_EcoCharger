@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class StartChargingRequestDTO {
-    private Long chargingPointId;
-    private String otp;
-    private Long carId;
+  private Long chargingPointId;
+  private String otp;
+  private Long carId;
 }

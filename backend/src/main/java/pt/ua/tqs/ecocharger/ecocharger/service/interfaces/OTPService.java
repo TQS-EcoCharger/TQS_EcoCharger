@@ -5,5 +5,6 @@ import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
 
 public interface OTPService {
   public OTPCode generateOtp(Long reservationId);
-  public boolean validateOtp(String code, Reservation reservation);   
+
+  public boolean validateOtp(String code, Reservation reservation);
 }

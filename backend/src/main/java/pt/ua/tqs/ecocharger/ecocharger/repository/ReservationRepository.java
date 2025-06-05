@@ -22,6 +22,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
   List<Reservation> findByChargingPointIdAndEndTimeAfter(Long chargingPointId, LocalDateTime time);
 
   Optional<Reservation> findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
-    Long chargingPointId, LocalDateTime start, LocalDateTime end);
-
+      Long chargingPointId, LocalDateTime start, LocalDateTime end);
 }

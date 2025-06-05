@@ -7,6 +7,6 @@ import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
 
 public interface OTPCodeRepository extends JpaRepository<OTPCode, Long> {
   Optional<OTPCode> findByCodeAndReservation(String code, Reservation reservation);
-  Optional<OTPCode> findByReservation(Reservation reservation);
 
+  Optional<OTPCode> findByReservation(Reservation reservation);
 }
