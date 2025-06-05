@@ -178,18 +178,29 @@ public class ReservationSteps {
 
   @Then("I should see the car selection dropdown")
   public void verifyCarDropdown() {
-    By dropdownControlSelector = By.cssSelector(".custom-car-select__control");
-
-    WebElement dropdownControl = wait.until(driver -> {
+    WebElement control = wait.until(driver -> {
       try {
-        WebElement el = driver.findElement(dropdownControlSelector);
+        WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
         return (el.isDisplayed() && el.isEnabled()) ? el : null;
-      } catch (NoSuchElementException | StaleElementReferenceException ignored) {
+      } catch (NoSuchElementException | StaleElementReferenceException e) {
         return null;
       }
     });
 
-    assertNotNull(dropdownControl, "Car selection dropdown not found or not ready.");
+    assertNotNull(control, "Car dropdown control not visible or enabled");
+
+    control.click();
+
+    WebElement menu = wait.until(driver -> {
+      try {
+        WebElement el = driver.findElement(By.cssSelector(".custom-car-select__menu"));
+        return el.isDisplayed() ? el : null;
+      } catch (NoSuchElementException | StaleElementReferenceException e) {
+        return null;
+      }
+    });
+
+    assertNotNull(menu, "Car dropdown menu did not appear");
   }
 
   @When("I select a vehicle from the list")
