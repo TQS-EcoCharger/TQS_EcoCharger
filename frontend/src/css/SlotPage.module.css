@@ -1,19 +1,18 @@
-/* ============================================================
-  LAYOUT GERAL
-============================================================ */
 .page {
   display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  width: 100%;
-  overflow: hidden;
+  background-color: #1e1e1e;
 }
 
 .wrapper {
   display: flex;
-  flex: 1;
-  height: 100%;
-  gap:30px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
+
 
 .map {
   flex: 1;
@@ -454,7 +453,7 @@ h2 {
   position: relative;
   margin-left: 10%;
   margin-top: 7%;
-  background-color: #252525;
+  background-color: #1e1e1e;
   color: #ffffff;
   border-radius: 15px;
   padding: 5px;

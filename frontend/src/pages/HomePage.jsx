@@ -13,6 +13,7 @@ import { FaRoad, FaCity } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
+import { format } from 'date-fns'; // Place at top with other imports
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -132,8 +133,8 @@ export default function HomePage() {
     const payload = {
       userId: parseInt(me.id),
       chargingPointId: selectedPoint.id,
-      startTime: startTime.toISOString(),
-      endTime: endTime.toISOString(),
+      startTime: format(startTime, "yyyy-MM-dd'T'HH:mm:ss"), 
+      endTime: format(endTime, "yyyy-MM-dd'T'HH:mm:ss"),
     };
 
     axios

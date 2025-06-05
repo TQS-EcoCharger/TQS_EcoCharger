@@ -1,3 +1,5 @@
+ALTER DATABASE ecocharger SET timezone TO 'Europe/Lisbon';
+
 INSERT INTO users (email, password, name, enabled) VALUES
 ('afonso@gmail.com', 'pass', 'Afonso Ferreira', true),
 ('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true);
@@ -57,41 +59,62 @@ INSERT INTO charging_stations (
 
 
 -- Station 1: Atlante
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (1, 1, true, 'Atlante');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (2, 1, true, 'Atlante');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(1, 1, true, 'Atlante', 0.25, 0.05, 0.3667),
+(2, 1, true, 'Atlante', 0.25, 0.05, 0.8333);
 
 -- Station 2: Mobi.E
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (3, 2, true, 'Mobi.E');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(3, 2, true, 'Mobi.E', 0.20, 0.03, 1.0000);
 
 -- Station 3: Mobi.E
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (4, 3, false, 'Mobi.E');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (5, 3, true, 'Mobi.E');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(4, 3, false, 'Mobi.E', 0.20, 0.03, 1.0000),
+(5, 3, true, 'Mobi.E', 0.20, 0.03, 0.3667);
 
 -- Station 4: EDP Comercial
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (6, 4, true, 'EDP');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(6, 4, true, 'EDP', 0.23, 0.04, 0.3667);
 
 -- Station 5: EDP Comercial
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (7, 5, true, 'EDP');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (8, 5, true, 'EDP');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(7, 5, true, 'EDP', 0.23, 0.04, 0.3667),
+(8, 5, true, 'EDP', 0.23, 0.04, 0.3667);
 
 -- Station 6: AVR-90002
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (9, 6, true, 'AVR-90002');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (10, 6, false, 'AVR-90002');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (11, 6, true, 'AVR-90002');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(9, 6, true, 'AVR-90002', 0.30, 0.06, 0.3667),
+(10, 6, false, 'AVR-90002', 0.30, 0.06, 0.3667),
+(11, 6, true, 'AVR-90002', 0.30, 0.06, 0.3667);
 
 -- Station 7: Mobi.E
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (12, 7, true, 'Mobi.E');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(12, 7, true, 'Mobi.E', 0.21, 0.04, 0.3667);
 
 -- Station 8: Galp Power
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (13, 8, true, 'Galp electric');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (14, 8, false, 'Galp electric');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(13, 8, true, 'Galp electric', 0.28, 0.07, 0.3667),
+(14, 8, false, 'Galp electric', 0.28, 0.07, 0.3667);
 
 -- Station 9: Powerdot
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (15, 9, true, 'Powerdot');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(15, 9, true, 'Powerdot', 0.26, 0.06, 0.3667);
 
 -- Station 10: Atlante
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (16, 10, true, 'Atlante');
-INSERT INTO charging_points (id, station_id, available, brand) VALUES (17, 10, true, 'Atlante');
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(16, 10, true, 'Atlante', 0.25, 0.05, 0.8333),
+(17, 10, true, 'Atlante', 0.25, 0.05, 0.8333);
+
 
 INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
 VALUES (1, 1, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');

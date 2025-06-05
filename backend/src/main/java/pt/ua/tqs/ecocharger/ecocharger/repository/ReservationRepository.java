@@ -6,6 +6,7 @@ import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
@@ -19,4 +20,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
   List<Reservation> findByUserId(Long userId);
 
   List<Reservation> findByChargingPointIdAndEndTimeAfter(Long chargingPointId, LocalDateTime time);
+
+  Optional<Reservation> findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
+    Long chargingPointId, LocalDateTime start, LocalDateTime end);
+
 }

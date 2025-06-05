@@ -57,6 +57,7 @@ public class Car {
   @Column(nullable = false)
   private boolean enabled;
 
+
   public static Car cloneCar(Car car) {
     return new Car(
         null,
