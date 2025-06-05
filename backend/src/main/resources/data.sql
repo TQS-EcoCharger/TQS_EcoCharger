@@ -31,30 +31,55 @@ INSERT INTO users (email, password, name, enabled, user_type) VALUES
 INSERT INTO administrators (id) SELECT id FROM users WHERE email = 'tomas@gmail.com';
 INSERT INTO clients (id) SELECT id FROM users WHERE email = 'tomascliente@gmail.com';
 
--- Estações de carregamento
+-- Estações de carregamento adicionais
 INSERT INTO charging_stations (municipality, address, latitude, longitude, countryCode, country) VALUES
-('Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739, 'PT', 'Portugal'),
-('Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
-('Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
-('Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682, 'PT', 'Portugal'),
-('Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208, 'PT', 'Portugal'),
-('Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503, 'PT', 'Portugal'),
-('Aveiro', 'Rua Doutor Alberto Souto -, 3800-148 Aveiro', 40.64375, -8.64861, 'PT', 'Portugal'),
-('Aveiro', 'Rua Doutor Alberto Soares Machado, 3800-146 Aveiro', 40.643751, -8.648611, 'PT', 'Portugal'),
-('Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023, 'PT', 'Portugal'),
-('Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514, 'PT', 'Portugal');
+('Porto', 'Rua de Santa Catarina, 4000-447 Porto', 41.14961, -8.60747, 'PT', 'Portugal'),
+('Porto', 'Rua das Flores, 4050-265 Porto', 41.14141, -8.61107, 'PT', 'Portugal'),
+('Lisboa', 'Praça do Comércio, 1100-148 Lisboa', 38.70775, -9.13659, 'PT', 'Portugal'),
+('Lisboa', 'Avenida da Liberdade, 1250-140 Lisboa', 38.72057, -9.14584, 'PT', 'Portugal'),
+('Coimbra', 'Rua Ferreira Borges, 3000-179 Coimbra', 40.21010, -8.42920, 'PT', 'Portugal'),
+('Faro', 'Rua Dom Francisco Gomes, 8000-262 Faro', 37.01530, -7.93550, 'PT', 'Portugal'),
+('Braga', 'Avenida Central, 4710-229 Braga', 41.54877, -8.42761, 'PT', 'Portugal'),
+('Setúbal', 'Avenida Luísa Todi, 2900-461 Setúbal', 38.52357, -8.89267, 'PT', 'Portugal'),
+('Leiria', 'Rua Capitão Mouzinho de Albuquerque, 2400-193 Leiria', 39.74349, -8.80768, 'PT', 'Portugal'),
+('Aveiro', 'Estrada de São Bernardo, 3810-174 Aveiro', 40.63132, -8.64325, 'PT', 'Portugal');
 
 SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations));
 
--- Pontos de carregamento
+-- Pontos de carregamento adicionais
 INSERT INTO charging_points (station_id, available, brand) VALUES
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 1), true, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), false, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), true, 'Mobi.E');
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 0), true, 'EDP'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 0), false, 'EDP'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 1), true, 'Mobi.E'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 1), true, 'Mobi.E'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 2), true, 'Ionity'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 2), true, 'Ionity'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 3), true, 'Galp'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 3), false, 'Galp'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 4), true, 'PowerDot'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 4), true, 'PowerDot'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 5), true, 'Mobi.E'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 5), true, 'Mobi.E'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 6), true, 'Ionity'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 6), true, 'Ionity'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 7), true, 'Galp'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 7), false, 'Galp'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 8), true, 'EDP'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 8), true, 'EDP'),
+
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 9), true, 'PowerDot'),
+((SELECT id FROM charging_stations ORDER BY id DESC LIMIT 1 OFFSET 9), true, 'PowerDot');
 
 SELECT setval('charging_points_id_seq', (SELECT MAX(id) FROM charging_points));
+
 
 -- Conectores
 INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type) VALUES
