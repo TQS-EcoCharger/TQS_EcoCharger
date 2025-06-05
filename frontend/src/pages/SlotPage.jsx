@@ -21,6 +21,8 @@ export default function SlotPage() {
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
   const inputRefs = useRef([]);
+  const otpInputIds = ['otp-1', 'otp-2', 'otp-3', 'otp-4', 'otp-5', 'otp-6'];
+
 
   const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
 
@@ -164,7 +166,7 @@ export default function SlotPage() {
                 <div className={styles.otpContainer} id="otp-container">
                   {otp.map((digit, i) => (
                     <input
-                      key={i}
+                      key={otpInputIds[i]}
                       ref={(el) => (inputRefs.current[i] = el)}
                       type="text"
                       inputMode="numeric"
