@@ -22,7 +22,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Chargingicon from '../../public/ChargingStation.png';
-import { useUser } from '../context/UserProvider.jsx';
 import ModalAddCharging from '../components/ModalAddCharging';
 import ModalEditCharging from '../components/ModalEditCharging';
 import ModalChargingPoints from '../components/ModalChargingPoints';
@@ -40,6 +39,7 @@ const customIcon = new L.Icon({
 
 export default function HomePage() {
   const [stations, setStations] = useState([]);
+  const [currentReservations, setCurrentReservations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,6 +48,7 @@ export default function HomePage() {
   const [message, setMessage] = useState('');
   const [userLocation, setUserLocation] = useState(null);
   const { userType } = useUser();
+  const me = JSON.parse(localStorage.getItem('me')) || {};
 
   const [existingReservations, setExistingReservations] = useState([]);
 
@@ -231,7 +232,7 @@ export default function HomePage() {
                       ) : (
                         <p className={styles.noConnectors}>No connectors available.</p>
                       )}
-
+                      {point.available ? (
                       <div className={styles.buttonRow}>
                         <ChargingPointReservations reservations={currentReservations} chargingPointId={point.id} />
                         <button
@@ -256,12 +257,19 @@ export default function HomePage() {
                           Reserve
                         </button>
                       </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   ))
-                ) : (
+                ) : (userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id))) ? (
                   <div className={styles.addChargingPointBox} onClick={() => setShowAddPointModal(true)}>
                     <span className={styles.addIcon}>+</span>
                     <p>Add Charging Point</p>
+                  </div>
+                ) : (
+                  <div className={styles.addChargingPointBox}>
+                    <p className={styles.noChargingPoints}>No charging points available.</p>
                   </div>
                 )}
                 {userType === 'administrator' && (

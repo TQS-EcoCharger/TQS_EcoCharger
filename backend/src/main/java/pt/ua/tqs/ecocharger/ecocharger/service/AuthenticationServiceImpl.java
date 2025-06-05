@@ -25,21 +25,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private ChargingOperatorService chargingOperatorService;
   private JwtUtil jwtUtil;
 
-  public AuthenticationServiceImpl(UserRepository userRepository, JwtUtil jwtUtil, UserRepository userRepository, ChargingOperatorService chargingOperatorService, DriverService driverService) {
+  public AuthenticationServiceImpl(UserRepository userRepository, JwtUtil jwtUtil, ChargingOperatorService chargingOperatorService, DriverService driverService) {
     this.userRepository = userRepository;
     this.jwtUtil = jwtUtil;
     this.chargingOperatorService = chargingOperatorService;
     this.driverService = driverService;
-  }
-
-  public AuthenticationServiceImpl(UserRepository userRepository,
-                                    DriverService driverService,
-                                    ChargingOperatorService chargingOperatorService,
-                                    JwtUtil jwtUtil) {
-    this.userRepository = userRepository;
-    this.driverService = driverService;
-    this.chargingOperatorService = chargingOperatorService;
-    this.jwtUtil = jwtUtil;
   }
   
   @Override

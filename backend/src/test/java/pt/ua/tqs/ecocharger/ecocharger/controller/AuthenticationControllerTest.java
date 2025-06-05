@@ -45,11 +45,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testLoginSuccess() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "123456"))
-<<<<<<< HEAD
         .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "administrator"));
-=======
-        .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "client"));
->>>>>>> develop
 
     String requestBody =
         """
@@ -65,7 +61,7 @@ class AuthenticationControllerTest {
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Login successful"))
         .andExpect(jsonPath("$.token").value("token123"))
-        .andExpect(jsonPath("$.userType").value("client"));
+        .andExpect(jsonPath("$.userType").value("administrator"));
   }
 
   @Test
@@ -94,11 +90,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testRegisterSuccess() throws Exception {
     Mockito.when(authService.register("mariah@example.com", "123456", "Mariah"))
-<<<<<<< HEAD
         .thenReturn(new AuthResultDTO(true, "Registration successful", "token123", "driver"));
-=======
-        .thenReturn(new AuthResultDTO(true, "Registration successful", "token123", "client"));
->>>>>>> develop
 
     String requestBody =
         "{ \"email\": \"mariah@example.com\", \"password\": \"123456\", \"name\": \"Mariah\" }";
@@ -109,7 +101,7 @@ class AuthenticationControllerTest {
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Registration successful"))
         .andExpect(jsonPath("$.token").value("token123"))
-        .andExpect(jsonPath("$.userType").value("client"));
+        .andExpect(jsonPath("$.userType").value("driver"));
   }
 
   @Test
@@ -118,10 +110,7 @@ class AuthenticationControllerTest {
   void testRegisterExistingEmail() throws Exception {
     Mockito.when(authService.register("peter@example.com", "123456", "Peter"))
         .thenReturn(new AuthResultDTO(false, "Email already in use", null, null));
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
     String requestBody =
         "{ \"email\": \" peter@example.com\", \"password\": \"123456\", \"name\": \"Peter\" }";
 
@@ -137,10 +126,7 @@ class AuthenticationControllerTest {
   void testRegisterShortPassword() throws Exception {
     Mockito.when(authService.register("andrew@example.com", "123", "Andrew"))
         .thenReturn(new AuthResultDTO(false, "Password must be at least 6 characters", null, null));
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
     String requestBody =
         "{ \"email\": \" andrew@example.com\", \"password\": \"123\", \"name\": \"Andrew\" }";
 

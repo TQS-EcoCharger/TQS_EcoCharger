@@ -3,6 +3,7 @@ package pt.ua.tqs.ecocharger.ecocharger.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -18,6 +19,7 @@ import lombok.EqualsAndHashCode;
  * @see User
  */
 @Entity
+@DiscriminatorValue("chargingOperators")
 @Table(name = "charging_operator")
 @Data
 @EqualsAndHashCode(callSuper = true)

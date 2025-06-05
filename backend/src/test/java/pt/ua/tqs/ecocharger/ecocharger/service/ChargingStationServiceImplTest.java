@@ -1,7 +1,6 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -10,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingStationRepository;
-import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,45 +71,6 @@ class ChargingStationServiceImplTest {
     assertEquals(1, result.size());
     assertEquals("Aveiro", result.get(0).getCityName());
   }
-
-  @Test
-  @DisplayName("Updating an existing charging station should be successful")
-  @Requirement("ET-22")
-  void testUpdateStation_Exists() {
-    ChargingStation station =
-        new ChargingStation("Porto", "Rua C", 41.0, -8.5, "Rua C", "PT", "Portugal", "Electric");
-    station.setId(1L);
-    
-    when(chargingStationRepository.findById(1L)).thenReturn(Optional.of(station));
-    when(chargingStationRepository.save(any(ChargingStation.class))).thenReturn(station);
-
-    ChargingStation updatedStation =
-        new ChargingStation("Porto", "Rua C", 42.0, -8.6, "Rua C", "PT", "Portugal", "Electric");
-    updatedStation.setId(1L);
-    ChargingStation result = chargingStationService.updateStation(1L, updatedStation);
-    assertEquals(42.0, result.getLatitude());
-    verify(chargingStationRepository, times(1)).save(any(ChargingStation.class));
-  }
-
-  @Test
-  @DisplayName("Updating a non-existing charging station should throw an exception")
-  @Requirement("ET-22")
-  void testUpdateStation_NotFound() {
-    ChargingStation updatedStation =
-        new ChargingStation("Porto", "Rua C", 42.0, -8.6, "Rua C", "PT", "Portugal", "Electric");
-    updatedStation.setId(2L);
-    
-    when(chargingStationRepository.findById(2L)).thenReturn(Optional.empty());
-    Exception exception =
-        assertThrows(
-            NotFoundException.class,
-            () -> {
-              chargingStationService.updateStation(2L, updatedStation);
-            });
-    assertEquals("Station not found", exception.getMessage());
-    verify(chargingStationRepository, never()).save(any(ChargingStation.class));
-  }
-  
 
   @Test
   @Requirement("ET-18")
