@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS charging_stations (
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
     countrycode VARCHAR(255) NOT NULL,
-    country VARCHAR(255) NOT NULL
+    country VARCHAR(255) NOT NULL,
+    administrator_id BIGINT,
+    CONSTRAINT fk_station_admin FOREIGN KEY (administrator_id) REFERENCES administrators(id)
 );
 
 -- CHARGING_POINTS

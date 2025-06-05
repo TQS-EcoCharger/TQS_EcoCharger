@@ -5,6 +5,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReservationSteps {
@@ -44,12 +45,17 @@ public class ReservationSteps {
 
   @When("I click the \"Reserve\" button on a charging point")
   public void i_click_the_reserve_button_on_charging_point() {
-    wait.until(
-        ExpectedConditions.elementToBeClickable(
-            By.cssSelector("button[id^='reserve-button-']")))
-        .click();
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-modal")));
+      WebElement reserveButton = wait.until(
+          ExpectedConditions.elementToBeClickable(By.cssSelector("button[id^='reserve-button-']"))
+      );
+      
+      String pointId = reserveButton.getAttribute("id").replace("reserve-button-", "");
+      TestMemoryContext.put("chargingPointId", pointId); 
+      
+      reserveButton.click();
+      wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-modal")));
   }
+
 
   @When("I set the reservation start time")
   public void i_set_start_time() {
@@ -109,4 +115,56 @@ public class ReservationSteps {
     assertFalse(start.getText().isEmpty(), "Start time should not be empty.");
     assertFalse(end.getText().isEmpty(), "End time should not be empty.");
   }
+
+  @When("I visit the slot page for the reserved charging point")
+public void visitSlotPage() {
+  String pointId = TestMemoryContext.get("chargingPointId").toString();
+    driver.get("http://localhost:5000/slots/" + pointId);
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='title']")));
+}
+
+@When("I click the \"Generate OTP\" button")
+public void clickGenerateOtp() {
+    WebElement generateBtn = wait.until(ExpectedConditions.elementToBeClickable(
+        By.cssSelector("[data-testid='generate-otp-button']")));
+    generateBtn.click();
+}
+
+@Then("I should see the OTP digits filled")
+public void checkOtpFilled() {
+    for (int i = 0; i < 6; i++) {
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.cssSelector("[data-testid='otp-digit-" + i + "']")));
+        String val = input.getAttribute("value");
+        assertFalse(val == null || val.isEmpty(), "OTP digit " + i + " is not filled");
+    }
+}
+
+@When("I click the \"Validate OTP\" button")
+public void clickValidateOtp() {
+    driver.findElement(By.cssSelector("[data-testid='validate-otp-button']")).click();
+}
+
+@Then("I should see the car selection dropdown")
+public void verifyCarDropdown() {
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='car-select']")));
+}
+
+@When("I select a vehicle from the list")
+public void selectCar() {
+    WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(
+        By.cssSelector("[data-testid='car-select']")));
+    new Select(dropdown).selectByIndex(1); 
+}
+
+@When("I click the \"Start Charging\" button")
+public void clickStartCharging() {
+    driver.findElement(By.cssSelector("[data-testid='start-charging-button']")).click();
+}
+
+@Then("I should see the charging session information")
+public void verifyChargingSessionStarted() {
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid='session-info']")));
+}
+
 }

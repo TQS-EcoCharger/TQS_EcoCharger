@@ -25,8 +25,12 @@ public class ChargingSessionRepositoryTest {
 private ChargingStation createStation(String suffix) {
     String randomId = UUID.randomUUID().toString().substring(0, 8); 
     ChargingStation station = new ChargingStation(
-        "Aveiro", "Rua " + randomId, 40.0 + Math.random(), -8.0 + Math.random(),
-        "Street " + randomId, "PT", "Portugal", "Car"
+        "Aveiro",                     
+        "Rua A " + suffix,            
+        40.0 + Math.random(),         
+        -8.0 + Math.random(),         
+        "PT",                         
+        "Portugal"                    
     );
     return chargingStationRepository.save(station);
 }
