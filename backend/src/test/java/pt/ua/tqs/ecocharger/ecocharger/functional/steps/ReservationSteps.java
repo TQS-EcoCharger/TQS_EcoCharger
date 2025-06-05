@@ -67,12 +67,17 @@ public class ReservationSteps {
 
   @When("I set the reservation start time")
   public void i_set_start_time() {
-    String startTime = java.time.LocalDateTime.now().minusMinutes(70).toString();
-
     JavascriptExecutor js = (JavascriptExecutor) driver;
+    String futureEnd = java.time.LocalDateTime.now().minusMinutes(80).toString();
+
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
-        startTime);
+        futureEnd);
+
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignored) {
+    }
   }
 
   @When("I set the reservation end time")
@@ -84,9 +89,6 @@ public class ReservationSteps {
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))",
         futureEnd);
-    js.executeScript(
-        "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
-        java.time.LocalDateTime.now().toString());
 
     try {
       Thread.sleep(100);
