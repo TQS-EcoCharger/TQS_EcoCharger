@@ -30,7 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Value("${jwt.secret}")
   private String jwtSecret;
 
-  @Lazy @Autowired private UserRepository userRepository;
+  private final UserRepository userRepository;
+
+  @Autowired
+  public JwtAuthenticationFilter(@Lazy UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   @Override
   protected void doFilterInternal(

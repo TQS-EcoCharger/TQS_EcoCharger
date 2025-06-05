@@ -36,7 +36,7 @@ public class ReservationSteps {
   @When("I select a charging station from the map")
   public void i_select_a_charging_station_from_the_map() {
     wait.until(ExpectedConditions.presenceOfElementLocated(By.className("leaflet-marker-icon")));
-    WebElement marker = driver.findEle.ments(By.className("leaflet-marker-icon")).get(4);
+    WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(2);
     marker.click();
 
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("station-details-panel")));

@@ -1,61 +1,50 @@
+-- Inserir utilizadores (drivers)
+INSERT INTO users (email, password, name, enabled, user_type) VALUES
+('afonso@gmail.com', 'pass', 'Afonso Ferreira', true, 'drivers'),
+('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'drivers');
 
-INSERT INTO users (email, password, name, enabled) VALUES
-('afonso@gmail.com', 'pass', 'Afonso Ferreira', true),
-('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true);
-
-INSERT INTO driver (id) VALUES
+-- Criar drivers com IDs iguais aos criados em "users"
+INSERT INTO drivers (id) VALUES
 (1),
 (2);
 
+-- Inserir carros
 INSERT INTO car (name, make, model, manufacture_year, license_plate, battery_capacity, battery_level, kilometers, consumption, enabled) VALUES
 ('Tesla Model 3', 'Tesla', 'Model 3', 2022, 'AA-12-BB', 75.0, 40.0, 25000, 15.0, true),
 ('Nissan Leaf', 'Nissan', 'Leaf', 2021, 'CC-34-DD', 40.0, 20.0, 32000, 14.5, true),
-
 ('Hyundai Kona Electric', 'Hyundai', 'Kona Electric', 2020, 'EE-56-FF', 64.0, 55.0, 15000, 16.2, true),
 ('Renault Zoe', 'Renault', 'Zoe', 2023, 'II-90-JJ', 52.0, 48.0, 9000, 12.8, true);
 
+-- Associar carros a drivers
 INSERT INTO driver_cars (driver_id, cars_id) VALUES
 (1, 1),
 (1, 2),
 (2, 3),
 (2, 4);
 
+-- Inserir utilizadores (admin e client)
+INSERT INTO users (email, password, name, enabled, user_type) VALUES
+('tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators'),
+('tomascliente@gmail.com', 'pass2', 'Tomás Cliente', true, 'clients');
 
--- CHARGING STATIONS (IDs 1–20)
-INSERT INTO charging_stations (
-    id, municipality, address, latitude, longitude,
-    streetName, countryCode, country, vehicleType
-) VALUES
-(1, 'Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739,
- 'Rua do Batalhão de Caçadores 10', 'PT', 'Portugal', 'Car,Truck'),
+-- Criar admin e cliente
+INSERT INTO administrators (id) SELECT id FROM users WHERE email = 'tomas@gmail.com';
+INSERT INTO clients (id) SELECT id FROM users WHERE email = 'tomascliente@gmail.com';
 
-(2, 'Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
- 'Rua Batalhão Caçadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
+-- Estações de carregamento
+INSERT INTO charging_stations (municipality, address, latitude, longitude, countryCode, country) VALUES
+('Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739, 'PT', 'Portugal'),
+('Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
+('Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
+('Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682, 'PT', 'Portugal'),
+('Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208, 'PT', 'Portugal'),
+('Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503, 'PT', 'Portugal'),
+('Aveiro', 'Rua Doutor Alberto Souto -, 3800-148 Aveiro', 40.64375, -8.64861, 'PT', 'Portugal'),
+('Aveiro', 'Rua Doutor Alberto Soares Machado, 3800-146 Aveiro', 40.643751, -8.648611, 'PT', 'Portugal'),
+('Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023, 'PT', 'Portugal'),
+('Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514, 'PT', 'Portugal');
 
-(3, 'Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738,
- 'Rua Batalhýo Caýadores Dez -', 'PT', 'Portugal', 'Car,Truck'),
-
-(4, 'Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682,
- 'Rua Príncipe Perfeito', 'PT', 'Portugal', 'Car,Truck'),
-
-(5, 'Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208,
- 'Praça Marquês de Pombal', 'PT', 'Portugal', 'Car,Truck'),
-
-(6, 'Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503,
- 'Largo do Rossio', 'PT', 'Portugal', 'Car,Truck'),
-
-(7, 'Aveiro', 'Rua Doutor Alberto Souto -, 3800-148 Aveiro', 40.64375, -8.64861,
- 'Rua Doutor Alberto Souto -', 'PT', 'Portugal', 'Car,Truck'),
-
-(8, 'Aveiro', 'Rua Doutor Alberto Soares Machado, 3800-146 Aveiro', 40.643751, -8.648611,
- 'Rua Doutor Alberto Soares Machado', 'PT', 'Portugal', 'Car,Truck'),
-
-(9, 'Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023,
- 'Cais da Fonte Nova', 'PT', 'Portugal', 'Car,Truck'),
-
-(10, 'Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514,
- 'Avenida da Universidade', 'PT', 'Portugal', 'Car,Truck');
-
+SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations));
 
 -- Station 1: Atlante
 INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 

@@ -1,7 +1,6 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-// TODO: change to non-wildcard imports
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -21,7 +20,7 @@ import pt.ua.tqs.ecocharger.ecocharger.repository.CarRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.DriverRepository;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
-public class DriverServiceTest {
+class DriverServiceTest {
 
   @Mock private DriverRepository driverRepository;
 
