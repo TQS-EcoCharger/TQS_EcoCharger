@@ -105,7 +105,6 @@ export default function SlotPage() {
       setSession(res.data);
       setMessage('');
       setOtp(Array(6).fill(''));
-      setCarId('');
       setCars([]);
       setIsOtpValid(false);
     } catch (err) {
