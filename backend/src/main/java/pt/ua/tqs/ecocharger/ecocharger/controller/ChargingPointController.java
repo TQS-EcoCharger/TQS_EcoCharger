@@ -49,4 +49,9 @@ public class ChargingPointController {
     chargingPointService.deletePoint(id);
     return ResponseEntity.noContent().build();
   }
+
+  @GetMapping("/{id}/active-session")
+  public ResponseEntity<?> getActiveSessionForPoint(@PathVariable Long id) {
+    return ResponseEntity.ok(chargingPointService.getActiveSessionForPoint(id));
+  }
 }
