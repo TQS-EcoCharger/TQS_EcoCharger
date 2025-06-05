@@ -1,6 +1,7 @@
 package pt.ua.tqs.ecocharger.ecocharger.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
+import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AdministratorService;
 
@@ -126,4 +128,38 @@ class AdministratorControllerTest {
         .andExpect(jsonPath("$.country").value("Portugal"));
     verify(administratorService, times(1)).deleteChargingStation(1L);
   }
+  
+
+
+  @Test
+  @DisplayName("Should update a charging point")
+  void testUpdateChargingPoint() throws Exception {
+    ChargingPoint point = new ChargingPoint();
+    point.setId(1L);
+    point.setAvailable(true);
+    point.setBrand("Tesla");
+    point.setPricePerKWh(0.25);
+    point.setPricePerMinute(0.10);
+
+    when(administratorService.updateChargingPoint(any(ChargingPoint.class), eq(1L)))
+        .thenReturn(point);
+
+    String requestBody = """
+        {
+          "available": true,
+          "brand": "Tesla",
+          "pricePerKwh": 0.25,
+          "pricePerMinute": 0.10
+        }
+        """;
+
+    mockMvc.perform(put("/api/v1/admin/stations/1/points/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.brand").value("Tesla"))
+        .andExpect(jsonPath("$.available").value(true));
+  }
+
+
 }
