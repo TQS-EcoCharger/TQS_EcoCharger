@@ -103,9 +103,9 @@ class DriverControllerTest {
     driver1.setPassword(updatedDriver.getPassword());
     driver1.setName(updatedDriver.getName());
     driver1.setEnabled(updatedDriver.isEnabled());
-  
+
     when(driverService.updateDriver(eq(1L), any(Driver.class))).thenReturn(driver1);
-  
+
     mockMvc
         .perform(
             put("/api/v1/driver/1")
@@ -122,15 +122,14 @@ class DriverControllerTest {
                     """))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.email").value(driver1.getEmail()));
-  }  
-
+  }
 
   @Test
   @DisplayName("Updating driver returns 404 NOT FOUND if it does not exist")
   void testUpdateDriverNotFound() throws Exception {
     when(driverService.updateDriver(eq(6L), any(Driver.class)))
         .thenThrow(new NotFoundException("Driver not found"));
-  
+
     mockMvc
         .perform(
             put("/api/v1/driver/6")
@@ -148,8 +147,6 @@ class DriverControllerTest {
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$").value("Driver not found"));
   }
-
-
 
   @Test
   @DisplayName("Adding car to driver returns 200 OK and updated driver in JSON if it exists")
