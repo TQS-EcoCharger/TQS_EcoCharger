@@ -144,7 +144,17 @@ public class VehicleSteps {
 
   @Then("the table should have {int} rows")
   public void the_table_should_have_rows(int expectedRowCount) {
+    try {
+      Thread.sleep(2000); // wait for the table to update
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     List<WebElement> vehicleRows = driver.findElements(By.cssSelector("#vehicles-table-body tr"));
+    System.out.println("Vehicle table rows: " + vehicleRows.size());
+    // Debugging: print out the text of each row
+    for (WebElement row : vehicleRows) {
+      System.out.println(row.getText());
+    }
     // print all the rows for debugging
     assertEquals(
         expectedRowCount,

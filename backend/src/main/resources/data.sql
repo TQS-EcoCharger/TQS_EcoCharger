@@ -56,11 +56,11 @@ SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations
 
 -- Pontos de carregamento
 INSERT INTO charging_points (station_id, available, brand) VALUES
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 1), true, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), false, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), true, 'Mobi.E');
+(1, true, 'Atlante'),
+(1, true, 'Atlante'),
+(5, true, 'Mobi.E'),
+(5, false, 'Mobi.E'),
+(5, true, 'Mobi.E');
 
 SELECT setval('charging_points_id_seq', (SELECT MAX(id) FROM charging_points));
 
