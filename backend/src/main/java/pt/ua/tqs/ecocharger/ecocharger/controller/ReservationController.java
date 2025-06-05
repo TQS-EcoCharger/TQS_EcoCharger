@@ -24,7 +24,9 @@ public class ReservationController {
     this.reservationService = reservationService;
   }
 
-  @Operation(summary = "Create a new reservation", description = "Creates a reservation for a user on a charging point")
+  @Operation(
+      summary = "Create a new reservation",
+      description = "Creates a reservation for a user on a charging point")
   @PostMapping
   public ResponseEntity<Object> createReservation(@RequestBody ReservationRequestDTO request) {
     try {
@@ -37,13 +39,17 @@ public class ReservationController {
     }
   }
 
-  @Operation(summary = "Get all reservations", description = "Returns all reservations in the system")
+  @Operation(
+      summary = "Get all reservations",
+      description = "Returns all reservations in the system")
   @GetMapping
   public ResponseEntity<List<ReservationResponseDTO>> getAllReservations() {
     return ResponseEntity.ok(reservationService.getAllReservations());
   }
 
-  @Operation(summary = "Get reservations by user", description = "Returns all reservations associated with a user ID")
+  @Operation(
+      summary = "Get reservations by user",
+      description = "Returns all reservations associated with a user ID")
   @GetMapping("/user/{userId}")
   public ResponseEntity<List<ReservationResponseDTO>> getReservationsByUserId(
       @Parameter(description = "ID of the user") @PathVariable Long userId) {
@@ -51,7 +57,9 @@ public class ReservationController {
     return ResponseEntity.ok(reservations);
   }
 
-  @Operation(summary = "Get active reservations for a charging point", description = "Returns active reservations for a specific charging point")
+  @Operation(
+      summary = "Get active reservations for a charging point",
+      description = "Returns active reservations for a specific charging point")
   @GetMapping("/point/{chargingPointId}/active")
   public ResponseEntity<List<ReservationResponseDTO>> getActiveReservationsByChargingPoint(
       @Parameter(description = "ID of the charging point") @PathVariable Long chargingPointId) {

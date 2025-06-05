@@ -29,26 +29,29 @@ public class AdministratorServiceImpl implements AdministratorService {
     this.chargingPointRepository = chargingPointRepository;
   }
 
-@Override
-public ChargingStation deleteChargingStation(Long id) {
-    ChargingStation station = chargingStationRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Charging Station not found"));
+  @Override
+  public ChargingStation deleteChargingStation(Long id) {
+    ChargingStation station =
+        chargingStationRepository
+            .findById(id)
+            .orElseThrow(() -> new RuntimeException("Charging Station not found"));
 
     Administrator addedBy = station.getAddedBy();
     if (addedBy != null) {
-        Administrator fullAdmin = administratorRepository.findById(addedBy.getId())
-            .orElseThrow(() -> new RuntimeException("Administrator not found"));
+      Administrator fullAdmin =
+          administratorRepository
+              .findById(addedBy.getId())
+              .orElseThrow(() -> new RuntimeException("Administrator not found"));
 
-        fullAdmin.getAddedStations().remove(station);
-        administratorRepository.save(fullAdmin);
+      fullAdmin.getAddedStations().remove(station);
+      administratorRepository.save(fullAdmin);
     }
 
     station.getChargingPoints().clear();
 
     chargingStationRepository.delete(station);
     return station;
-}
-
+  }
 
   @Override
   public ChargingStation updateChargingStation(ChargingStation station) {

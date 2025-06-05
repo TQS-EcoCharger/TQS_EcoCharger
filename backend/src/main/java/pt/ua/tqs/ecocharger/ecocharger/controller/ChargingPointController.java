@@ -50,16 +50,14 @@ public class ChargingPointController {
   @Operation(summary = "Get charging points by station ID")
   @GetMapping("/station/{stationId}")
   public ResponseEntity<List<ChargingPoint>> getPointsByStationId(
-      @Parameter(description = "ID of the charging station")
-      @PathVariable Long stationId) {
+      @Parameter(description = "ID of the charging station") @PathVariable Long stationId) {
     return ResponseEntity.ok(chargingPointService.getPointsByStationId(stationId));
   }
 
   @Operation(summary = "Delete a charging point by its ID")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deletePoint(
-      @Parameter(description = "ID of the charging point to delete")
-      @PathVariable Long id) {
+      @Parameter(description = "ID of the charging point to delete") @PathVariable Long id) {
     chargingPointService.deletePoint(id);
     return ResponseEntity.noContent().build();
   }

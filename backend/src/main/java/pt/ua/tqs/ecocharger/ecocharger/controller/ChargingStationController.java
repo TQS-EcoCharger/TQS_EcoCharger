@@ -25,8 +25,7 @@ public class ChargingStationController {
 
   @Operation(summary = "Create a new charging station")
   @PostMapping
-  public ResponseEntity<ChargingStation> createStation(
-      @RequestBody ChargingStation station) {
+  public ResponseEntity<ChargingStation> createStation(@RequestBody ChargingStation station) {
     ChargingStation savedStation = chargingStationService.createStation(station);
     return ResponseEntity.ok(savedStation);
   }

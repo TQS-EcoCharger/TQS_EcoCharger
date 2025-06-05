@@ -72,8 +72,7 @@ public class DriverController {
   @Operation(summary = "Add a car to a driver")
   @PatchMapping("{id}/cars/")
   public ResponseEntity<Object> addCarToDriver(
-      @Parameter(description = "ID of the driver") @PathVariable Long id,
-      @RequestBody Car car) {
+      @Parameter(description = "ID of the driver") @PathVariable Long id, @RequestBody Car car) {
     try {
       Driver updatedDriver = driverService.addCarToDriver(id, car);
       return ResponseEntity.ok(updatedDriver);
