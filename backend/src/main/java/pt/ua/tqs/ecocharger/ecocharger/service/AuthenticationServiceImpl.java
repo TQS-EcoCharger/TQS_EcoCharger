@@ -3,12 +3,14 @@ package pt.ua.tqs.ecocharger.ecocharger.service;
 import org.springframework.stereotype.Service;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
-import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
+import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingOperatorService;
 
 import java.util.Optional;
 
@@ -17,12 +19,20 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-  private final UserRepository userRepository;
-  private final JwtUtil jwtUtil;
+  private UserRepository userRepository;
+  private DriverService driverService;
+  private ChargingOperatorService chargingOperatorService;
+  private JwtUtil jwtUtil;
 
-  public AuthenticationServiceImpl(UserRepository userRepository, JwtUtil jwtUtil) {
+  public AuthenticationServiceImpl(
+      UserRepository userRepository,
+      JwtUtil jwtUtil,
+      ChargingOperatorService chargingOperatorService,
+      DriverService driverService) {
     this.userRepository = userRepository;
     this.jwtUtil = jwtUtil;
+    this.chargingOperatorService = chargingOperatorService;
+    this.driverService = driverService;
   }
 
   @Override
@@ -44,14 +54,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     String token = jwtUtil.generateToken(user.getEmail());
-    String userType = user instanceof Administrator ? "administrator" : "client";
+
+    String userType;
+    if (driverService.driverExists(user.getId())) {
+      userType = "driver";
+    } else if (chargingOperatorService.chargingOperatorExists(user.getId())) {
+      userType = "chargingOperator";
+    } else {
+      userType = "administrator";
+    }
 
     return new AuthResultDTO(true, "Login successful", token, userType);
   }
 
   @Override
   public AuthResultDTO register(String email, String password, String name) {
-    if (userRepository.findByEmail(email).isPresent()) {
+    Optional<User> existingUserOpt = userRepository.findByEmail(email);
+    if (existingUserOpt.isPresent()) {
       return new AuthResultDTO(false, "Email already in use", null, null);
     }
 
@@ -73,10 +92,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     user.setPassword(password);
     user.setEnabled(true);
 
-    userRepository.save(user);
+    Driver driver = new Driver(null, user.getEmail(), user.getPassword(), user.getName(), true);
+    driverService.createDriver(driver);
 
     String token = jwtUtil.generateToken(user.getEmail());
-    return new AuthResultDTO(true, "Registration successful", token, "client");
+
+    return new AuthResultDTO(true, "Registration successful", token, "driver");
   }
 
   @Override

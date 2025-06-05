@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingPointRepository;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,6 +96,37 @@ class ChargingPointServiceImplTest {
 
     assertEquals(1, result.size());
     assertTrue(result.get(0).isAvailable());
+  }
+
+  @Test
+  @DisplayName("Should successfully update an existing charging point")
+  @Requirement("ET-22")
+  void testUpdatePoint_Exists() {
+    ChargingPoint updatedPoint = new ChargingPoint();
+    updatedPoint.setId(1L);
+    updatedPoint.setBrand("Updated Brand");
+
+    when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
+    when(chargingPointRepository.save(any(ChargingPoint.class))).thenReturn(updatedPoint);
+
+    ChargingPoint result = chargingPointService.updatePoint(1L, updatedPoint);
+    assertEquals("Updated Brand", result.getBrand());
+    verify(chargingPointRepository).save(updatedPoint);
+  }
+
+  @Test
+  @DisplayName("Should throw exception when trying to update non-existent charging point")
+  @Requirement("ET-22")
+  void testUpdatePoint_NotFound() {
+    ChargingPoint updatedPoint = new ChargingPoint();
+    updatedPoint.setId(2L);
+
+    when(chargingPointRepository.findById(2L)).thenReturn(Optional.empty());
+    Exception exception =
+        assertThrows(
+            NotFoundException.class, () -> chargingPointService.updatePoint(2L, updatedPoint));
+    assertEquals("Point not found", exception.getMessage());
+    verify(chargingPointRepository, never()).save(any());
   }
 
   @Test

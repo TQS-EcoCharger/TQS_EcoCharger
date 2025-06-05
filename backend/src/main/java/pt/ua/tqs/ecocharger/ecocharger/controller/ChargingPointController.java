@@ -7,6 +7,7 @@ import pt.ua.tqs.ecocharger.ecocharger.dto.CreateChargingPointRequest;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingPointService;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 import java.util.List;
 
@@ -31,6 +32,17 @@ public class ChargingPointController {
   @GetMapping
   public ResponseEntity<List<ChargingPoint>> getAllPoints() {
     return ResponseEntity.ok(chargingPointService.getAllPoints());
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<ChargingPoint> updatePoint(
+      @PathVariable Long id, @RequestBody ChargingPoint point) {
+    try {
+      ChargingPoint updatedPoint = chargingPointService.updatePoint(id, point);
+      return ResponseEntity.ok(updatedPoint);
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @GetMapping("/available")
