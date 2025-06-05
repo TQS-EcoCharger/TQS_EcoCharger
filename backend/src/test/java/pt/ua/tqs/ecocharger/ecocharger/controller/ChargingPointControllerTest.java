@@ -72,7 +72,8 @@ class ChargingPointControllerTest {
     point.setBrand("Tesla");
     point.setAvailable(true);
 
-    Mockito.when(chargingPointService.updatePoint(eq(1L), any(ChargingPoint.class))).thenReturn(point);
+    Mockito.when(chargingPointService.updatePoint(eq(1L), any(ChargingPoint.class)))
+        .thenReturn(point);
     String json =
         """
         {
@@ -82,10 +83,7 @@ class ChargingPointControllerTest {
         }
         """;
     mockMvc
-        .perform(
-            put("/api/v1/points/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        .perform(put("/api/v1/points/1").contentType(MediaType.APPLICATION_JSON).content(json))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(1L))
         .andExpect(jsonPath("$.brand").value("Tesla"))

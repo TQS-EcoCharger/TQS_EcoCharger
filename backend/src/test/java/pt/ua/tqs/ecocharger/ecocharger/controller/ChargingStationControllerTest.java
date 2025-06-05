@@ -61,7 +61,7 @@ class ChargingStationControllerTest {
   @Test
   @DisplayName("Successfully edit station")
   @Requirement("ET-22")
-    void testEditStation() throws Exception {
+  void testEditStation() throws Exception {
     ChargingStation mockStation =
         new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     mockStation.setId(1L);
@@ -77,7 +77,7 @@ class ChargingStationControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(1L))
         .andExpect(jsonPath("$.cityName").value("Updated City"));
-  } 
+  }
 
   @Test
   @DisplayName("Return 404 when station not found")
