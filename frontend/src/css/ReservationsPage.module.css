@@ -152,3 +152,98 @@
     grid-template-columns: 1fr; /* Always 1 on mobile */
   }
 }
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.headerIcon {
+  font-size: 1.8rem;
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 0.3rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fdc459;
+  background-color: #2d2d2d;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.otpCard {
+  margin-top: 1rem;
+  background: #fff;
+  border-left: 4px solid #fdc459;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.otpCode {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.expiry {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #c62828;
+}
+
+
+.cardBody p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0.35rem 0;
+  font-size: 1.05rem;
+}
+
+.inlineIcon {
+  font-size: 1rem;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.availableIcon,
+.unavailableIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-right: 6px;
+  margin-left: 2px;
+}
+
+.availableIcon {
+  color: green;
+}
+
+.unavailableIcon {
+  color: red;
+}
+
+/* Header alignment fix */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.headerIcon {
+  font-size: 1.5rem;
+  color: #000;
+}

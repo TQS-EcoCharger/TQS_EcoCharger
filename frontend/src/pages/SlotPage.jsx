@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CONFIG from '../config';
 import styles from '../css/SlotPage.module.css';
+import Select from 'react-select';
 
 import { FaCar, FaClock, FaBolt, FaPowerOff, FaUser, FaKey } from 'react-icons/fa';
 import { BsBatteryCharging } from 'react-icons/bs';
@@ -131,7 +132,6 @@ export default function SlotPage() {
 
   return (
     <div className={styles.page}>
-      <Sidebar />
       <div className={styles.wrapper}>
         <div className={styles.stationDetails1} style={{ width: '50%', margin: '5% auto' }}>
 
@@ -157,24 +157,42 @@ export default function SlotPage() {
 
           ) : (
             <div id="no-session-info">
-              <p>No active session.</p>
-              <p><FaKey /> OTP Code:</p>
-              <div className={styles.otpContainer} id="otp-container">
-                {otp.map((digit, i) => (
-                  <input
-                    key={i}
-                    ref={(el) => (inputRefs.current[i] = el)}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    className={styles.otpBox}
-                    value={digit}
-                    id={`otp-digit-${i}`}
-                    onChange={(e) => handleOtpChange(e.target.value, i)}
-                    onKeyDown={(e) => handleKeyDown(e, i)}
-                  />
-                ))}
+              <div className={styles.otpCardWrapper}>
+                <h2>Start Charging</h2>
+                <p><FaKey className={styles.sessionIcon} /> <strong>Enter OTP Code:</strong></p>
+
+                <div className={styles.otpContainer} id="otp-container">
+                  {otp.map((digit, i) => (
+                    <input
+                      key={i}
+                      ref={(el) => (inputRefs.current[i] = el)}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      className={styles.otpBox}
+                      value={digit}
+                      id={`otp-digit-${i}`}
+                      onChange={(e) => handleOtpChange(e.target.value, i)}
+                      onKeyDown={(e) => handleKeyDown(e, i)}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleValidateOtp}
+                  className={styles.confirmButton}
+                  id="validate-otp-button"
+                >
+                  Validate OTP
+                </button>
+
+                {message && (
+                  <p className={styles.message} id="status-message">
+                    {message}
+                  </p>
+                )}
               </div>
+
 
               {!isOtpValid ? (
                 <button

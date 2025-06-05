@@ -531,3 +531,47 @@ h2 {
 .endChargingBtn:hover {
   background-color: #d6b23e;
 }
+
+
+.otpCardWrapper {
+  background: #2a2a2a;
+  color: #fff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+  border: 2px solid #f4cc5d;
+  transition: transform 0.2s ease;
+}
+
+.otpCardWrapper:hover {
+  transform: translateY(-3px);
+}
+
+.otpCardWrapper h2 {
+  color: #f4cc5d;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.otpCardWrapper p {
+  font-size: 1rem;
+  margin: 0.5rem 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.otpCardWrapper .confirmButton {
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.otpCardWrapper .otpContainer {
+  margin: 1rem 0;
+}

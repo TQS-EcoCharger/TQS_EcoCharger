@@ -89,6 +89,7 @@ public ReservationResponseDTO createReservation(ReservationRequestDTO request) {
     chargingPointDTO.setAvailable(cp.isAvailable());
     chargingPointDTO.setPricePerKWh(cp.getPricePerKWh());
     chargingPointDTO.setPricePerMinute(cp.getPricePerMinute());
+    chargingPointDTO.setChargingRateKWhPerMinute(cp.getChargingRateKWhPerMinute());
     chargingPointDTO.setChargingStation(stationDTO);
     chargingPointDTO.setConnectors(
         cp.getConnectors().stream()

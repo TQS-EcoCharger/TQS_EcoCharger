@@ -51,7 +51,7 @@ public class ReservationControllerTest {
     void setUp() {
         ChargingStationDTO chargingStation = new ChargingStationDTO(1L, "Station A", "Location A", 50.1234, -8.1234);
         List<ConnectorDTO> connectors = List.of(new ConnectorDTO(1L, "Type 2", 50, 2, 3));
-        ChargingPointDTO chargingPoint = new ChargingPointDTO(2L, "ChargingBrand", true, 100.0, 10.0, connectors,
+        ChargingPointDTO chargingPoint = new ChargingPointDTO(2L, "ChargingBrand", true, 100.0, 10.0, 20.0, connectors,
                 chargingStation);
         reservationResponse = new ReservationResponseDTO(
                 1L,

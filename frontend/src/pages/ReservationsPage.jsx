@@ -2,6 +2,17 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from '../css/ReservationsPage.module.css';
 import CONFIG from '../config';
+import {
+  FaClock,
+  FaBolt,
+  FaCheck,
+  FaTimes,
+  FaMapMarkerAlt,
+  FaStopwatch,
+  FaBatteryFull,
+  FaPlug
+} from 'react-icons/fa';
+import { BsInfoCircle } from 'react-icons/bs';
 import Sidebar from '../components/Sidebar';
 
 export default function ReservationsPage() {
@@ -95,7 +106,7 @@ export default function ReservationsPage() {
 
               return (
                 <div
-                  data-charging-point-id={cp?.id}  // <-- THIS LINE IS NEW
+                  data-charging-point-id={cp?.id}
                   key={reservation.id}
                   className={`${styles.card} ${
                     reservation.status === 'TO_BE_USED'
@@ -108,43 +119,77 @@ export default function ReservationsPage() {
                   }`}
                   id={`reservation-card-${reservation.id}`}
                 >
-                  <h3 className={styles.cardTitle} id={`reservation-brand-${reservation.id}`}>
-                    {cp?.brand || 'Charging Point'}
-                  </h3>
+                  {/* Header */}
+                  <div className={styles.cardHeader}>
+                    <span className={styles.headerIcon}>⚡</span>
+                    <h3 className={styles.cardTitle} id={`reservation-brand-${reservation.id}`}>
+                      <FaPlug className={styles.inlineIcon} /> {cp?.brand || 'Charging Point'}
+                    </h3>
+                  </div>
 
-                  <p id={`reservation-status-${reservation.id}`}><strong>Status:</strong> {reservation.status}</p>
-                  <p id={`reservation-start-${reservation.id}`}><strong>Start:</strong> {new Date(reservation.startTime).toLocaleString()}</p>
-                  <p id={`reservation-end-${reservation.id}`}><strong>End:</strong> {new Date(reservation.endTime).toLocaleString()}</p>
+                  {/* Details */}
+                  <div className={styles.cardBody}>
+                    <p id={`reservation-status-${reservation.id}`}>
+                      <BsInfoCircle className={styles.inlineIcon} />
+                      <strong>Status:</strong> {reservation.status}
+                    </p>
 
-                  <p><strong>Price per kWh:</strong> €{cp?.pricePerKWh?.toFixed(2) ?? 'N/A'}</p>
-                  <p><strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}</p>
-                  <p><strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}</p>
+                    <p id={`reservation-start-${reservation.id}`}>
+                      <FaClock className={styles.inlineIcon} />
+                      <strong>Start:</strong> {new Date(reservation.startTime).toLocaleString()}
+                    </p>
 
-                  {cs && (
-                    <p><strong>Location:</strong> {cs.address}, {cs.cityName}</p>
-                  )}
+                    <p id={`reservation-end-${reservation.id}`}>
+                      <FaClock className={styles.inlineIcon} />
+                      <strong>End:</strong> {new Date(reservation.endTime).toLocaleString()}
+                    </p>
 
-                  {reservation.status === 'TO_BE_USED' && (
-                    <div style={{ marginTop: '10px' }}>
-                      <button
-                        className={styles.confirmButton}
-                        id={`generate-otp-button-${reservation.id}`}
-                        data-testid="generate-otp-button"
-                        onClick={() => handleGenerateOtp(reservation.id)}
+                    <p>
+                      <FaBolt className={styles.inlineIcon} />
+                      <strong>Price per kWh:</strong> €{cp?.pricePerKWh?.toFixed(2) ?? 'N/A'}
+                    </p>
 
-                      >
-                        Generate Start Code
-                      </button>
+                    <p>
+                      <FaStopwatch className={styles.inlineIcon} />
+                      <strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}
+                    </p>
 
-                      {otpData[reservation.id] && (
-                        <div className={styles.message} style={{ marginTop: '0.5rem' }}>
-                          <p id={`otp-code-${reservation.id}`}><strong>OTP Code:</strong> {otpData[reservation.id]?.code}</p>
-                          <p id={`otp-expiry-${reservation.id}`}><strong>Expires in:</strong> {timers[reservation.id]}s</p>
-                        </div>
+                    <p>
+                      {cp?.available ? (
+                        <FaCheck className={styles.availableIcon} />
+                      ) : (
+                        <FaTimes className={styles.unavailableIcon} />
                       )}
-                    </div>
-                  )}
+                      <strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}
+                    </p>
+
+                    {cs && (
+                      <p>
+                        <FaMapMarkerAlt className={styles.inlineIcon} />
+                        <strong>Location:</strong> {cs.address}, {cs.cityName}
+                      </p>
+                    )}
+                    {reservation.status === 'TO_BE_USED' && (
+                      <>
+                        <button
+                          className={styles.confirmButton}
+                          id={`generate-otp-button-${reservation.id}`}
+                          onClick={() => handleGenerateOtp(reservation.id)}
+                        >
+                          Generate Start Code
+                        </button>
+
+                        {otpData[reservation.id] && (
+                          <div className={styles.otpCard}>
+                            <p className={styles.otpCode}><strong>OTP:</strong> {otpData[reservation.id].code}</p>
+                            <p className={styles.expiry}><strong>Expires in:</strong> {timers[reservation.id]}s</p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
+
               );
             })}
           </div>
