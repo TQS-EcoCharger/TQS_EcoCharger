@@ -27,7 +27,7 @@ export default function SlotPage() {
       const res = await axios.get(`${CONFIG.API_URL}v1/points/${chargingPointId}/active-session`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setSession(res.data); // ActiveSessionDTO
+      setSession(res.data);
     } catch (err) {
       setSession(null);
     } finally {
@@ -37,7 +37,7 @@ export default function SlotPage() {
 
   useEffect(() => {
     fetchSession();
-    const interval = setInterval(fetchSession, 60000); // refresh every 60s
+    const interval = setInterval(fetchSession, 60000);
     return () => clearInterval(interval);
   }, [chargingPointId]);
 
@@ -132,30 +132,33 @@ export default function SlotPage() {
     <div className={styles.page}>
       <div className={styles.wrapper}>
         <div className={styles.stationDetails1} style={{ width: '50%', margin: '5% auto' }}>
-          <h2>Charging Slot #{chargingPointId}</h2>
+          <h2 data-testid="title">Charging Slot #{chargingPointId}</h2>
 
           {loading ? (
-            <p>Loading...</p>
+            <p data-testid="loading">Loading...</p>
           ) : session ? (
-            <div>
-              <p><FaCar /> <strong>Car:</strong> {session.carName || session.car.model} </p>
-              <p><BsBatteryCharging /> <strong>Battery now:</strong> {(session.currentBatteryLevel ?? 0).toFixed(2)}%</p>
-              <p><FaBolt /> <strong>Energy delivered:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
-              <p><FaClock /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
-              <p><FaBolt /> <strong>Total cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
-
+            <div data-testid="session-info">
+              <p data-testid="session-car"><FaCar /> <strong>Car:</strong> {session.carName || session.car.model}</p>
+              <p data-testid="session-battery"><BsBatteryCharging /> <strong>Battery now:</strong> {(session.currentBatteryLevel ?? 0).toFixed(2)}%</p>
+              <p data-testid="session-energy"><FaBolt /> <strong>Energy delivered:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
+              <p data-testid="session-duration"><FaClock /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
+              <p data-testid="session-cost"><FaBolt /> <strong>Total cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
 
               <div className={styles.modalButtons} style={{ marginTop: '2rem' }}>
-                <button onClick={handleEndCharging} className={styles.confirmButton1}>
+                <button
+                  onClick={handleEndCharging}
+                  className={styles.confirmButton1}
+                  data-testid="end-charging-button"
+                >
                   <FaPowerOff /> End Charging
                 </button>
               </div>
             </div>
           ) : (
-            <div>
+            <div data-testid="no-session-info">
               <p>No active session.</p>
               <p><FaKey /> OTP Code:</p>
-              <div className={styles.otpContainer}>
+              <div className={styles.otpContainer} data-testid="otp-container">
                 {otp.map((digit, i) => (
                   <input
                     key={i}
@@ -165,6 +168,7 @@ export default function SlotPage() {
                     maxLength={1}
                     className={styles.otpBox}
                     value={digit}
+                    data-testid={`otp-digit-${i}`}
                     onChange={(e) => handleOtpChange(e.target.value, i)}
                     onKeyDown={(e) => handleKeyDown(e, i)}
                   />
@@ -172,7 +176,11 @@ export default function SlotPage() {
               </div>
 
               {!isOtpValid ? (
-                <button onClick={handleValidateOtp} className={styles.confirmButton}>
+                <button
+                  onClick={handleValidateOtp}
+                  className={styles.confirmButton}
+                  data-testid="validate-otp-button"
+                >
                   Validate OTP
                 </button>
               ) : (
@@ -183,21 +191,30 @@ export default function SlotPage() {
                     value={carId}
                     onChange={(e) => setCarId(e.target.value)}
                     className={styles.datePicker}
+                    data-testid="car-select"
                   >
                     <option value="">-- Choose your vehicle --</option>
                     {cars.map((car) => (
-                      <option key={car.id} value={car.id}>
+                      <option key={car.id} value={car.id} data-testid={`car-option-${car.id}`}>
                         {car.make} {car.model} (ID: {car.id})
                       </option>
                     ))}
                   </select>
-                  <button onClick={handleStartCharging} className={styles.confirmButton} style={{ marginTop: '1rem' }}>
+                  <button
+                    onClick={handleStartCharging}
+                    className={styles.confirmButton}
+                    style={{ marginTop: '1rem' }}
+                    data-testid="start-charging-button"
+                  >
                     Start Charging
                   </button>
                 </>
               )}
-
-              {message && <p className={styles.message}>{message}</p>}
+              {message && (
+                <p className={styles.message} data-testid="status-message">
+                  {message}
+                </p>
+              )}
             </div>
           )}
         </div>

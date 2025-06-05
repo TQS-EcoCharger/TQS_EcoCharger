@@ -1,4 +1,3 @@
-ALTER DATABASE ecocharger SET timezone TO 'Europe/Lisbon';
 
 INSERT INTO users (email, password, name, enabled) VALUES
 ('afonso@gmail.com', 'pass', 'Afonso Ferreira', true),

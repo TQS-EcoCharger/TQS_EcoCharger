@@ -36,7 +36,7 @@ public class ReservationSteps {
   @When("I select a charging station from the map")
   public void i_select_a_charging_station_from_the_map() {
     wait.until(ExpectedConditions.presenceOfElementLocated(By.className("leaflet-marker-icon")));
-    WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(4);
+    WebElement marker = driver.findEle.ments(By.className("leaflet-marker-icon")).get(4);
     marker.click();
 
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("station-details-panel")));
@@ -45,8 +45,8 @@ public class ReservationSteps {
   @When("I click the \"Reserve\" button on a charging point")
   public void i_click_the_reserve_button_on_charging_point() {
     wait.until(
-            ExpectedConditions.elementToBeClickable(
-                By.cssSelector("button[id^='reserve-button-']")))
+        ExpectedConditions.elementToBeClickable(
+            By.cssSelector("button[id^='reserve-button-']")))
         .click();
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-modal")));
   }
@@ -76,8 +76,7 @@ public class ReservationSteps {
 
   @Then("I should see the message {string}")
   public void i_should_see_the_message(String expectedMessage) {
-    WebElement messageEl =
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-message")));
+    WebElement messageEl = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-message")));
     assertTrue(messageEl.getText().contains(expectedMessage));
   }
 
@@ -91,20 +90,17 @@ public class ReservationSteps {
 
   @Then("I should see at least one reservation with details")
   public void i_should_see_at_least_one_reservation_with_details() {
-    WebElement list =
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("[data-testid='reservations-list']")));
+    WebElement list = wait.until(
+        ExpectedConditions.visibilityOfElementLocated(
+            By.cssSelector("[data-testid='reservations-list']")));
 
-    java.util.List<WebElement> cards =
-        list.findElements(By.cssSelector("[data-testid^='reservation-card-']"));
+    java.util.List<WebElement> cards = list.findElements(By.cssSelector("[data-testid^='reservation-card-']"));
     assertFalse(cards.isEmpty(), "Expected at least one reservation card.");
 
     WebElement firstCard = cards.get(0);
 
     WebElement brand = firstCard.findElement(By.cssSelector("[data-testid^='reservation-brand-']"));
-    WebElement status =
-        firstCard.findElement(By.cssSelector("[data-testid^='reservation-status-']"));
+    WebElement status = firstCard.findElement(By.cssSelector("[data-testid^='reservation-status-']"));
     WebElement start = firstCard.findElement(By.cssSelector("[data-testid^='reservation-start-']"));
     WebElement end = firstCard.findElement(By.cssSelector("[data-testid^='reservation-end-']"));
 

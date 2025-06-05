@@ -79,7 +79,6 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new IllegalArgumentException("Car not found."));
 
-        // ✅ Mark reservation as USED
         reservation.setStatus(ReservationStatus.USED);
         reservationRepository.save(reservation);
 

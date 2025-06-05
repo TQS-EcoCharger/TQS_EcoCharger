@@ -15,9 +15,11 @@ import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingStationDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ConnectorDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationRequestDTO;
+
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.ReservationStatus;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ReservationService;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.OTPService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +40,10 @@ public class ReservationControllerTest {
     @Autowired
     @MockitoBean
     private ReservationService reservationService;
+
+    @MockitoBean
+    @Autowired
+    private OTPService otpService;
 
     private ReservationResponseDTO reservationResponse;
 
