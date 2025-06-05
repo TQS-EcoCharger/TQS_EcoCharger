@@ -188,10 +188,11 @@
   justify-content: center;
   border-top: 1px solid #ccc;
   z-index: 10;
+
 }
 
 .reserveBtn {
-  width: 100%;
+  width: 45%;
   padding: 16px;
   background-color: #fdc459;
   color: #000;
@@ -200,10 +201,17 @@
   border: none;
   border-top: 1px solid #ddd;
   margin-top: 15px;
+  margin-left: 10px;
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
+.faicon {
+  margin-right: 0.5vw;
+  color: #000; /* gold color for icon */
+}
+
 
 
 .reserveBtn:hover {
@@ -498,5 +506,9 @@ h2 {
   color: #ffffff;
   border-radius: 15px;
   padding: 5px;
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1vh;
 }
 

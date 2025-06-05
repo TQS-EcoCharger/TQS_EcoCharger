@@ -189,15 +189,18 @@ public class ReservationSteps {
 
   @When("I select a vehicle from the list")
   public void selectCar() {
-      // Wait for the custom react-select dropdown to be clickable
-      WebElement dropdownControl = wait.until(ExpectedConditions.elementToBeClickable(
-          By.cssSelector(".custom-car-select__control")));
-      dropdownControl.click();
+    // Wait for the custom react-select dropdown to be clickable
+    WebElement dropdownControl =
+        wait.until(
+            ExpectedConditions.elementToBeClickable(By.cssSelector(".custom-car-select__control")));
+    dropdownControl.click();
 
-      // Wait for dropdown menu and click the first available option
-      WebElement firstOption = wait.until(ExpectedConditions.elementToBeClickable(
-          By.cssSelector(".custom-car-select__menu .custom-car-select__option")));
-      firstOption.click();
+    // Wait for dropdown menu and click the first available option
+    WebElement firstOption =
+        wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".custom-car-select__menu .custom-car-select__option")));
+    firstOption.click();
   }
 
   @When("I click the \"Start Charging\" button")
