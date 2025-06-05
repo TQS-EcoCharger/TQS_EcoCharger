@@ -50,6 +50,9 @@ public class ChargingPoint {
   @Column(name = "price_per_minute")
   private Double pricePerMinute;
 
+  @Column(name = "charging_rate_kwh_per_minute", nullable = false)
+  private Double chargingRateKWhPerMinute;
+
   public ChargingPoint(
       ChargingStation chargingStation,
       boolean available,

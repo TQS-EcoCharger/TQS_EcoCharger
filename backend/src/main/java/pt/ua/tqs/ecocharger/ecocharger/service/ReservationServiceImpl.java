@@ -30,6 +30,15 @@ public class ReservationServiceImpl implements ReservationService {
       throw new IllegalArgumentException("Start time must be before end time");
     }
 
+    long durationMinutes =
+        java.time.Duration.between(request.getStartTime(), request.getEndTime()).toMinutes();
+    if (durationMinutes < 15) {
+      throw new IllegalArgumentException("Reservation must be at least 15 minutes long");
+    }
+    if (durationMinutes > 240) {
+      throw new IllegalArgumentException("Reservation cannot exceed 4 hours");
+    }
+
     User user =
         userRepository
             .findById(request.getUserId())
@@ -53,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
     reservation.setChargingPoint(chargingPoint);
     reservation.setStartTime(request.getStartTime());
     reservation.setEndTime(request.getEndTime());
-    reservation.setStatus(ReservationStatus.PENDING);
+    reservation.setStatus(ReservationStatus.TO_BE_USED);
 
     Reservation saved = reservationRepository.save(reservation);
 
@@ -84,6 +93,7 @@ public class ReservationServiceImpl implements ReservationService {
     chargingPointDTO.setAvailable(cp.isAvailable());
     chargingPointDTO.setPricePerKWh(cp.getPricePerKWh());
     chargingPointDTO.setPricePerMinute(cp.getPricePerMinute());
+    chargingPointDTO.setChargingRateKWhPerMinute(cp.getChargingRateKWhPerMinute());
     chargingPointDTO.setChargingStation(stationDTO);
     chargingPointDTO.setConnectors(
         cp.getConnectors().stream()

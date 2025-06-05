@@ -58,7 +58,7 @@ public class ReservationServiceTest {
             chargingPoint,
             LocalDateTime.parse("2023-05-28T10:00:00"),
             LocalDateTime.parse("2023-05-28T12:00:00"),
-            ReservationStatus.PENDING);
+            ReservationStatus.TO_BE_USED);
 
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     when(chargingPointRepository.findById(2L)).thenReturn(Optional.of(chargingPoint));
@@ -141,5 +141,99 @@ public class ReservationServiceTest {
 
     assertEquals(1, responses.size());
     assertEquals(2L, responses.get(0).getChargingPoint().getId());
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - End time before Start time")
+  @Requirement("ET-30")
+  void testCreateReservation_EndBeforeStart() {
+    ReservationRequestDTO request =
+        new ReservationRequestDTO(
+            1L,
+            2L,
+            LocalDateTime.parse("2023-05-28T12:00:00"),
+            LocalDateTime.parse("2023-05-28T10:00:00"));
+
+    IllegalArgumentException ex =
+        assertThrows(
+            IllegalArgumentException.class, () -> reservationService.createReservation(request));
+
+    assertTrue(ex.getMessage().contains("Start time must be before end time"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Duration less than 15 minutes")
+  @Requirement("ET-30")
+  void testCreateReservation_TooShort() {
+    ReservationRequestDTO request =
+        new ReservationRequestDTO(
+            1L,
+            2L,
+            LocalDateTime.parse("2023-05-28T10:00:00"),
+            LocalDateTime.parse("2023-05-28T10:10:00"));
+
+    IllegalArgumentException ex =
+        assertThrows(
+            IllegalArgumentException.class, () -> reservationService.createReservation(request));
+
+    assertTrue(ex.getMessage().contains("at least 15 minutes"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Duration exceeds 4 hours")
+  @Requirement("ET-30")
+  void testCreateReservation_TooLong() {
+    ReservationRequestDTO request =
+        new ReservationRequestDTO(
+            1L,
+            2L,
+            LocalDateTime.parse("2023-05-28T10:00:00"),
+            LocalDateTime.parse("2023-05-28T15:01:00"));
+
+    IllegalArgumentException ex =
+        assertThrows(
+            IllegalArgumentException.class, () -> reservationService.createReservation(request));
+
+    assertTrue(ex.getMessage().contains("cannot exceed 4 hours"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Invalid User ID")
+  @Requirement("ET-30")
+  void testCreateReservation_InvalidUser() {
+    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    ReservationRequestDTO request =
+        new ReservationRequestDTO(
+            999L,
+            2L,
+            LocalDateTime.parse("2023-05-28T10:00:00"),
+            LocalDateTime.parse("2023-05-28T12:00:00"));
+
+    IllegalArgumentException ex =
+        assertThrows(
+            IllegalArgumentException.class, () -> reservationService.createReservation(request));
+
+    assertTrue(ex.getMessage().contains("Invalid user ID"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Invalid Charging Point ID")
+  @Requirement("ET-30")
+  void testCreateReservation_InvalidChargingPoint() {
+    when(chargingPointRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    ReservationRequestDTO request =
+        new ReservationRequestDTO(
+            1L,
+            999L,
+            LocalDateTime.parse("2023-05-28T10:00:00"),
+            LocalDateTime.parse("2023-05-28T12:00:00"));
+
+    IllegalArgumentException ex =
+        assertThrows(
+            IllegalArgumentException.class, () -> reservationService.createReservation(request));
+
+    assertTrue(ex.getMessage().contains("Invalid charging point ID"));
   }
 }

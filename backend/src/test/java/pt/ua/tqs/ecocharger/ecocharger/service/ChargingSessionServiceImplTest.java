@@ -1,0 +1,142 @@
+package pt.ua.tqs.ecocharger.ecocharger.service;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import pt.ua.tqs.ecocharger.ecocharger.models.*;
+import pt.ua.tqs.ecocharger.ecocharger.repository.*;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+class ChargingSessionServiceImplTest {
+
+  @InjectMocks private ChargingSessionServiceImpl service;
+
+  @Mock private OTPCodeRepository otpRepo;
+  @Mock private ReservationRepository reservationRepo;
+  @Mock private ChargingSessionRepository sessionRepo;
+  @Mock private CarRepository carRepo;
+
+  private final Long pointId = 1L;
+  private final Long carId = 10L;
+  private final String otp = "123456";
+  private final LocalDateTime now = LocalDateTime.now();
+
+  @BeforeEach
+  void setup() {
+    MockitoAnnotations.openMocks(this);
+  }
+
+  @Test
+  void testStartSessionWithOtp_success() {
+    Reservation reservation = new Reservation();
+    reservation.setChargingPoint(new ChargingPoint());
+    reservation.setStartTime(now.minusMinutes(5));
+    reservation.setEndTime(now.plusMinutes(30));
+    reservation.setUser(new User());
+    reservation.setStatus(ReservationStatus.TO_BE_USED);
+
+    OTPCode otpCode = new OTPCode();
+    otpCode.setCode(otp);
+    otpCode.setExpirationTime(now.plusMinutes(10));
+
+    Car car = new Car();
+    car.setId(carId);
+    car.setBatteryCapacity(40.0);
+    car.setBatteryLevel(20.0);
+
+    ChargingSession expectedSession = new ChargingSession();
+
+    when(reservationRepo.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
+            eq(pointId), any(), any()))
+        .thenReturn(Optional.of(reservation));
+    when(otpRepo.findByCodeAndReservation(eq(otp), eq(reservation)))
+        .thenReturn(Optional.of(otpCode));
+    when(carRepo.findById(carId)).thenReturn(Optional.of(car));
+    when(sessionRepo.save(any())).thenReturn(expectedSession);
+
+    ChargingSession session = service.startSessionWithOtp(pointId, otp, carId);
+
+    assertNotNull(session);
+    assertEquals(ReservationStatus.USED, reservation.getStatus());
+    verify(reservationRepo).save(reservation);
+    verify(sessionRepo).save(any(ChargingSession.class));
+  }
+
+  @Test
+  void testEndSession_success() {
+    ChargingPoint point = new ChargingPoint();
+    point.setChargingRateKWhPerMinute(1.0);
+    point.setPricePerKWh(0.5);
+    point.setPricePerMinute(0.1);
+
+    Car car = new Car();
+    car.setBatteryCapacity(50.0);
+    car.setBatteryLevel(20.0);
+
+    ChargingSession session = new ChargingSession();
+    session.setId(123L);
+    session.setStartTime(now.minusMinutes(30));
+    session.setInitialBatteryLevel(10.0);
+    session.setChargingPoint(point);
+    session.setCar(car);
+
+    when(sessionRepo.findById(123L)).thenReturn(Optional.of(session));
+    when(sessionRepo.save(any())).thenReturn(session);
+
+    ChargingSession ended = service.endSession(123L);
+
+    assertNotNull(ended.getEndTime());
+    assertEquals(30, ended.getDurationMinutes());
+    assertEquals(ChargingStatus.COMPLETED, ended.getStatus());
+    assertTrue(ended.getTotalCost() > 0);
+    assertEquals(40.0, car.getBatteryLevel()); // 10 + 30 * 1.0 = 40
+    verify(carRepo).save(car);
+  }
+
+  @Test
+  void testEndSession_alreadyEnded_throwsException() {
+    ChargingSession session = new ChargingSession();
+    session.setEndTime(LocalDateTime.now());
+
+    when(sessionRepo.findById(123L)).thenReturn(Optional.of(session));
+
+    assertThrows(IllegalStateException.class, () -> service.endSession(123L));
+  }
+
+  @Test
+  void testEndSession_invalidRate_throwsException() {
+    ChargingPoint point = new ChargingPoint();
+    point.setChargingRateKWhPerMinute(0.00);
+    ChargingSession session = new ChargingSession();
+    session.setStartTime(now.minusMinutes(10));
+    session.setInitialBatteryLevel(5.0);
+    session.setChargingPoint(point);
+    session.setCar(new Car());
+
+    when(sessionRepo.findById(123L)).thenReturn(Optional.of(session));
+
+    assertThrows(IllegalStateException.class, () -> service.endSession(123L));
+  }
+
+  @Test
+  void testStartSessionWithOtp_invalidOtp_throwsException() {
+    Reservation reservation = new Reservation();
+    reservation.setStartTime(now.minusMinutes(5));
+    reservation.setEndTime(now.plusMinutes(30));
+
+    when(reservationRepo.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
+            anyLong(), any(), any()))
+        .thenReturn(Optional.of(reservation));
+    when(otpRepo.findByCodeAndReservation(any(), eq(reservation))).thenReturn(Optional.empty());
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> service.startSessionWithOtp(pointId, "invalid", carId));
+  }
+}
