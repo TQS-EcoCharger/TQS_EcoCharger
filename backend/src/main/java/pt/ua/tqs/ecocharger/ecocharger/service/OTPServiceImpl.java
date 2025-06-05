@@ -19,20 +19,24 @@ public class OTPServiceImpl implements OTPService {
   private final OTPCodeRepository otpCodeRepository;
   private final ReservationRepository reservationRepository;
 
-  public OTPServiceImpl(OTPCodeRepository otpCodeRepository, ReservationRepository reservationRepository) {
+  public OTPServiceImpl(
+      OTPCodeRepository otpCodeRepository, ReservationRepository reservationRepository) {
     this.reservationRepository = reservationRepository;
     this.otpCodeRepository = otpCodeRepository;
   }
 
   public OTPCode generateOtp(Long reservationId) {
-    Reservation reservation = reservationRepository.findById(reservationId)
-        .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+    Reservation reservation =
+        reservationRepository
+            .findById(reservationId)
+            .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
 
     if (reservation.getStatus() != ReservationStatus.TO_BE_USED) {
       throw new IllegalStateException("OTP can only be generated for TO_BE_USED reservations");
     }
 
-    otpCodeRepository.findByReservation(reservation)
+    otpCodeRepository
+        .findByReservation(reservation)
         .ifPresent(existingOtp -> otpCodeRepository.delete(existingOtp));
 
     String code = String.format("%06d", new Random().nextInt(1000000));

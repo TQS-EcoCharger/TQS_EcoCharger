@@ -11,22 +11,20 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingPointRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingSessionRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingStationRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingPointService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChargingPointServiceImpl implements ChargingPointService {
 
-    private final ChargingPointRepository chargingPointRepository;
-    private final ChargingSessionRepository chargingSessionRepository;
+  private final ChargingPointRepository chargingPointRepository;
+  private final ChargingSessionRepository chargingSessionRepository;
 
-    public ChargingPointServiceImpl(ChargingPointRepository pointRepo,
-                                    ChargingSessionRepository sessionRepo) {
-        this.chargingPointRepository = pointRepo;
-        this.chargingSessionRepository = sessionRepo;
-    }
-
+  public ChargingPointServiceImpl(
+      ChargingPointRepository pointRepo, ChargingSessionRepository sessionRepo) {
+    this.chargingPointRepository = pointRepo;
+    this.chargingSessionRepository = sessionRepo;
+  }
 
   @Override
   public ChargingPoint createPoint(ChargingPoint point, ChargingStation station) {
@@ -73,15 +71,20 @@ public class ChargingPointServiceImpl implements ChargingPointService {
     return points.orElseThrow(() -> new RuntimeException("No points found for this station"));
   }
 
-@Override
-public ActiveSessionDTO getActiveSessionForPoint(Long pointId) {
-    ChargingPoint point = chargingPointRepository.findById(pointId)
-        .orElseThrow(() -> new IllegalArgumentException("Charging point not found"));
+  @Override
+  public ActiveSessionDTO getActiveSessionForPoint(Long pointId) {
+    ChargingPoint point =
+        chargingPointRepository
+            .findById(pointId)
+            .orElseThrow(() -> new IllegalArgumentException("Charging point not found"));
 
-    ChargingSession session = chargingSessionRepository.findByChargingPointAndEndTimeIsNull(point)
-        .orElseThrow(() -> new IllegalStateException("No active session on this point"));
+    ChargingSession session =
+        chargingSessionRepository
+            .findByChargingPointAndEndTimeIsNull(point)
+            .orElseThrow(() -> new IllegalStateException("No active session on this point"));
 
-    long durationMinutes = java.time.Duration.between(session.getStartTime(), LocalDateTime.now()).toMinutes();
+    long durationMinutes =
+        java.time.Duration.between(session.getStartTime(), LocalDateTime.now()).toMinutes();
 
     Car car = session.getCar();
     double initialBatteryLevel = session.getInitialBatteryLevel();
@@ -104,10 +107,6 @@ public ActiveSessionDTO getActiveSessionForPoint(Long pointId) {
         durationMinutes,
         batteryPercentage,
         energyDelivered,
-        totalCost
-    );
-}
-
-
-
+        totalCost);
+  }
 }

@@ -39,31 +39,29 @@ public class ReservationControllerTestIT {
   private User user;
   private ChargingPoint point;
 
-    @BeforeEach
-    void setUp() {
-        reservationRepository.deleteAll();
-        pointRepository.deleteAll();
-        stationRepository.deleteAll();
-        userRepository.deleteAll();
+  @BeforeEach
+  void setUp() {
+    reservationRepository.deleteAll();
+    pointRepository.deleteAll();
+    stationRepository.deleteAll();
+    userRepository.deleteAll();
 
-        user = userRepository.save(new User(null, "email@test.com", "pass", "Test User", true));
-        ChargingStation station =
-            stationRepository.save(new ChargingStation("City", "Addr", 1.0, 1.0, "CC", "Country"));
+    user = userRepository.save(new User(null, "email@test.com", "pass", "Test User", true));
+    ChargingStation station =
+        stationRepository.save(new ChargingStation("City", "Addr", 1.0, 1.0, "CC", "Country"));
 
-        point = new ChargingPoint();
-        point.setChargingStation(station);
-        point.setAvailable(true);
-        point.setBrand("BrandX");
-        point.setConnectors(Collections.emptyList());
-        point.setChargingRateKWhPerMinute(1.5); 
-        point.setPricePerKWh(0.5);
-        point.setPricePerMinute(0.1);
-        point = pointRepository.save(point); 
+    point = new ChargingPoint();
+    point.setChargingStation(station);
+    point.setAvailable(true);
+    point.setBrand("BrandX");
+    point.setConnectors(Collections.emptyList());
+    point.setChargingRateKWhPerMinute(1.5);
+    point.setPricePerKWh(0.5);
+    point.setPricePerMinute(0.1);
+    point = pointRepository.save(point);
 
-        RestAssuredMockMvc.mockMvc(mockMvc);
-    }
-
-
+    RestAssuredMockMvc.mockMvc(mockMvc);
+  }
 
   @Test
   @DisplayName("Create reservation - success")

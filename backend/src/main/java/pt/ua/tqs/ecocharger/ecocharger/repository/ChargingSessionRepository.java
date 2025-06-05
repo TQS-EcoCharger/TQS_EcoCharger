@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChargingSessionRepository extends JpaRepository<ChargingSession, Long> {
-    List<ChargingSession> findByUserId(Long userId);
-    List<ChargingSession> findByChargingPointId(Long chargingPointId);
-    Optional<ChargingSession> findByChargingPointAndEndTimeIsNull(ChargingPoint chargingPoint);
+  List<ChargingSession> findByUserId(Long userId);
+
+  List<ChargingSession> findByChargingPointId(Long chargingPointId);
+
+  Optional<ChargingSession> findByChargingPointAndEndTimeIsNull(ChargingPoint chargingPoint);
 }

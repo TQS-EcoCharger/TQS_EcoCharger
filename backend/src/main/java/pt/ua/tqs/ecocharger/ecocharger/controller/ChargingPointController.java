@@ -52,8 +52,6 @@ public class ChargingPointController {
 
   @GetMapping("/{id}/active-session")
   public ResponseEntity<?> getActiveSessionForPoint(@PathVariable Long id) {
-      return ResponseEntity.ok(chargingPointService.getActiveSessionForPoint(id));
+    return ResponseEntity.ok(chargingPointService.getActiveSessionForPoint(id));
   }
-
-  
 }

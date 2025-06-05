@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationRequestDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.OTPCode;
-import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.OTPService;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ReservationService;
 
@@ -58,10 +57,10 @@ public class ReservationController {
   @PostMapping("/{reservationId}/otp")
   public ResponseEntity<OTPCode> generateOtp(@PathVariable Long reservationId) {
     try {
-        OTPCode otp = otpService.generateOtp(reservationId);
-        return ResponseEntity.ok(otp);
+      OTPCode otp = otpService.generateOtp(reservationId);
+      return ResponseEntity.ok(otp);
     } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(null);
+      return ResponseEntity.badRequest().body(null);
     }
   }
 }

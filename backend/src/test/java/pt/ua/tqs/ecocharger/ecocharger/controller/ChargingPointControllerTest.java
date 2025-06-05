@@ -131,18 +131,19 @@ class ChargingPointControllerTest {
   @Requirement("ET-43")
   @DisplayName("Get active session for a charging point")
   void testGetActiveSessionForPoint() throws Exception {
-      var sessionDto = new pt.ua.tqs.ecocharger.ecocharger.dto.ActiveSessionDTO(
-              5L, 1L, 3L, "Tesla Model S", 25, 85.0, 15.0, 12.5
-      );
+    var sessionDto =
+        new pt.ua.tqs.ecocharger.ecocharger.dto.ActiveSessionDTO(
+            5L, 1L, 3L, "Tesla Model S", 25, 85.0, 15.0, 12.5);
 
-      Mockito.when(chargingPointService.getActiveSessionForPoint(1L)).thenReturn(sessionDto);
+    Mockito.when(chargingPointService.getActiveSessionForPoint(1L)).thenReturn(sessionDto);
 
-      mockMvc.perform(get("/api/v1/points/1/active-session"))
-              .andExpect(status().isOk())
-              .andExpect(jsonPath("$.sessionId").value(5L))
-              .andExpect(jsonPath("$.carName").value("Tesla Model S"))
-              .andExpect(jsonPath("$.batteryPercentage").value(85.0))
-              .andExpect(jsonPath("$.energyDelivered").value(15.0))
-              .andExpect(jsonPath("$.totalCost").value(12.5));
+    mockMvc
+        .perform(get("/api/v1/points/1/active-session"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.sessionId").value(5L))
+        .andExpect(jsonPath("$.carName").value("Tesla Model S"))
+        .andExpect(jsonPath("$.batteryPercentage").value(85.0))
+        .andExpect(jsonPath("$.energyDelivered").value(15.0))
+        .andExpect(jsonPath("$.totalCost").value(12.5));
   }
 }

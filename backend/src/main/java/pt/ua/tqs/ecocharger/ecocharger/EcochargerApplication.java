@@ -10,10 +10,11 @@ import jakarta.annotation.PostConstruct;
 @SpringBootApplication
 public class EcochargerApplication {
 
-    @PostConstruct
-    void started() {
-        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Lisbon"));
-    }
+  @PostConstruct
+  void started() {
+    TimeZone.setDefault(TimeZone.getTimeZone("Europe/Lisbon"));
+  }
+
   public static void main(String[] args) {
     SpringApplication.run(EcochargerApplication.class, args);
   }
