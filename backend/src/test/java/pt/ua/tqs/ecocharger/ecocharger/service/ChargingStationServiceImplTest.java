@@ -113,4 +113,20 @@ class ChargingStationServiceImplTest {
 
     assertEquals(2, result.size());
   }
+
+  @Test
+  @Requirement("ET-22")
+  void testUpdateStation_Exists() {
+    ChargingStation existingStation = new ChargingStation("Porto", "Rua C", 41.0, -8.5, "PT", "Portugal");
+    existingStation.setId(1L);
+    ChargingStation updatedStation = new ChargingStation("Porto", "Rua D", 41.0, -8.5, "PT", "Portugal");
+    updatedStation.setId(1L);
+
+    when(chargingStationRepository.findById(1L)).thenReturn(Optional.of(existingStation));
+    when(chargingStationRepository.save(any(ChargingStation.class))).thenReturn(updatedStation);
+    ChargingStation result = chargingStationService.updateStation(1L, updatedStation);
+    assertEquals("Porto", result.getCityName());
+    assertEquals("Rua D", result.getAddress());
+    verify(chargingStationRepository, times(1)).save(any(ChargingStation.class));
+  }
 }
