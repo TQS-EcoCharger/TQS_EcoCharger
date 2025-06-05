@@ -152,6 +152,28 @@ export default function HomePage() {
       });
   };
 
+  const handleRemoveButtonClick = () => {
+    if (!selectedStation) {
+      alert("Select a charging station to remove.");
+      return;
+    }
+
+    if (window.confirm(`Are you sure you want to remove the station: ${selectedStation.cityName}?`)) {
+      axios.delete(`${CONFIG.API_URL}v1/admin/stations/${selectedStation.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(() => {
+          setStations((prev) => prev.filter((s) => s.id !== selectedStation.id));
+          setSelectedStation(null);
+          alert("Charging station removed successfully.");
+        })
+        .catch((error) => {
+          console.error("Failed to remove station:", error);
+          alert("Failed to remove the charging station.");
+        });
+    }
+  }
+
   return (
     <div className={styles.page} id="homepage">
       <Sidebar />
@@ -228,6 +250,7 @@ export default function HomePage() {
                 {userType === 'administrator' && (
                   <>
                     <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
+                    <button className={styles.editBtn} onClick={handleRemoveButtonClick}>Remove</button>
                     {selectedStation.chargingPoints?.length > 0 && (
                       <button className={styles.editBtn} onClick={() => setShowAddPointModal(true)}>+ Add Point</button>
                     )}
@@ -253,9 +276,9 @@ export default function HomePage() {
                   eventHandlers={{
                     click: () => setSelectedStation(station),
                     add: (e) => {
-                      const markerEl = e.target.getElement(); // DOM element
+                      const markerEl = e.target.getElement(); 
                       if (markerEl) {
-                        markerEl.setAttribute("id", `marker-${index + 1}`); // indexado a partir de 1
+                        markerEl.setAttribute("id", `marker-${index + 1}`); 
                       }
                     }
                   }}
@@ -271,9 +294,7 @@ export default function HomePage() {
               ))}
 
           </MapContainer>
-        </div>
-
-        {userType === 'administrator' && (
+          {userType === 'administrator' && (
           <button
             id="add-charging-station-button"
             className={styles.addStationBtn}
@@ -282,6 +303,7 @@ export default function HomePage() {
             + Add Charging Station
           </button>
         )}
+        </div>
 
         {showModal && (
           <ModalAddCharging onClose={() => setShowModal(false)} onSuccess={handleNewStation} />
