@@ -66,4 +66,24 @@ class UserTest {
     driver.removeCar(car);
     assertTrue(driver.getCars().isEmpty());
   }
+
+  @Test
+  void createChargingOperator() {
+    ChargingOperator operator = new ChargingOperator(5L, "charging@operator.com", "securepass", "Operator Name", true);
+
+    assertEquals(5L, operator.getId());
+    assertEquals("charging@operator.com", operator.getEmail());
+    assertEquals("securepass", operator.getPassword());
+    assertEquals("Operator Name", operator.getName());
+    assertTrue(operator.isEnabled());
+    assertNotNull(operator.getChargingStations());
+    assertTrue(operator.getChargingStations().isEmpty());
+
+    ChargingStation station = new ChargingStation();
+    operator.addChargingStation(station);
+    assertEquals(1, operator.getChargingStations().size());
+    assertEquals(station, operator.getChargingStations().get(0));
+    operator.removeChargingStation(station);
+    assertTrue(operator.getChargingStations().isEmpty());
+  }
 }

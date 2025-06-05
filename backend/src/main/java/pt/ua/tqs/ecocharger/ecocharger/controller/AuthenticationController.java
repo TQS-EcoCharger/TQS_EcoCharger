@@ -56,7 +56,6 @@ public class AuthenticationController {
 
   @GetMapping("/me")
   public ResponseEntity<Object> getCurrentUser(@RequestHeader("Authorization") String token) {
-    System.out.println("Received token: " + token);
     String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
     try {
       User currentUser = authService.getCurrentUser(jwtToken);

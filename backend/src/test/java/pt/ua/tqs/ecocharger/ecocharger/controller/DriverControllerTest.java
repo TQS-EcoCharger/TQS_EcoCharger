@@ -164,7 +164,6 @@ class DriverControllerTest {
                         + " \"licensePlate\":\"ABC123\", \"batteryCapacity\":100.0,"
                         + " \"currentCharge\":50.0, \"kilometers\":0.0, \"consumption\":0.0}"))
         .andExpect(status().isOk())
-        .andDo(print())
         .andExpect(jsonPath("$.cars", hasSize(1)));
   }
 
