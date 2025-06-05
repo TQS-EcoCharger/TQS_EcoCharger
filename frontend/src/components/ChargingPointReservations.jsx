@@ -16,7 +16,7 @@ export default function ChargingPointReservations({ reservations, chargingPointI
   }, [reservations, chargingPointId]);
 
   const filtered = curReservations.filter(
-    (r) => r.chargingPoint.id === chargingPointId
+    (r) => r.chargingPoint.id === curChargingPointId
   );
 
   const startDate = moment().startOf("day");
@@ -72,7 +72,7 @@ export default function ChargingPointReservations({ reservations, chargingPointI
               <table id="schedule-table" className={styles.table}>
                 <thead>
                   <tr id="schedule-table-header-row">
-                    <th id="header-empty-cell" className={styles.headerCell}></th>
+                    <th id="header-empty-cell" className={styles.headerCell} />
                     {days.map((day) => (
                       <th
                         key={day.format("YYYY-MM-DD")}

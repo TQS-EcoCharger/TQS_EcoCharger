@@ -93,6 +93,7 @@ export default function HomePage() {
       }
     };
     fetchSelf();
+    fetchCurrentReservations();
   }, []);
 
   useEffect(() => {
@@ -252,7 +253,7 @@ export default function HomePage() {
                               });
                           }}
                         >
-                          <FontAwesomeIcon icon={faCar} className={styles.faicon}/>
+                          <FontAwesomeIcon icon={faCar} className={styles.faicon} />
                           Reserve
                         </button>
                       </div>
