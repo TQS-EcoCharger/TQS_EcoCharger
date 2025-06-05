@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -62,6 +62,34 @@ class ChargingPointControllerTest {
         .perform(post("/api/v1/points").contentType(MediaType.APPLICATION_JSON).content(json))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(10));
+  }
+
+  @Test
+  @DisplayName("Edit a charging point")
+  void testEditPoint() throws Exception {
+    ChargingPoint point = new ChargingPoint();
+    point.setId(1L);
+    point.setBrand("Tesla");
+    point.setAvailable(true);
+
+    Mockito.when(chargingPointService.updatePoint(eq(1L), any(ChargingPoint.class))).thenReturn(point);
+    String json =
+        """
+        {
+          "id": 1,
+          "brand": "Tesla",
+          "available": true
+        }
+        """;
+    mockMvc
+        .perform(
+            put("/api/v1/points/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1L))
+        .andExpect(jsonPath("$.brand").value("Tesla"))
+        .andExpect(jsonPath("$.available").value(true));
   }
 
   @Test

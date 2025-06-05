@@ -1,12 +1,16 @@
 -- Inserir utilizadores (drivers)
 INSERT INTO users (email, password, name, enabled, user_type) VALUES
 ('afonso@gmail.com', 'pass', 'Afonso Ferreira', true, 'drivers'),
-('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'drivers');
+('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'drivers'),
+('chargingoperator@example.com', 'op1234', 'Charging Operator', true, 'chargingOperators');
 
 -- Criar drivers com IDs iguais aos criados em "users"
 INSERT INTO drivers (id) VALUES
 (1),
 (2);
+
+INSERT INTO charging_operator (id) VALUES
+(3);
 
 -- Inserir carros
 INSERT INTO car (name, make, model, manufacture_year, license_plate, battery_capacity, battery_level, kilometers, consumption, enabled) VALUES
@@ -35,7 +39,6 @@ INSERT INTO clients (id) SELECT id FROM users WHERE email = 'tomascliente@gmail.
 INSERT INTO charging_stations (municipality, address, latitude, longitude, countryCode, country) VALUES
 ('Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739, 'PT', 'Portugal'),
 ('Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
-('Aveiro', 'Rua Batalhýo Caýadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
 ('Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682, 'PT', 'Portugal'),
 ('Aveiro', 'Praça Marquês de Pombal, 3810-133 Aveiro', 40.638799, -8.652208, 'PT', 'Portugal'),
 ('Aveiro', 'Largo do Rossio, 3800-246 Aveiro', 40.642059, -8.656503, 'PT', 'Portugal'),
@@ -44,15 +47,20 @@ INSERT INTO charging_stations (municipality, address, latitude, longitude, count
 ('Aveiro', 'Cais da Fonte Nova, 3810-200 Aveiro', 40.638509, -8.645023, 'PT', 'Portugal'),
 ('Aveiro', 'Avenida da Universidade, 3810-489 Aveiro', 40.633825, -8.656514, 'PT', 'Portugal');
 
+INSERT INTO charging_operator_stations (operator_id, stations_id) VALUES
+(3, 1),
+(3, 2),
+(3, 7);
+
 SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations));
 
 -- Pontos de carregamento
 INSERT INTO charging_points (station_id, available, brand) VALUES
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 1), true, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), false, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), true, 'Mobi.E');
+(1, true, 'Atlante'),
+(1, true, 'Atlante'),
+(5, true, 'Mobi.E'),
+(5, false, 'Mobi.E'),
+(5, true, 'Mobi.E');
 
 SELECT setval('charging_points_id_seq', (SELECT MAX(id) FROM charging_points));
 
