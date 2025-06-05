@@ -17,10 +17,11 @@
 /* Grid that holds the cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible 3 per row */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 1–3 cards depending on screen */
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
+
 
 /* Card styling stays as is */
 .card {
@@ -48,8 +49,8 @@
 
 /* Text when no reservations */
 .message {
-  text-align: center;
-  color: #ffffff;
+  text-align: left;
+  color: #000000;
   font-size: 1.1rem;
 }
 
@@ -58,7 +59,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #2c3e50;
+  color: #000000;
 }
 
 /* Connector styles */
@@ -78,14 +79,76 @@
 }
 
 /* Status colors */
-.pending {
+.TO_BE_USED {
   background-color: #fdc459;
 }
 
 .confirmed {
-  background-color: #a5d6a7;
+  background-color: #dbffd7;
 }
 
 .cancelled {
-  background-color: #ef9a9a;
+  background-color: #ffa1a1;
+}
+
+/* Add spacing between field groups */
+.card p {
+  margin: 0.35rem 0;
+  font-size: 1.15rem;
+}
+
+/* Make the generate button more modern */
+.confirmButton {
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  background-color: #2d2d2d;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.confirmButton:hover {
+  background-color: #444;
+}
+
+/* OTP Code block styling */
+.otpBlock {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  background-color: #fff8e1;
+  border-left: 4px solid #ffb300;
+  border-radius: 0.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.otpBlock p {
+  margin: 0.25rem 0;
+  color: #333;
+}
+
+.otpCode {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.expiryText {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #d32f2f;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr); /* Always 3 on desktop */
+  }
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr; /* Always 1 on mobile */
+  }
 }

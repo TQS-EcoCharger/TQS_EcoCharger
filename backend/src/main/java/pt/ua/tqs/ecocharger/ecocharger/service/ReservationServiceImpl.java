@@ -24,28 +24,33 @@ public class ReservationServiceImpl implements ReservationService {
   private final UserRepository userRepository;
   private final ChargingPointRepository chargingPointRepository;
 
-  @Override
-  public ReservationResponseDTO createReservation(ReservationRequestDTO request) {
+@Override
+public ReservationResponseDTO createReservation(ReservationRequestDTO request) {
     if (request.getStartTime().isAfter(request.getEndTime())) {
-      throw new IllegalArgumentException("Start time must be before end time");
+        throw new IllegalArgumentException("Start time must be before end time");
     }
 
-    User user =
-        userRepository
-            .findById(request.getUserId())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+    long durationMinutes = java.time.Duration.between(request.getStartTime(), request.getEndTime()).toMinutes();
+    if (durationMinutes < 15) {
+        throw new IllegalArgumentException("Reservation must be at least 15 minutes long");
+    }
+    if (durationMinutes > 240) {
+        throw new IllegalArgumentException("Reservation cannot exceed 4 hours");
+    }
 
-    ChargingPoint chargingPoint =
-        chargingPointRepository
-            .findById(request.getChargingPointId())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid charging point ID"));
+    User user = userRepository
+        .findById(request.getUserId())
+        .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-    boolean conflict =
-        reservationRepository.existsByChargingPointIdAndTimeOverlap(
-            request.getChargingPointId(), request.getStartTime(), request.getEndTime());
+    ChargingPoint chargingPoint = chargingPointRepository
+        .findById(request.getChargingPointId())
+        .orElseThrow(() -> new IllegalArgumentException("Invalid charging point ID"));
+
+    boolean conflict = reservationRepository.existsByChargingPointIdAndTimeOverlap(
+        request.getChargingPointId(), request.getStartTime(), request.getEndTime());
 
     if (conflict) {
-      throw new IllegalStateException("Time slot already reserved for this charging point");
+        throw new IllegalStateException("Time slot already reserved for this charging point");
     }
 
     Reservation reservation = new Reservation();
@@ -53,12 +58,12 @@ public class ReservationServiceImpl implements ReservationService {
     reservation.setChargingPoint(chargingPoint);
     reservation.setStartTime(request.getStartTime());
     reservation.setEndTime(request.getEndTime());
-    reservation.setStatus(ReservationStatus.PENDING);
+    reservation.setStatus(ReservationStatus.TO_BE_USED);
 
     Reservation saved = reservationRepository.save(reservation);
 
     return mapToDTO(saved);
-  }
+}
 
   @Override
   public List<ReservationResponseDTO> getAllReservations() {
@@ -119,8 +124,7 @@ public class ReservationServiceImpl implements ReservationService {
   @Override
   public List<ReservationResponseDTO> getActiveReservationsByChargingPointId(Long chargingPointId) {
     LocalDateTime now = LocalDateTime.now();
-    List<Reservation> reservations =
-        reservationRepository.findByChargingPointIdAndEndTimeAfter(chargingPointId, now);
+    List<Reservation> reservations = reservationRepository.findByChargingPointIdAndEndTimeAfter(chargingPointId, now);
 
     return reservations.stream().map(this::mapToDTO).collect(Collectors.toList());
   }

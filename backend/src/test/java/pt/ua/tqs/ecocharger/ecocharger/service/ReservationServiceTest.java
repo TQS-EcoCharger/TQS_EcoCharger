@@ -23,13 +23,17 @@ import pt.ua.tqs.ecocharger.ecocharger.repository.*;
 
 public class ReservationServiceTest {
 
-  @Mock private ReservationRepository reservationRepository;
+  @Mock
+  private ReservationRepository reservationRepository;
 
-  @Mock private UserRepository userRepository;
+  @Mock
+  private UserRepository userRepository;
 
-  @Mock private ChargingPointRepository chargingPointRepository;
+  @Mock
+  private ChargingPointRepository chargingPointRepository;
 
-  @InjectMocks private ReservationServiceImpl reservationService;
+  @InjectMocks
+  private ReservationServiceImpl reservationService;
 
   private User user;
   private ChargingPoint chargingPoint;
@@ -41,29 +45,27 @@ public class ReservationServiceTest {
 
     user = new User(1L, "user@example.com", "password", "User", true);
 
-    List<Connectors> connectors =
-        List.of(
-            new Connectors("Type1", 1, 5, 10, "Voltage"),
-            new Connectors("Type2", 7, 15, 22, "Voltage"));
+    List<Connectors> connectors = List.of(
+        new Connectors("Type1", 1, 5, 10, "Voltage"),
+        new Connectors("Type2", 7, 15, 22, "Voltage"));
 
     ChargingStation station = new ChargingStation("City", "Address", 10.0, 20.0, "2000", "Country");
 
     chargingPoint = new ChargingPoint(station, true, "BrandX", connectors);
     chargingPoint.setId(2L);
 
-    reservation =
-        new Reservation(
-            1L,
-            user,
-            chargingPoint,
-            LocalDateTime.parse("2023-05-28T10:00:00"),
-            LocalDateTime.parse("2023-05-28T12:00:00"),
-            ReservationStatus.PENDING);
+    reservation = new Reservation(
+        1L,
+        user,
+        chargingPoint,
+        LocalDateTime.parse("2023-05-28T10:00:00"),
+        LocalDateTime.parse("2023-05-28T12:00:00"),
+        ReservationStatus.TO_BE_USED);
 
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     when(chargingPointRepository.findById(2L)).thenReturn(Optional.of(chargingPoint));
     when(reservationRepository.existsByChargingPointIdAndTimeOverlap(
-            2L, reservation.getStartTime(), reservation.getEndTime()))
+        2L, reservation.getStartTime(), reservation.getEndTime()))
         .thenReturn(false);
     when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
   }
@@ -72,12 +74,11 @@ public class ReservationServiceTest {
   @DisplayName("Create Reservation Successfully")
   @Requirement("ET-30")
   void testCreateReservation() {
-    ReservationRequestDTO request =
-        new ReservationRequestDTO(
-            1L,
-            2L,
-            LocalDateTime.parse("2023-05-28T10:00:00"),
-            LocalDateTime.parse("2023-05-28T12:00:00"));
+    ReservationRequestDTO request = new ReservationRequestDTO(
+        1L,
+        2L,
+        LocalDateTime.parse("2023-05-28T10:00:00"),
+        LocalDateTime.parse("2023-05-28T12:00:00"));
 
     ReservationResponseDTO response = reservationService.createReservation(request);
 
@@ -93,12 +94,11 @@ public class ReservationServiceTest {
     when(reservationRepository.existsByChargingPointIdAndTimeOverlap(anyLong(), any(), any()))
         .thenReturn(true);
 
-    ReservationRequestDTO request =
-        new ReservationRequestDTO(
-            1L,
-            2L,
-            LocalDateTime.parse("2023-05-28T10:00:00"),
-            LocalDateTime.parse("2023-05-28T12:00:00"));
+    ReservationRequestDTO request = new ReservationRequestDTO(
+        1L,
+        2L,
+        LocalDateTime.parse("2023-05-28T10:00:00"),
+        LocalDateTime.parse("2023-05-28T12:00:00"));
 
     assertThrows(IllegalStateException.class, () -> reservationService.createReservation(request));
     verify(reservationRepository, times(0)).save(any(Reservation.class));
@@ -133,13 +133,104 @@ public class ReservationServiceTest {
   @DisplayName("Get Active Reservations by Charging Point ID")
   void testGetActiveReservationsByChargingPointId() {
     when(reservationRepository.findByChargingPointIdAndEndTimeAfter(
-            eq(2L), any(LocalDateTime.class)))
+        eq(2L), any(LocalDateTime.class)))
         .thenReturn(List.of(reservation));
 
-    List<ReservationResponseDTO> responses =
-        reservationService.getActiveReservationsByChargingPointId(2L);
+    List<ReservationResponseDTO> responses = reservationService.getActiveReservationsByChargingPointId(2L);
 
     assertEquals(1, responses.size());
     assertEquals(2L, responses.get(0).getChargingPoint().getId());
   }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - End time before Start time")
+  @Requirement("ET-30")
+  void testCreateReservation_EndBeforeStart() {
+    ReservationRequestDTO request = new ReservationRequestDTO(
+        1L,
+        2L,
+        LocalDateTime.parse("2023-05-28T12:00:00"),
+        LocalDateTime.parse("2023-05-28T10:00:00"));
+
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        reservationService.createReservation(request)
+    );
+
+    assertTrue(ex.getMessage().contains("Start time must be before end time"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Duration less than 15 minutes")
+  @Requirement("ET-30")
+  void testCreateReservation_TooShort() {
+    ReservationRequestDTO request = new ReservationRequestDTO(
+        1L,
+        2L,
+        LocalDateTime.parse("2023-05-28T10:00:00"),
+        LocalDateTime.parse("2023-05-28T10:10:00"));
+
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        reservationService.createReservation(request)
+    );
+
+    assertTrue(ex.getMessage().contains("at least 15 minutes"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Duration exceeds 4 hours")
+  @Requirement("ET-30")
+  void testCreateReservation_TooLong() {
+    ReservationRequestDTO request = new ReservationRequestDTO(
+        1L,
+        2L,
+        LocalDateTime.parse("2023-05-28T10:00:00"),
+        LocalDateTime.parse("2023-05-28T15:01:00"));
+
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        reservationService.createReservation(request)
+    );
+
+    assertTrue(ex.getMessage().contains("cannot exceed 4 hours"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Invalid User ID")
+  @Requirement("ET-30")
+  void testCreateReservation_InvalidUser() {
+    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    ReservationRequestDTO request = new ReservationRequestDTO(
+        999L,
+        2L,
+        LocalDateTime.parse("2023-05-28T10:00:00"),
+        LocalDateTime.parse("2023-05-28T12:00:00"));
+
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        reservationService.createReservation(request)
+    );
+
+    assertTrue(ex.getMessage().contains("Invalid user ID"));
+  }
+
+  @Test
+  @DisplayName("Fail to Create Reservation - Invalid Charging Point ID")
+  @Requirement("ET-30")
+  void testCreateReservation_InvalidChargingPoint() {
+    when(chargingPointRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+    ReservationRequestDTO request = new ReservationRequestDTO(
+        1L,
+        999L,
+        LocalDateTime.parse("2023-05-28T10:00:00"),
+        LocalDateTime.parse("2023-05-28T12:00:00"));
+
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+        reservationService.createReservation(request)
+    );
+
+    assertTrue(ex.getMessage().contains("Invalid charging point ID"));
+  }
+
+
+
 }

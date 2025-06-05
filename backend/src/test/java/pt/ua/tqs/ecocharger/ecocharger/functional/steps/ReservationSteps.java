@@ -5,12 +5,18 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReservationSteps {
 
   private WebDriver driver;
   private WebDriverWait wait;
+
+  private static String storedOtpCode;
+  private static String storedChargingPointId;
 
   @Before
   public void setUp() {
@@ -38,79 +44,147 @@ public class ReservationSteps {
     wait.until(ExpectedConditions.presenceOfElementLocated(By.className("leaflet-marker-icon")));
     WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(2);
     marker.click();
-
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("station-details-panel")));
   }
 
   @When("I click the \"Reserve\" button on a charging point")
   public void i_click_the_reserve_button_on_charging_point() {
-    wait.until(
-            ExpectedConditions.elementToBeClickable(
-                By.cssSelector("button[id^='reserve-button-']")))
-        .click();
+    WebElement reserveButton = wait.until(
+        ExpectedConditions.elementToBeClickable(By.cssSelector("button[id^='reserve-button-']")));
+
+    String pointId = reserveButton.getAttribute("id").replace("reserve-button-", "");
+    TestMemoryContext.put("chargingPointId", pointId);
+
+    reserveButton.click();
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-modal")));
   }
 
   @When("I set the reservation start time")
   public void i_set_start_time() {
     WebElement startPicker = driver.findElement(By.id("start-time-picker"));
-
     JavascriptExecutor js = (JavascriptExecutor) driver;
     String nowDate = java.time.ZonedDateTime.now().toLocalDateTime().toString();
     js.executeScript("arguments[0].value = arguments[1]", startPicker, nowDate);
-    js.executeScript(
-        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", startPicker);
+    js.executeScript("arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", startPicker);
   }
 
-  @When("I set the reservation end time")
-  public void i_set_end_time() {
-    WebElement endPicker = driver.findElement(By.id("end-time-picker"));
+@When("I set the reservation end time")
+public void i_set_end_time() {
 
-    JavascriptExecutor js = (JavascriptExecutor) driver;
-    String futureDate = java.time.ZonedDateTime.now().plusMinutes(15).toLocalDateTime().toString();
-    js.executeScript("arguments[0].value = arguments[1]", endPicker, futureDate);
+  JavascriptExecutor js = (JavascriptExecutor) driver;
+  String futureEnd = java.time.LocalDateTime.now().plusMinutes(30).toString();
 
-    js.executeScript(
-        "arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", endPicker);
-  }
+  js.executeScript("window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))", futureEnd);
+  js.executeScript("window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))", java.time.LocalDateTime.now().toString());
+  
+  try {
+    Thread.sleep(100);
+  } catch (InterruptedException ignored) {}
+}
 
   @Then("I should see the message {string}")
   public void i_should_see_the_message(String expectedMessage) {
-    WebElement messageEl =
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-message")));
+    WebElement messageEl = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservation-message")));
     assertTrue(messageEl.getText().contains(expectedMessage));
   }
 
   @When("I visit the reservations page")
   public void i_visit_the_reservations_page() {
     driver.get("http://localhost:5000/reservations");
-    wait.until(
-        ExpectedConditions.visibilityOfElementLocated(
-            By.cssSelector("[data-testid='reservations-page']")));
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservations-page")));
   }
 
   @Then("I should see at least one reservation with details")
   public void i_should_see_at_least_one_reservation_with_details() {
-    WebElement list =
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("[data-testid='reservations-list']")));
-
-    java.util.List<WebElement> cards =
-        list.findElements(By.cssSelector("[data-testid^='reservation-card-']"));
+    WebElement list = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reservations-list")));
+    List<WebElement> cards = list.findElements(By.cssSelector("[id^='reservation-card-']"));
     assertFalse(cards.isEmpty(), "Expected at least one reservation card.");
 
     WebElement firstCard = cards.get(0);
+    String fullId = firstCard.getAttribute("id"); // e.g., reservation-card-42
+    String reservationId = fullId.replace("reservation-card-", "");
+    TestMemoryContext.put("reservationId", reservationId);
 
-    WebElement brand = firstCard.findElement(By.cssSelector("[data-testid^='reservation-brand-']"));
-    WebElement status =
-        firstCard.findElement(By.cssSelector("[data-testid^='reservation-status-']"));
-    WebElement start = firstCard.findElement(By.cssSelector("[data-testid^='reservation-start-']"));
-    WebElement end = firstCard.findElement(By.cssSelector("[data-testid^='reservation-end-']"));
+    assertFalse(firstCard.findElement(By.cssSelector("[id^='reservation-brand-']")).getText().isEmpty());
+    assertFalse(firstCard.findElement(By.cssSelector("[id^='reservation-status-']")).getText().isEmpty());
+    assertFalse(firstCard.findElement(By.cssSelector("[id^='reservation-start-']")).getText().isEmpty());
+    assertFalse(firstCard.findElement(By.cssSelector("[id^='reservation-end-']")).getText().isEmpty());
+  }
+  
+  @When("I click the \"generate-otp-button\" for the first reservation")
+  public void clickFirstOtpButton() {
+      WebElement firstCard = wait.until(ExpectedConditions.presenceOfElementLocated(
+          By.cssSelector("[id^='reservation-card-']")));
 
-    assertFalse(brand.getText().isEmpty(), "Brand should not be empty.");
-    assertFalse(status.getText().isEmpty(), "Status should not be empty.");
-    assertFalse(start.getText().isEmpty(), "Start time should not be empty.");
-    assertFalse(end.getText().isEmpty(), "End time should not be empty.");
+      String reservationId = firstCard.getAttribute("id").replace("reservation-card-", "");
+
+      WebElement button = firstCard.findElement(By.id("generate-otp-button-" + reservationId));
+      button.click();
+
+      // Extract charging point ID from data attribute
+      String chargingPointId = firstCard.getAttribute("data-charging-point-id");
+      TestMemoryContext.put("chargingPointId", chargingPointId);
+
+      wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("otp-code-" + reservationId)));
+      WebElement otpEl = driver.findElement(By.id("otp-code-" + reservationId));
+      storedOtpCode = otpEl.getText().replaceAll("[^\\d]", "");  // Extract digits only
+  }
+
+
+  @Then("I store the OTP code for later use")
+  public void storeOtp() {
+    assertNotNull(storedOtpCode);
+  }
+
+  @When("I enter the stored OTP code into the inputs")
+  public void enterStoredOtp() {
+    for (int i = 0; i < storedOtpCode.length(); i++) {
+      WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.id("otp-digit-" + i)));
+      input.clear();
+      input.sendKeys(Character.toString(storedOtpCode.charAt(i)));
+    }
+  }
+
+  @Then("I should see the OTP digits filled")
+  public void checkOtpFilled() {
+    for (int i = 0; i < 6; i++) {
+      WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(
+          By.id("otp-digit-" + i)));
+      String val = input.getAttribute("value");
+      assertFalse(val == null || val.isEmpty(), "OTP digit " + i + " is not filled");
+    }
+  }
+
+  @When("I visit the slot page for the reserved charging point")
+  public void visitSlotPage() {
+    String pointId = TestMemoryContext.get("chargingPointId").toString();
+    driver.get("http://localhost:5000/slots/" + pointId);
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("title")));
+  }
+
+  @When("I click the \"Validate OTP\" button")
+  public void clickValidateOtp() {
+    driver.findElement(By.id("validate-otp-button")).click();
+  }
+
+  @Then("I should see the car selection dropdown")
+  public void verifyCarDropdown() {
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("car-select")));
+  }
+
+  @When("I select a vehicle from the list")
+  public void selectCar() {
+    WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(By.id("car-select")));
+    new Select(dropdown).selectByIndex(1);
+  }
+
+  @When("I click the \"Start Charging\" button")
+  public void clickStartCharging() {
+    driver.findElement(By.id("start-charging-button")).click();
+  }
+
+  @Then("I should see the charging session information")
+  public void verifyChargingSessionStarted() {
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("session-info")));
   }
 }
