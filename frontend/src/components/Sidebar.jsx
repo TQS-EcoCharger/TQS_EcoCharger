@@ -7,7 +7,7 @@ export default function Sidebar() {
   const { userType } = useUser();
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }} id="layout-container">
+    <div style={{ display: 'flex', height: '100vh' }} id="layout-container">
       <div className={styles.sidebar} id="sidebar">
         <img
           src="/logo.png"
