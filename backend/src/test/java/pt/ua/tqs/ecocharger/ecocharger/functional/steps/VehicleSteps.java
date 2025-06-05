@@ -54,7 +54,6 @@ public class VehicleSteps {
   @Then("the table should have the following columns:")
   public void the_table_should_have_the_following_columns(
       io.cucumber.datatable.DataTable dataTable) {
-    // Get first row (the only row in this case)
     List<String> expectedColumns = dataTable.row(0);
 
     List<WebElement> headerCells = driver.findElements(By.cssSelector("#vehicles-table thead th"));

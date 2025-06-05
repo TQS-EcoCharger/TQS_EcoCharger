@@ -26,6 +26,8 @@ const LoginPage = () => {
       console.log("Login successful:", response.data);
       login(response.data.token, response.data.userType);
       navigate("/home");
+    
+
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
       setError(err.response?.data || "Login failed. Please try again.");

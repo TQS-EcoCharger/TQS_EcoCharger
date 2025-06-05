@@ -2,7 +2,6 @@ package pt.ua.tqs.ecocharger.ecocharger.controller;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ public class AuthenticationController {
 
   private final AuthenticationService authService;
 
-  @Autowired
   public AuthenticationController(AuthenticationService authService) {
     this.authService = authService;
   }

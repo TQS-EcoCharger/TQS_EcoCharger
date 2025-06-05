@@ -1,15 +1,8 @@
+@ET-18
+Feature: Login and Map Interaction
 
-#@ET-18
-#Feature: Home Page
-#
-#  Scenario: Ver estações no mapa após login
-#    Given o utilizador está autenticado
-#    When o utilizador abre a página inicial
-#    Then o mapa deve mostrar múltiplas estações
-#    And deve ver a mensagem "Selecione uma estação no mapa"
-#
-#  Scenario: Ver detalhes de uma estação ao clicar num marcador
-#    Given o utilizador está na página inicial com estações carregadas
-#    When o utilizador clica num marcador de estação no mapa
-#    Then os detalhes da estação devem aparecer no painel lateral
-#
+  Scenario: User logs in and clicks on a map marker
+    Given the user accesses the login page
+    When the user logs in with email "tomas@gmail.com" and password "pass1"
+    Then the user should see the map with markers
+    When the user clicks on a marker

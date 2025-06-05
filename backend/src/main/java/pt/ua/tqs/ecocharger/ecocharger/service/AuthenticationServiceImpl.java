@@ -1,10 +1,10 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
+import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AuthenticationService;
@@ -24,6 +24,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private DriverService driverService;
   private ChargingOperatorService chargingOperatorService;
   private JwtUtil jwtUtil;
+
+  public AuthenticationServiceImpl(UserRepository userRepository, JwtUtil jwtUtil, UserRepository userRepository, ChargingOperatorService chargingOperatorService, DriverService driverService) {
+    this.userRepository = userRepository;
+    this.jwtUtil = jwtUtil;
+    this.chargingOperatorService = chargingOperatorService;
+    this.driverService = driverService;
+  }
 
   public AuthenticationServiceImpl(UserRepository userRepository,
                                     DriverService driverService,
@@ -88,8 +95,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     User user = new User();
     user.setEmail(email);
-    user.setPassword(password);
     user.setName(name);
+    user.setPassword(password);
     user.setEnabled(true);
 
     Driver driver = new Driver(null, user.getEmail(), user.getPassword(), user.getName(), true);
