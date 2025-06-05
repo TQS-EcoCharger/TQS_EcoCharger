@@ -178,29 +178,37 @@ public class ReservationSteps {
 
   @Then("I should see the car selection dropdown")
   public void verifyCarDropdown() {
-    By selector = By.cssSelector(".custom-car-select__control");
+    By dropdownControl = By.cssSelector(".custom-car-select__control");
 
     wait.until(driver -> {
       try {
-        WebElement el = driver.findElement(selector);
-        return el.isDisplayed() && el.isEnabled();
+        WebElement el = driver.findElement(dropdownControl);
+        return el != null && el.isDisplayed() && el.isEnabled();
       } catch (NoSuchElementException | StaleElementReferenceException ignored) {
         return false;
       }
+    });
+
+    driver.findElement(dropdownControl).click();
+
+    wait.until(driver -> {
+      List<WebElement> options = driver.findElements(By.cssSelector(".custom-car-select__option"));
+      return options.size() > 0 && options.get(0).isDisplayed();
     });
   }
 
   @When("I select a vehicle from the list")
   public void selectCar() {
-    WebElement dropdownControl = wait.until(
-        ExpectedConditions.elementToBeClickable(By.cssSelector(".custom-car-select__control")));
+    WebElement dropdownControl =
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".custom-car-select__control")));
     dropdownControl.click();
 
-    WebElement firstOption = wait.until(
-        ExpectedConditions.elementToBeClickable(
-            By.cssSelector(".custom-car-select__menu .custom-car-select__option")));
+    WebElement firstOption =
+        wait.until(ExpectedConditions.elementToBeClickable(
+            By.cssSelector(".custom-car-select__option")));
     firstOption.click();
   }
+
 
   @When("I click the \"Start Charging\" button")
   public void clickStartCharging() {
