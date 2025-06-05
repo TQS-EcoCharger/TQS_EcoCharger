@@ -181,7 +181,6 @@ class AuthenticationControllerTest {
         .andExpect(content().string("User not found"));
   }
 
-
   @Test
   @DisplayName("Registering with missing fields returns 400 Bad Request and error message")
   @Requirement("ET-52")
@@ -192,36 +191,34 @@ class AuthenticationControllerTest {
         .perform(post("/api/auth/register").contentType("application/json").content(requestBody))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Missing required fields")));
-}
+  }
 
   @Test
   @DisplayName("Get current user returns 200 OK and user info")
   @Requirement("ET-52")
   void testGetCurrentUserSuccess() throws Exception {
-      User mockUser = new User(); 
-      mockUser.setId(1L);
-      mockUser.setEmail("user@example.com");
-  
-      Mockito.when(authService.getCurrentUser("valid.token")).thenReturn(mockUser);
-  
-      mockMvc
-          .perform(get("/api/auth/me").header("Authorization", "Bearer valid.token"))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.email").value("user@example.com"));
+    User mockUser = new User();
+    mockUser.setId(1L);
+    mockUser.setEmail("user@example.com");
+
+    Mockito.when(authService.getCurrentUser("valid.token")).thenReturn(mockUser);
+
+    mockMvc
+        .perform(get("/api/auth/me").header("Authorization", "Bearer valid.token"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.email").value("user@example.com"));
   }
-  
+
   @Test
   @DisplayName("Get current user with invalid token throws 401")
   @Requirement("ET-52")
   void testGetCurrentUserInvalidToken() throws Exception {
-      Mockito.when(authService.getCurrentUser("")).thenThrow(new IllegalArgumentException("Invalid token"));
-  
-      mockMvc
-          .perform(get("/api/auth/me").header("Authorization", "Bearer "))
-          .andExpect(status().isUnauthorized())
-          .andExpect(content().string("Invalid token"));
-  }
-  
-  
+    Mockito.when(authService.getCurrentUser(""))
+        .thenThrow(new IllegalArgumentException("Invalid token"));
 
+    mockMvc
+        .perform(get("/api/auth/me").header("Authorization", "Bearer "))
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string("Invalid token"));
+  }
 }

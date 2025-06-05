@@ -113,7 +113,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
-   @Requirement("ET-20")
+  @Requirement("ET-20")
   @DisplayName("Successfully delete a charging station")
   void testDeleteChargingStationSuccess() {
     Administrator admin = new Administrator();
@@ -135,7 +135,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
-   @Requirement("ET-20")
+  @Requirement("ET-20")
   @DisplayName("Fail to delete charging station: not found")
   void testDeleteChargingStationNotFound() {
     when(chargingStationRepository.findById(1L)).thenReturn(Optional.empty());
@@ -147,7 +147,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
-   @Requirement("ET-20")
+  @Requirement("ET-20")
   @DisplayName("Fail to delete charging station: admin not found")
   void testDeleteChargingStationAdminNotFound() {
     Administrator admin = new Administrator();
@@ -166,11 +166,10 @@ class AdministratorServiceImplTest {
     assertEquals("Administrator not found", ex.getMessage());
   }
 
-
   @Test
-   @Requirement("ET-20")
-@DisplayName("Successfully update a charging point")
-void testUpdateChargingPointSuccess() {
+  @Requirement("ET-20")
+  @DisplayName("Successfully update a charging point")
+  void testUpdateChargingPointSuccess() {
     ChargingPoint existingPoint = new ChargingPoint();
     existingPoint.setId(1L);
     existingPoint.setBrand("OldBrand");
@@ -189,22 +188,22 @@ void testUpdateChargingPointSuccess() {
 
     assertEquals("NewBrand", result.getBrand());
     verify(chargingPointRepository).save(existingPoint);
-}
+  }
 
-@Test
- @Requirement("ET-20")
-@DisplayName("Fail to update non-existent charging point")
-void testUpdateChargingPointNotFound() {
+  @Test
+  @Requirement("ET-20")
+  @DisplayName("Fail to update non-existent charging point")
+  void testUpdateChargingPointNotFound() {
     ChargingPoint updateData = new ChargingPoint();
     updateData.setId(999L);
 
     when(chargingPointRepository.findById(999L)).thenReturn(Optional.empty());
 
-    RuntimeException ex = assertThrows(RuntimeException.class,
-        () -> administratorService.updateChargingPoint(updateData, 999L));
+    RuntimeException ex =
+        assertThrows(
+            RuntimeException.class,
+            () -> administratorService.updateChargingPoint(updateData, 999L));
 
     assertEquals("Charging Point not found", ex.getMessage());
-}
-
-
+  }
 }
