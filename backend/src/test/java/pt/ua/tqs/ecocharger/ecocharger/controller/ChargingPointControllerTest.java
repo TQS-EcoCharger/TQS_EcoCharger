@@ -1,6 +1,9 @@
 package pt.ua.tqs.ecocharger.ecocharger.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -122,5 +125,25 @@ class ChargingPointControllerTest {
     mockMvc.perform(delete("/api/v1/points/1")).andExpect(status().isNoContent());
 
     Mockito.verify(chargingPointService).deletePoint(1L);
+  }
+
+  @Test
+  @Requirement("ET-43")
+  @DisplayName("Get active session for a charging point")
+  void testGetActiveSessionForPoint() throws Exception {
+    var sessionDto =
+        new pt.ua.tqs.ecocharger.ecocharger.dto.ActiveSessionDTO(
+            5L, 1L, 3L, "Tesla Model S", 25, 85.0, 15.0, 12.5);
+
+    Mockito.when(chargingPointService.getActiveSessionForPoint(1L)).thenReturn(sessionDto);
+
+    mockMvc
+        .perform(get("/api/v1/points/1/active-session"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.sessionId").value(5L))
+        .andExpect(jsonPath("$.carName").value("Tesla Model S"))
+        .andExpect(jsonPath("$.batteryPercentage").value(85.0))
+        .andExpect(jsonPath("$.energyDelivered").value(15.0))
+        .andExpect(jsonPath("$.totalCost").value(12.5));
   }
 }

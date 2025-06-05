@@ -46,27 +46,90 @@ INSERT INTO charging_stations (municipality, address, latitude, longitude, count
 
 SELECT setval('charging_stations_id_seq', (SELECT MAX(id) FROM charging_stations));
 
--- Pontos de carregamento
-INSERT INTO charging_points (station_id, available, brand) VALUES
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 0), true, 'Atlante'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 1), true, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), false, 'Mobi.E'),
-((SELECT id FROM charging_stations ORDER BY id LIMIT 1 OFFSET 2), true, 'Mobi.E');
+-- Station 1: Atlante
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(1, 1, true, 'Atlante', 0.25, 0.05, 0.3667),
+(2, 1, true, 'Atlante', 0.25, 0.05, 0.8333);
 
-SELECT setval('charging_points_id_seq', (SELECT MAX(id) FROM charging_points));
+-- Station 2: Mobi.E
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(3, 2, true, 'Mobi.E', 0.20, 0.03, 1.0000);
 
--- Conectores
-INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type) VALUES
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 0), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 0), 'Chademo', 50, 400, 125, 'DC'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 1), 'Chademo', 50, 400, 125, 'DC'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 2), 'IEC62196Type2CCS', 60, 400, 150, 'DC'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 3), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 4), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 5), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 6), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 7), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
-((SELECT id FROM charging_points ORDER BY id LIMIT 1 OFFSET 8), 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+-- Station 3: Mobi.E
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(4, 3, false, 'Mobi.E', 0.20, 0.03, 1.0000),
+(5, 3, true, 'Mobi.E', 0.20, 0.03, 0.3667);
 
-SELECT setval('connectors_id_seq', (SELECT MAX(id) FROM connectors));
+-- Station 4: EDP Comercial
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(6, 4, true, 'EDP', 0.23, 0.04, 0.3667);
+
+-- Station 5: EDP Comercial
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(7, 5, true, 'EDP', 0.23, 0.04, 0.3667),
+(8, 5, true, 'EDP', 0.23, 0.04, 0.3667);
+
+-- Station 6: AVR-90002
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(9, 6, true, 'AVR-90002', 0.30, 0.06, 0.3667),
+(10, 6, false, 'AVR-90002', 0.30, 0.06, 0.3667),
+(11, 6, true, 'AVR-90002', 0.30, 0.06, 0.3667);
+
+-- Station 7: Mobi.E
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(12, 7, true, 'Mobi.E', 0.21, 0.04, 0.3667);
+
+-- Station 8: Galp Power
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(13, 8, true, 'Galp electric', 0.28, 0.07, 0.3667),
+(14, 8, false, 'Galp electric', 0.28, 0.07, 0.3667);
+
+-- Station 9: Powerdot
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(15, 9, true, 'Powerdot', 0.26, 0.06, 0.3667);
+
+-- Station 10: Atlante
+INSERT INTO charging_points (id, station_id, available, brand, price_per_kwh, price_per_minute, charging_rate_kwh_per_minute) 
+VALUES 
+(16, 10, true, 'Atlante', 0.25, 0.05, 0.8333),
+(17, 10, true, 'Atlante', 0.25, 0.05, 0.8333);
+
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (1, 1, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (2, 1, 'Chademo', 50, 400, 125, 'DC');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (3, 2, 'Chademo', 50, 400, 125, 'DC');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (4, 3, 'IEC62196Type2CCS', 60, 400, 150, 'DC');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (5, 4, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (6, 5, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (7, 6, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (8, 7, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (9, 8, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+INSERT INTO connectors (id, charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
+VALUES (10, 9, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
