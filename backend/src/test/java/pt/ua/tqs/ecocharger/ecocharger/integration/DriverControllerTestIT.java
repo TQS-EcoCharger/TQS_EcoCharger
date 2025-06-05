@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.equalTo;
 @Import({TestContainersConfig.class, SecurityDisableConfig.class})
 @TestPropertySource(locations = "classpath:application-it.properties")
 @ActiveProfiles("test")
-public class DriverControllerTestIT {
+class DriverControllerTestIT {
 
   @Autowired private DriverRepository driverRepository;
 
@@ -75,7 +75,7 @@ public class DriverControllerTestIT {
   void testCreateDriver() {
     String newDriverJson =
         """
-            { "email": "marcelorodriguez@example.com", "password": "password6", "name": "Marcelo Rodriguez", "enabled": true }
+            { "email": "marcelorodriguez@example.com", "password": "password6", "name": "Marcelo Rodriguez", "enabled": true,"type": "drivers" }
         """;
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -92,7 +92,7 @@ public class DriverControllerTestIT {
   void testUpdateDriver() {
     String updatedDriverJson =
         """
-            { "email": "johndoe@example.com", "password": "newpassword", "name": "John Doe Updated", "enabled": true }
+            { "email": "johndoe@example.com", "password": "newpassword", "name": "John Doe Updated", "enabled": true,"type": "drivers" }
         """;
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -125,7 +125,7 @@ public class DriverControllerTestIT {
   void testCreateDriverAlreadyExists() {
     String existingDriverJson =
         """
-            { "email": "johndoe@example.com", "password": "password1", "name": "John Doe", "enabled": true }
+            { "email": "johndoe@example.com", "password": "password1", "name": "John Doe", "enabled": true,"type": "drivers" }
         """;
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -141,7 +141,7 @@ public class DriverControllerTestIT {
   void testUpdateDriverNotFound() {
     String updatedDriverJson =
         """
-            { "email": "joanadoe@example.com", "password": "newpassword", "name": "Joana Doe Updated", "enabled": true }
+            { "email": "joanadoe@example.com", "password": "newpassword", "name": "Joana Doe Updated", "enabled": true ,"type": "drivers"}
         """;
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -165,14 +165,13 @@ public class DriverControllerTestIT {
         .when()
         .patch("/api/v1/driver/" + savedDriver.getId() + "/cars/")
         .then()
-        // TODO: 201 <-> 405
         .statusCode(200);
   }
 
   @Test
   @DisplayName("Test remove car from driver")
   void testRemoveCarFromDriver() {
-    testAddCarToDriver(); // ensure car exists
+    testAddCarToDriver();
     RestAssuredMockMvc.given()
         .when()
         .delete("/api/v1/driver/" + savedDriver.getId() + "/cars/2")
