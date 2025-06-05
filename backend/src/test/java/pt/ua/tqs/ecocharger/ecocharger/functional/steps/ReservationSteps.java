@@ -224,5 +224,4 @@ public class ReservationSteps {
   public void verifyChargingSessionStarted() {
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("session-info")));
   }
-
 }
