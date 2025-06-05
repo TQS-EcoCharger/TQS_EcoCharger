@@ -11,7 +11,7 @@ public class ActiveSessionDTO {
     private Long carId;
     private String carName;
     private long durationMinutes;
-    private double currentBatteryLevel;
+    private double batteryPercentage;;
     private double energyDelivered;
     private double totalCost;
 }

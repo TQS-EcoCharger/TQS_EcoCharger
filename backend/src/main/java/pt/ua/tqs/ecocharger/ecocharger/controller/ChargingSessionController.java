@@ -56,4 +56,16 @@ public class ChargingSessionController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
+
+    @PostMapping("/{sessionId}/end")
+    public ResponseEntity<?> endCharging(@PathVariable Long sessionId) {
+        try {
+            ChargingSession endedSession = chargingSessionService.endSession(sessionId);
+            return ResponseEntity.ok(endedSession);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
 }

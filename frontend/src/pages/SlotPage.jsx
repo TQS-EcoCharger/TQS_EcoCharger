@@ -138,15 +138,15 @@ export default function SlotPage() {
             <p>Loading...</p>
           ) : session ? (
             <div>
-              <p><FaUser /> <strong>User:</strong> You</p>
-              <p><FaCar /> <strong>Car:</strong> {session.carName}</p>
-              <p><BsBatteryCharging /> <strong>Battery now:</strong> {session.currentBatteryLevel.toFixed(2)} kWh</p>
-              <p><FaBolt /> <strong>Energy delivered:</strong> {session.energyDelivered.toFixed(2)} kWh</p>
-              <p><FaClock /> <strong>Duration:</strong> {session.durationMinutes} min</p>
-              <p><FaBolt /> <strong>Total cost:</strong> €{session.totalCost.toFixed(2)}</p>
+              <p><FaCar /> <strong>Car:</strong> {session.carName || session.car.model} </p>
+              <p><BsBatteryCharging /> <strong>Battery now:</strong> {(session.currentBatteryLevel ?? 0).toFixed(2)}%</p>
+              <p><FaBolt /> <strong>Energy delivered:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
+              <p><FaClock /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
+              <p><FaBolt /> <strong>Total cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
+
 
               <div className={styles.modalButtons} style={{ marginTop: '2rem' }}>
-                <button onClick={handleEndCharging} className={styles.confirmButton}>
+                <button onClick={handleEndCharging} className={styles.confirmButton1}>
                   <FaPowerOff /> End Charging
                 </button>
               </div>

@@ -103,7 +103,7 @@ public class ReservationControllerTestIT {
             point,
             LocalDateTime.now().plusHours(1),
             LocalDateTime.now().plusHours(2),
-            ReservationStatus.CONFIRMED);
+            ReservationStatus.TO_BE_USED);
     reservationRepository.save(r);
 
     String json =

@@ -24,13 +24,12 @@ public class OTPServiceImpl implements OTPService {
     this.otpCodeRepository = otpCodeRepository;
   }
 
-
-public OTPCode generateOtp(Long reservationId) {
+  public OTPCode generateOtp(Long reservationId) {
     Reservation reservation = reservationRepository.findById(reservationId)
         .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
 
-    if (reservation.getStatus() != ReservationStatus.PENDING) {
-        throw new IllegalStateException("OTP can only be generated for PENDING reservations");
+    if (reservation.getStatus() != ReservationStatus.TO_BE_USED) {
+      throw new IllegalStateException("OTP can only be generated for TO_BE_USED reservations");
     }
 
     otpCodeRepository.findByReservation(reservation)
@@ -41,7 +40,7 @@ public OTPCode generateOtp(Long reservationId) {
 
     OTPCode newOtp = new OTPCode(null, code, expirationTime, reservation);
     return otpCodeRepository.save(newOtp);
-}
+  }
 
   public boolean validateOtp(String code, Reservation reservation) {
     Optional<OTPCode> otp = otpCodeRepository.findByCodeAndReservation(code, reservation);

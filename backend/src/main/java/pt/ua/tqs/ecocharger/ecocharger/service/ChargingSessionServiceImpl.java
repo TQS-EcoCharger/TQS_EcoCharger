@@ -8,6 +8,7 @@ import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
 import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
+import pt.ua.tqs.ecocharger.ecocharger.models.ReservationStatus;
 import pt.ua.tqs.ecocharger.ecocharger.repository.CarRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingSessionRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.OTPCodeRepository;
@@ -60,6 +61,7 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
         return new OtpValidationResponse(true, "OTP is valid.");
     }
 
+    @Override
     public ChargingSession startSessionWithOtp(Long chargingPointId, String otp, Long carId) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -77,6 +79,10 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new IllegalArgumentException("Car not found."));
 
+        // ✅ Mark reservation as USED
+        reservation.setStatus(ReservationStatus.USED);
+        reservationRepository.save(reservation);
+
         ChargingSession session = new ChargingSession();
         session.setReservation(reservation);
         session.setUser(reservation.getUser());
@@ -90,6 +96,8 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
     }
 
 
+
+    @Override
     public ChargingSession endSession(Long sessionId) {
         ChargingSession session = chargingSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("Session not found."));

@@ -73,39 +73,41 @@ public class ChargingPointServiceImpl implements ChargingPointService {
     return points.orElseThrow(() -> new RuntimeException("No points found for this station"));
   }
 
-  @Override
-  public ActiveSessionDTO getActiveSessionForPoint(Long pointId) {
-      ChargingPoint point = chargingPointRepository.findById(pointId)
-          .orElseThrow(() -> new IllegalArgumentException("Charging point not found"));
+@Override
+public ActiveSessionDTO getActiveSessionForPoint(Long pointId) {
+    ChargingPoint point = chargingPointRepository.findById(pointId)
+        .orElseThrow(() -> new IllegalArgumentException("Charging point not found"));
 
-      ChargingSession session = chargingSessionRepository.findByChargingPointAndEndTimeIsNull(point)
-          .orElseThrow(() -> new IllegalStateException("No active session on this point"));
+    ChargingSession session = chargingSessionRepository.findByChargingPointAndEndTimeIsNull(point)
+        .orElseThrow(() -> new IllegalStateException("No active session on this point"));
 
-      long durationMinutes = java.time.Duration.between(session.getStartTime(), LocalDateTime.now()).toMinutes();
+    long durationMinutes = java.time.Duration.between(session.getStartTime(), LocalDateTime.now()).toMinutes();
 
-      Car car = session.getCar();
-      double initialBatteryLevel = session.getInitialBatteryLevel(); // ✅ Use stored value
-      double batteryCapacity = car.getBatteryCapacity();
+    Car car = session.getCar();
+    double initialBatteryLevel = session.getInitialBatteryLevel();
+    double batteryCapacity = car.getBatteryCapacity();
 
-      double chargingRate = point.getChargingRateKWhPerMinute();
-      double energyDelivered = durationMinutes * chargingRate;
-      double estimatedBatteryLevel = Math.min(initialBatteryLevel + energyDelivered, batteryCapacity);
+    double chargingRate = point.getChargingRateKWhPerMinute();
+    double energyDelivered = durationMinutes * chargingRate;
+    double estimatedBatteryLevel = Math.min(initialBatteryLevel + energyDelivered, batteryCapacity);
+    double batteryPercentage = (estimatedBatteryLevel / batteryCapacity) * 100.0;
 
-      double costPerKWh = point.getPricePerKWh() != null ? point.getPricePerKWh() : 0.0;
-      double costPerMinute = point.getPricePerMinute() != null ? point.getPricePerMinute() : 0.0;
-      double totalCost = (energyDelivered * costPerKWh) + (durationMinutes * costPerMinute);
+    double costPerKWh = point.getPricePerKWh() != null ? point.getPricePerKWh() : 0.0;
+    double costPerMinute = point.getPricePerMinute() != null ? point.getPricePerMinute() : 0.0;
+    double totalCost = (energyDelivered * costPerKWh) + (durationMinutes * costPerMinute);
 
-      return new ActiveSessionDTO(
-          session.getId(),
-          point.getId(),
-          car.getId(),
-          car.getName(),
-          durationMinutes,
-          estimatedBatteryLevel,
-          energyDelivered,
-          totalCost
-      );
-  }
+    return new ActiveSessionDTO(
+        session.getId(),
+        point.getId(),
+        car.getId(),
+        car.getName(),
+        durationMinutes,
+        batteryPercentage,
+        energyDelivered,
+        totalCost
+    );
+}
+
 
 
 }

@@ -99,9 +99,9 @@ const handleGenerateOtp = async (reservationId) => {
           <div
             key={reservation.id}
             className={`${styles.card} ${
-              reservation.status === 'PENDING'
-                ? styles.pending
-                : reservation.status === 'CONFIRMED'
+              reservation.status === 'TO_BE_USED'
+                ? styles.TO_BE_USED
+                : reservation.status === 'USED'
                 ? styles.confirmed
                 : reservation.status === 'CANCELLED'
                 ? styles.cancelled
@@ -125,7 +125,7 @@ const handleGenerateOtp = async (reservationId) => {
               <p><strong>Location:</strong> {cs.address}, {cs.cityName}</p>
             )}
 
-            {reservation.status === 'PENDING' && (
+            {reservation.status === 'TO_BE_USED' && (
               <div style={{ marginTop: '10px' }}>
                 <button
                   className={styles.confirmButton}

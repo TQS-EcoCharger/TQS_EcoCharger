@@ -30,19 +30,16 @@ public class ReservationServiceImpl implements ReservationService {
       throw new IllegalArgumentException("Start time must be before end time");
     }
 
-    User user =
-        userRepository
-            .findById(request.getUserId())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+    User user = userRepository
+        .findById(request.getUserId())
+        .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-    ChargingPoint chargingPoint =
-        chargingPointRepository
-            .findById(request.getChargingPointId())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid charging point ID"));
+    ChargingPoint chargingPoint = chargingPointRepository
+        .findById(request.getChargingPointId())
+        .orElseThrow(() -> new IllegalArgumentException("Invalid charging point ID"));
 
-    boolean conflict =
-        reservationRepository.existsByChargingPointIdAndTimeOverlap(
-            request.getChargingPointId(), request.getStartTime(), request.getEndTime());
+    boolean conflict = reservationRepository.existsByChargingPointIdAndTimeOverlap(
+        request.getChargingPointId(), request.getStartTime(), request.getEndTime());
 
     if (conflict) {
       throw new IllegalStateException("Time slot already reserved for this charging point");
@@ -53,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
     reservation.setChargingPoint(chargingPoint);
     reservation.setStartTime(request.getStartTime());
     reservation.setEndTime(request.getEndTime());
-    reservation.setStatus(ReservationStatus.PENDING);
+    reservation.setStatus(ReservationStatus.TO_BE_USED);
 
     Reservation saved = reservationRepository.save(reservation);
 
@@ -119,8 +116,7 @@ public class ReservationServiceImpl implements ReservationService {
   @Override
   public List<ReservationResponseDTO> getActiveReservationsByChargingPointId(Long chargingPointId) {
     LocalDateTime now = LocalDateTime.now();
-    List<Reservation> reservations =
-        reservationRepository.findByChargingPointIdAndEndTimeAfter(chargingPointId, now);
+    List<Reservation> reservations = reservationRepository.findByChargingPointIdAndEndTimeAfter(chargingPointId, now);
 
     return reservations.stream().map(this::mapToDTO).collect(Collectors.toList());
   }
