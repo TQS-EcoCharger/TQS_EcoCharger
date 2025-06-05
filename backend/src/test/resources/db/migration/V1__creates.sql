@@ -130,8 +130,6 @@ CREATE TABLE IF NOT EXISTS charging_sessions (
     FOREIGN KEY (car_id) REFERENCES car(id)
 );
 
-
-
 CREATE TABLE IF NOT EXISTS otp_codes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(255) NOT NULL,
@@ -152,6 +150,8 @@ CREATE TABLE IF NOT EXISTS charging_sessions (
     total_cost DOUBLE,
     status VARCHAR(50) NOT NULL,
     initial_battery_level DOUBLE NOT NULL,
+    energy_delivered DOUBLE;
+    payment_intent_id VARCHAR(255);
     FOREIGN KEY (reservation_id) REFERENCES reservations(id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (charging_point_id) REFERENCES charging_points(id),

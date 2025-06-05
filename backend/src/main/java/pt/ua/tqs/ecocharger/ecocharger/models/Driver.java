@@ -3,6 +3,7 @@ package pt.ua.tqs.ecocharger.ecocharger.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,6 +25,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Driver extends User {
+
+  @Column(name = "balance", nullable = false)
+  private Double balance = 0.0;
 
   @OneToMany(fetch = FetchType.EAGER)
   @JoinTable(

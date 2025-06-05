@@ -1,22 +1,17 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
-import java.time.LocalDateTime;
-
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
-import pt.ua.tqs.ecocharger.ecocharger.models.Car;
-import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
-import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
-import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
-import pt.ua.tqs.ecocharger.ecocharger.models.ReservationStatus;
-import pt.ua.tqs.ecocharger.ecocharger.repository.CarRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingSessionRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.OTPCodeRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.ReservationRepository;
-import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingSessionService;
-import pt.ua.tqs.ecocharger.ecocharger.models.OTPCode;
-import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStatus;
+import pt.ua.tqs.ecocharger.ecocharger.models.*;
+import pt.ua.tqs.ecocharger.ecocharger.repository.*;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -26,23 +21,34 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
   private final ReservationRepository reservationRepository;
   private final ChargingSessionRepository chargingSessionRepository;
   private final CarRepository carRepository;
+  private final UserRepository userRepository;
+
+  @Value("${stripe.secret}")
+  private String stripeSecretKey;
+
+  @PostConstruct
+  public void init() {
+    Stripe.apiKey = stripeSecretKey;
+  }
 
   public ChargingSessionServiceImpl(
       OTPCodeRepository otpCodeRepository,
       ReservationRepository reservationRepository,
       ChargingSessionRepository chargingSessionRepository,
-      CarRepository carRepository) {
+      CarRepository carRepository,
+      UserRepository userRepository
+  ) {
     this.otpCodeRepository = otpCodeRepository;
     this.reservationRepository = reservationRepository;
     this.chargingSessionRepository = chargingSessionRepository;
     this.carRepository = carRepository;
+    this.userRepository = userRepository;
   }
 
   @Override
   public OtpValidationResponse validateOtp(String otp, Long chargingPointId) {
     LocalDateTime now = LocalDateTime.now();
 
-    System.out.println(now);
     Optional<Reservation> reservation =
         reservationRepository.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
             chargingPointId, now, now);
@@ -71,10 +77,7 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
     Reservation reservation =
         reservationRepository
             .findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(chargingPointId, now, now)
-            .orElseThrow(
-                () ->
-                    new IllegalArgumentException(
-                        "No active reservation found for this charging point."));
+            .orElseThrow(() -> new IllegalArgumentException("No active reservation found."));
 
     OTPCode code =
         otpCodeRepository
@@ -130,25 +133,46 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
 
     double chargingRateKWhPerMinute = chargingPoint.getChargingRateKWhPerMinute();
     if (chargingRateKWhPerMinute <= 0) {
-      throw new IllegalStateException("Invalid charging rate for charging point.");
+      throw new IllegalStateException("Invalid charging rate.");
     }
 
     double chargedEnergy = durationMinutes * chargingRateKWhPerMinute;
     double newBatteryLevel = Math.min(initialBattery + chargedEnergy, capacity);
     double actualEnergyDelivered = newBatteryLevel - initialBattery;
 
-    double costPerKWh =
-        chargingPoint.getPricePerKWh() != null ? chargingPoint.getPricePerKWh() : 0.0;
-    double costPerMinute =
-        chargingPoint.getPricePerMinute() != null ? chargingPoint.getPricePerMinute() : 0.0;
+    double costPerKWh = Optional.ofNullable(chargingPoint.getPricePerKWh()).orElse(0.0);
+    double costPerMinute = Optional.ofNullable(chargingPoint.getPricePerMinute()).orElse(0.0);
 
     double totalCost = (actualEnergyDelivered * costPerKWh) + (durationMinutes * costPerMinute);
-
+    session.setEnergyDelivered(actualEnergyDelivered);
     session.setTotalCost(totalCost);
     session.setStatus(ChargingStatus.COMPLETED);
 
     car.setBatteryLevel(newBatteryLevel);
     carRepository.save(car);
+
+    try {
+      long amountCents = Math.round(totalCost * 100);
+
+      PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+          .setAmount(amountCents)
+          .setCurrency("eur")
+          .setDescription("EV Charging session - EcoCharger")
+          .setReceiptEmail(session.getUser().getEmail())
+          .build();
+
+      PaymentIntent intent = PaymentIntent.create(params);
+      session.setPaymentIntentId(intent.getId());
+
+      // Update driver balance
+      if (session.getUser() instanceof Driver driver) {
+        driver.setBalance(driver.getBalance() + totalCost);
+        userRepository.save(driver);
+      }
+
+    } catch (StripeException e) {
+      throw new IllegalStateException("Payment failed: " + e.getMessage());
+    }
 
     return chargingSessionRepository.save(session);
   }
