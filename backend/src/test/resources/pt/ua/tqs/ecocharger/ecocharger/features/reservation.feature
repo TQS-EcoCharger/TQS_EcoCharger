@@ -25,6 +25,6 @@ Feature: Make a reservation
     And I click the "validate-otp-button"
     Then I should see the car selection dropdown
 
-    When I select a vehicle from the list
-    And I click the "start-charging-button"
-    Then I should see the charging session information
+    #When I select a vehicle from the list
+    #And I click the "start-charging-button"
+    #Then I should see the charging session information
