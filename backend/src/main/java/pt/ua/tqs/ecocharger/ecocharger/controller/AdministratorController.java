@@ -24,14 +24,15 @@ public class AdministratorController {
   public AdministratorController(AdministratorService administratorService) {
     this.administratorService = administratorService;
   }
-    
+
   @Operation(summary = "Create a new administrator")
   @ApiResponse(
       responseCode = "200",
       description = "Administrator created successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = Administrator.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = Administrator.class)))
   @PostMapping
   public ResponseEntity<Administrator> createAdministrator(@RequestBody Administrator admin) {
     return ResponseEntity.ok(
@@ -43,9 +44,10 @@ public class AdministratorController {
   @ApiResponse(
       responseCode = "200",
       description = "Charging station updated successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ChargingStation.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingStation.class)))
   @PutMapping("/stations/{stationId}")
   public ResponseEntity<ChargingStation> updateStation(
       @Parameter(description = "ID of the charging station to update") @PathVariable Long stationId,
@@ -53,15 +55,15 @@ public class AdministratorController {
     station.setId(stationId);
     return ResponseEntity.ok(administratorService.updateChargingStation(station));
   }
-  
 
   @Operation(summary = "Update a charging point")
   @ApiResponse(
       responseCode = "200",
       description = "Charging point updated successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ChargingPoint.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingPoint.class)))
   @PutMapping("/stations/{stationId}/points/{pointId}")
   public ResponseEntity<ChargingPoint> updatePoint(
       @RequestBody ChargingPoint point,
@@ -72,19 +74,19 @@ public class AdministratorController {
     point.setChargingStation(station);
     return ResponseEntity.ok(administratorService.updateChargingPoint(point, pointId));
   }
-  
 
   @Operation(summary = "Delete a charging station")
   @ApiResponse(
       responseCode = "200",
       description = "Charging station deleted successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ChargingStation.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingStation.class)))
   @DeleteMapping("/stations/{stationId}")
   public ResponseEntity<ChargingStation> deleteStation(
-      @Parameter(description = "ID of the charging station to delete") @PathVariable Long stationId) {
+      @Parameter(description = "ID of the charging station to delete") @PathVariable
+          Long stationId) {
     return ResponseEntity.ok(administratorService.deleteChargingStation(stationId));
   }
-  
 }
