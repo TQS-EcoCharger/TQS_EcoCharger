@@ -151,7 +151,7 @@ export default function ReservationsPage() {
 
                     <p>
                       <FaStopwatch className={styles.inlineIcon} />
-                      <strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}
+                      <strong>kWh per minute:</strong> {cp?.chargingRateKWhPerMinute?.toFixed(2) ?? 'N/A'}
                     </p>
 
                     <p>
@@ -160,7 +160,6 @@ export default function ReservationsPage() {
                       ) : (
                         <FaTimes className={styles.unavailableIcon} />
                       )}
-                      <strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}
                     </p>
 
                     {cs && (

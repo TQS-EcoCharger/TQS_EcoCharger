@@ -104,7 +104,7 @@ export default function SlotPage() {
   const handleStartCharging = async () => {
     const otpCode = otp.join('');
     try {
-      const res = await axios.post(`${CONFIG.API_URL}v1/sessions`, {
+      await axios.post(`${CONFIG.API_URL}v1/sessions`, {
         otp: otpCode,
         carId: parseInt(selectedCarOption?.value),
         chargingPointId: parseInt(chargingPointId)
@@ -112,7 +112,7 @@ export default function SlotPage() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setSession(res.data);
+      await fetchSession();
       setMessage('');
       setOtp(Array(6).fill(''));
       setCars([]);
