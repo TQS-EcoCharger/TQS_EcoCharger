@@ -145,15 +145,16 @@ export default function SlotPage() {
           {loading ? (
             <p id="loading">Loading...</p>
           ) : session ? (
-            <div className={styles.sessionCard} id="session-info">
-              <ChargingRingWithBubbles batteryPercentage={(session.batteryPercentage ?? 0).toFixed(2)} />
+            <div className={styles.comparisonContainer} id="session-container">
+                <div className={styles.sessionCard} id="session-info">
+                  <ChargingRingWithBubbles batteryPercentage={session.batteryPercentage.toFixed(2)} />
 
-                <h2>Charging Slot #{chargingPointId}</h2>
-                <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
-                <p><BsBatteryCharging className={styles.sessionIcon} /> <strong>Battery:</strong> {(session.batteryPercentage ?? 0).toFixed(2)}%</p>
-                <p><FaBolt className={styles.sessionIcon} /> <strong>Energy:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
-                <p><FaClock className={styles.sessionIcon} /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
-                <p><FaBolt className={styles.sessionIcon} /> <strong>Cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
+                  <h2>Charging Slot #{chargingPointId}</h2>
+                  <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
+                  <p><BsBatteryCharging className={styles.sessionIcon} /> <strong>Battery:</strong> {(session.batteryPercentage ?? 0).toFixed(2)}%</p>
+                  <p><FaBolt className={styles.sessionIcon} /> <strong>Energy:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
+                  <p><FaClock className={styles.sessionIcon} /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
+                  <p><FaBolt className={styles.sessionIcon} /> <strong>Cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
 
                   <button
                     onClick={handleEndCharging}
@@ -171,7 +172,7 @@ export default function SlotPage() {
                   <p>Price of fuel needed: {(1.65 * (13.8 * (session.energyDelivered * 100 / curCar.consumption)/ 100)).toFixed(2)}€</p>
                   <p>Difference: {-(session.totalCost - (1.65 * (13.8 * (session.energyDelivered * 100 / curCar.consumption)/ 100))).toFixed(2)}€</p>
                 </div>
-              </div>
+            </div>
 
           ) : (
             <div id="no-session-info">
