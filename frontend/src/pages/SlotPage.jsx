@@ -8,6 +8,7 @@ import Select from 'react-select';
 import { FaCar, FaClock, FaBolt, FaPowerOff, FaUser, FaKey } from 'react-icons/fa';
 import { BsBatteryCharging } from 'react-icons/bs';
 import Sidebar from '../components/Sidebar';
+import ChargingRingWithBubbles from '../components/ChargingRingWithBubbles';
 
 export default function SlotPage() {
   const { id: chargingPointId } = useParams();
@@ -136,6 +137,8 @@ export default function SlotPage() {
             <p id="loading">Loading...</p>
           ) : session ? (
             <div className={styles.sessionCard} id="session-info">
+              <ChargingRingWithBubbles batteryPercentage={session.batteryPercentage.toFixed(2)} />
+
               <h2>Charging Slot #{chargingPointId}</h2>
               <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
               <p><BsBatteryCharging className={styles.sessionIcon} /> <strong>Battery:</strong> {(session.batteryPercentage ?? 0).toFixed(2)}%</p>

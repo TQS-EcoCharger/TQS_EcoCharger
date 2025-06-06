@@ -1,22 +1,12 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Service;
-
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
-import pt.ua.tqs.ecocharger.ecocharger.models.Car;
-import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
-import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
-import pt.ua.tqs.ecocharger.ecocharger.models.Reservation;
-import pt.ua.tqs.ecocharger.ecocharger.models.ReservationStatus;
-import pt.ua.tqs.ecocharger.ecocharger.repository.CarRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingSessionRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.OTPCodeRepository;
-import pt.ua.tqs.ecocharger.ecocharger.repository.ReservationRepository;
+import pt.ua.tqs.ecocharger.ecocharger.models.*;
+import pt.ua.tqs.ecocharger.ecocharger.repository.*;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingSessionService;
-import pt.ua.tqs.ecocharger.ecocharger.models.OTPCode;
-import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStatus;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -26,23 +16,26 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
   private final ReservationRepository reservationRepository;
   private final ChargingSessionRepository chargingSessionRepository;
   private final CarRepository carRepository;
+  private final UserRepository userRepository;
 
   public ChargingSessionServiceImpl(
       OTPCodeRepository otpCodeRepository,
       ReservationRepository reservationRepository,
       ChargingSessionRepository chargingSessionRepository,
-      CarRepository carRepository) {
+      CarRepository carRepository,
+      UserRepository userRepository
+  ) {
     this.otpCodeRepository = otpCodeRepository;
     this.reservationRepository = reservationRepository;
     this.chargingSessionRepository = chargingSessionRepository;
     this.carRepository = carRepository;
+    this.userRepository = userRepository;
   }
 
   @Override
   public OtpValidationResponse validateOtp(String otp, Long chargingPointId) {
     LocalDateTime now = LocalDateTime.now();
 
-    System.out.println(now);
     Optional<Reservation> reservation =
         reservationRepository.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
             chargingPointId, now, now);
@@ -71,10 +64,7 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
     Reservation reservation =
         reservationRepository
             .findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(chargingPointId, now, now)
-            .orElseThrow(
-                () ->
-                    new IllegalArgumentException(
-                        "No active reservation found for this charging point."));
+            .orElseThrow(() -> new IllegalArgumentException("No active reservation found."));
 
     OTPCode code =
         otpCodeRepository
@@ -85,10 +75,8 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
       throw new IllegalArgumentException("OTP expired.");
     }
 
-    Car car =
-        carRepository
-            .findById(carId)
-            .orElseThrow(() -> new IllegalArgumentException("Car not found."));
+    Car car = carRepository.findById(carId)
+        .orElseThrow(() -> new IllegalArgumentException("Car not found."));
 
     reservation.setStatus(ReservationStatus.USED);
     reservationRepository.save(reservation);
@@ -107,10 +95,8 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
 
   @Override
   public ChargingSession endSession(Long sessionId) {
-    ChargingSession session =
-        chargingSessionRepository
-            .findById(sessionId)
-            .orElseThrow(() -> new IllegalArgumentException("Session not found."));
+    ChargingSession session = chargingSessionRepository.findById(sessionId)
+        .orElseThrow(() -> new IllegalArgumentException("Session not found."));
 
     if (session.getEndTime() != null) {
       throw new IllegalStateException("Session already ended.");
@@ -130,25 +116,32 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
 
     double chargingRateKWhPerMinute = chargingPoint.getChargingRateKWhPerMinute();
     if (chargingRateKWhPerMinute <= 0) {
-      throw new IllegalStateException("Invalid charging rate for charging point.");
+      throw new IllegalStateException("Invalid charging rate.");
     }
 
     double chargedEnergy = durationMinutes * chargingRateKWhPerMinute;
     double newBatteryLevel = Math.min(initialBattery + chargedEnergy, capacity);
     double actualEnergyDelivered = newBatteryLevel - initialBattery;
 
-    double costPerKWh =
-        chargingPoint.getPricePerKWh() != null ? chargingPoint.getPricePerKWh() : 0.0;
-    double costPerMinute =
-        chargingPoint.getPricePerMinute() != null ? chargingPoint.getPricePerMinute() : 0.0;
+    double costPerKWh = Optional.ofNullable(chargingPoint.getPricePerKWh()).orElse(0.0);
+    double costPerMinute = Optional.ofNullable(chargingPoint.getPricePerMinute()).orElse(0.0);
 
     double totalCost = (actualEnergyDelivered * costPerKWh) + (durationMinutes * costPerMinute);
-
+    session.setEnergyDelivered(actualEnergyDelivered);
     session.setTotalCost(totalCost);
     session.setStatus(ChargingStatus.COMPLETED);
 
     car.setBatteryLevel(newBatteryLevel);
     carRepository.save(car);
+
+    if (session.getUser() instanceof Driver driver) {
+      double newBalance = driver.getBalance() - totalCost;
+      if (newBalance < 0) {
+        throw new IllegalStateException("Insufficient balance to complete the session, please recharge your balance.");
+      }
+      driver.setBalance(newBalance);
+      userRepository.save(driver);
+    }
 
     return chargingSessionRepository.save(session);
   }
