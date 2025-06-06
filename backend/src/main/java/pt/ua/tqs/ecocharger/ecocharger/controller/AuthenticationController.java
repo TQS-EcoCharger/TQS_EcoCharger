@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.LoginRequest;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
@@ -14,6 +18,9 @@ import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(
+    name = "Authentication",
+    description = "Endpoints for user login, registration, and current user info")
 public class AuthenticationController {
 
   private final AuthenticationService authService;
@@ -22,6 +29,9 @@ public class AuthenticationController {
     this.authService = authService;
   }
 
+  @Operation(
+      summary = "User login",
+      description = "Authenticates a user with email and password, returns a token if successful")
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest request) {
     AuthResultDTO result = authService.authenticate(request.getEmail(), request.getPassword());
@@ -33,18 +43,24 @@ public class AuthenticationController {
     return ResponseEntity.ok(result);
   }
 
+  @Operation(
+      summary = "User registration",
+      description = "Registers a new user with email, password, and name")
   @PostMapping("/register")
   public ResponseEntity<Object> register(@RequestBody Map<String, String> user) {
     String email = user.get("email");
     String password = user.get("password");
     String name = user.get("name");
+
     if (email == null || password == null || name == null) {
       AuthResultDTO result = new AuthResultDTO(false, "Missing required fields", null, null);
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getMessage());
     }
+
     email = email.strip();
     password = password.strip();
     name = name.strip();
+
     AuthResultDTO result = authService.register(email, password, name);
 
     if (!result.isSuccess()) {
@@ -54,9 +70,15 @@ public class AuthenticationController {
     return ResponseEntity.ok(result);
   }
 
+  @Operation(
+      summary = "Get current user",
+      description = "Retrieves the current authenticated user based on JWT token")
   @GetMapping("/me")
-  public ResponseEntity<Object> getCurrentUser(@RequestHeader("Authorization") String token) {
+  public ResponseEntity<Object> getCurrentUser(
+      @Parameter(description = "Bearer token obtained at login") @RequestHeader("Authorization")
+          String token) {
     String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+
     try {
       User currentUser = authService.getCurrentUser(jwtToken);
       return ResponseEntity.ok(currentUser);

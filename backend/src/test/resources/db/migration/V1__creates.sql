@@ -14,10 +14,6 @@ CREATE TABLE IF NOT EXISTS administrators (
     FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS clients (
-    id BIGINT PRIMARY KEY,
-    FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
-);
 
 CREATE TABLE IF NOT EXISTS drivers (
     id BIGINT PRIMARY KEY,
@@ -162,14 +158,10 @@ CREATE TABLE IF NOT EXISTS charging_sessions (
 -- USERS
 INSERT INTO users (email, password, name, enabled, user_type)
 VALUES
-('john@example.com', '123456', 'John Doe', true, 'clients'),
-('alice@example.com', 'alicepass', 'Alice', true, 'clients'),
+('john@example.com', '123456', 'John Doe', true, 'drivers'),
+('alice@example.com', 'alicepass', 'Alice', true, 'drivers'),
 ('bob@example.com', 'bobpass', 'Bob', false, 'drivers');
 
--- CLIENTS
-INSERT INTO clients (id)
-SELECT id FROM users WHERE email IN ('john@example.com', 'alice@example.com');
 
--- DRIVER
 INSERT INTO drivers (id)
-SELECT id FROM users WHERE email = 'bob@example.com';
+SELECT id FROM users WHERE email IN ('john@example.com', 'alice@example.com', 'bob@example.com');
