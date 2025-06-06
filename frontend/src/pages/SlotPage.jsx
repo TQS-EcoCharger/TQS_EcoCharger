@@ -147,7 +147,7 @@ export default function SlotPage() {
           ) : session ? (
             <div className={styles.comparisonContainer} id="session-container">
               <div className={styles.sessionCard} id="session-info">
-                <ChargingRingWithBubbles batteryPercentage={session.batteryPercentage.toFixed(2)} />
+                <ChargingRingWithBubbles batteryPercentage={(session.batteryPercentage ?? 0).toFixed(2)} />
 
                 <h2>Charging Slot #{chargingPointId}</h2>
                 <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
