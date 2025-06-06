@@ -38,6 +38,11 @@ public class DriverServiceImpl implements DriverService {
   }
 
   @Override
+  public boolean driverExists(Long id) {
+    return driverRepository.existsById(id);
+  }
+
+  @Override
   public Driver createDriver(Driver driver) {
     Optional<Driver> existingDriver = driverRepository.findByEmail(driver.getEmail());
     if (existingDriver.isPresent()) {
