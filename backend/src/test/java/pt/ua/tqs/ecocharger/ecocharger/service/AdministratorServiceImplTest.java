@@ -113,7 +113,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-20")
+  @Requirement("ET-21")
   @DisplayName("Successfully delete a charging station")
   void testDeleteChargingStationSuccess() {
     Administrator admin = new Administrator();
@@ -135,7 +135,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-20")
+  @Requirement("ET-21")
   @DisplayName("Fail to delete charging station: not found")
   void testDeleteChargingStationNotFound() {
     when(chargingStationRepository.findById(1L)).thenReturn(Optional.empty());
@@ -147,7 +147,7 @@ class AdministratorServiceImplTest {
   }
 
   @Test
-  @Requirement("ET-20")
+  @Requirement("ET-21")
   @DisplayName("Fail to delete charging station: admin not found")
   void testDeleteChargingStationAdminNotFound() {
     Administrator admin = new Administrator();

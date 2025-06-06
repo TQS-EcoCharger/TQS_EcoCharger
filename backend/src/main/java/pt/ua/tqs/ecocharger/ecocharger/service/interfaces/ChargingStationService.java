@@ -11,4 +11,6 @@ public interface ChargingStationService {
   void deleteStation(Long id);
 
   List<ChargingStation> getAllStations();
+
+  ChargingStation updateStation(Long id, ChargingStation station);
 }

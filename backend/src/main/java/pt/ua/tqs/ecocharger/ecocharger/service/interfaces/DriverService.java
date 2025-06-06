@@ -9,6 +9,8 @@ public interface DriverService {
 
   List<Driver> getAllDrivers();
 
+  boolean driverExists(Long id);
+
   Driver getDriverById(Long id);
 
   Driver saveDriver(Driver driver);

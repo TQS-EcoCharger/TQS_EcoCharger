@@ -7,6 +7,7 @@ import CONFIG from '../config';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
+import { useUser } from '../context/UserProvider.jsx';
 
 export default function Sidebar() {
   const { userType, token } = useUser();

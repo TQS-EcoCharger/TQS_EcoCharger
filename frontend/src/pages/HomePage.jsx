@@ -13,6 +13,7 @@ import { FaRoad, FaCity } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
+import { useUser } from "../context/UserProvider.jsx";
 import { format } from 'date-fns'; // Place at top with other imports
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +23,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Chargingicon from '../../public/ChargingStation.png';
-import { useUser } from '../context/UserContext';
 import ModalAddCharging from '../components/ModalAddCharging';
 import ModalEditCharging from '../components/ModalEditCharging';
 import ModalChargingPoints from '../components/ModalChargingPoints';
@@ -40,21 +40,21 @@ const customIcon = new L.Icon({
 
 export default function HomePage() {
   const [stations, setStations] = useState([]);
+  const [currentReservations, setCurrentReservations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [message, setMessage] = useState('');
-  const [setUserLocation] = useState(null);
-  const [currentReservations, setCurrentReservations] = useState([]);
-
+  const [userLocation, setUserLocation] = useState(null);
+  const { userType } = useUser();
+  const me = JSON.parse(localStorage.getItem('me')) || {};
 
   const [existingReservations, setExistingReservations] = useState([]);
 
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const { userType } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddPointModal, setShowAddPointModal] = useState(false);
@@ -98,7 +98,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) return userLocation;
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
@@ -207,6 +207,28 @@ export default function HomePage() {
       });
   };
 
+  const handleRemoveButtonClick = () => {
+    if (!selectedStation) {
+      alert("Select a charging station to remove.");
+      return;
+    }
+
+    if (window.confirm(`Are you sure you want to remove the station: ${selectedStation.cityName}?`)) {
+      axios.delete(`${CONFIG.API_URL}v1/admin/stations/${selectedStation.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(() => {
+          setStations((prev) => prev.filter((s) => s.id !== selectedStation.id));
+          setSelectedStation(null);
+          alert("Charging station removed successfully.");
+        })
+        .catch((error) => {
+          console.error("Failed to remove station:", error);
+          alert("Failed to remove the charging station.");
+        });
+    }
+  }
+
   return (
     <div className={styles.page} id="homepage">
       <Sidebar />
@@ -253,7 +275,7 @@ export default function HomePage() {
                       ) : (
                         <p className={styles.noConnectors}>No connectors available.</p>
                       )}
-
+                      {point.available ? (
                       <div className={styles.buttonRow}>
                         <ChargingPointReservations reservations={currentReservations} chargingPointId={point.id} />
                         <button
@@ -278,17 +300,25 @@ export default function HomePage() {
                           Reserve
                         </button>
                       </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   ))
-                ) : (
+                ) : (userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id))) ? (
                   <div className={styles.addChargingPointBox} onClick={() => setShowAddPointModal(true)}>
                     <span className={styles.addIcon}>+</span>
                     <p>Add Charging Point</p>
                   </div>
+                ) : (
+                  <div className={styles.addChargingPointBox}>
+                    <p className={styles.noChargingPoints}>No charging points available.</p>
+                  </div>
                 )}
-                {userType === 'administrator' && (
+                {userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id)) && (
                   <>
                     <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
+                    <button className={styles.editBtn} onClick={handleRemoveButtonClick}>Remove</button>
                     {selectedStation.chargingPoints?.length > 0 && (
                       <button className={styles.editBtn} onClick={() => setShowAddPointModal(true)}>+ Add Point</button>
                     )}
@@ -314,9 +344,9 @@ export default function HomePage() {
                   eventHandlers={{
                     click: () => setSelectedStation(station),
                     add: (e) => {
-                      const markerEl = e.target.getElement(); // DOM element
+                      const markerEl = e.target.getElement(); 
                       if (markerEl) {
-                        markerEl.setAttribute("id", `marker-${index + 1}`); // indexado a partir de 1
+                        markerEl.setAttribute("id", `marker-${index + 1}`); 
                       }
                     }
                   }}
@@ -332,9 +362,7 @@ export default function HomePage() {
               ))}
 
           </MapContainer>
-        </div>
-
-        {userType === 'administrator' && (
+          {userType === 'administrator' && (
           <button
             id="add-charging-station-button"
             className={styles.addStationBtn}
@@ -343,6 +371,7 @@ export default function HomePage() {
             + Add Charging Station
           </button>
         )}
+        </div>
 
         {showModal && (
           <ModalAddCharging onClose={() => setShowModal(false)} onSuccess={handleNewStation} />
