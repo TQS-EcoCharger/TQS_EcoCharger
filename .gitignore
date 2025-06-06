@@ -40,3 +40,4 @@ backend/allure-results/
 ### Sensitive Information ###
 .env
 **/application.properties
+**/application-it.properties

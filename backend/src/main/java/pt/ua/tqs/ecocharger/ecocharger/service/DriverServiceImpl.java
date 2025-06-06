@@ -134,4 +134,11 @@ public class DriverServiceImpl implements DriverService {
     }
     driverRepository.deleteById(id);
   }
+
+  @Override
+  public Driver addBalanceToDriver(Long id, Double amount) throws NotFoundException {
+    Driver driver = getDriverById(id);
+    driver.setBalance(driver.getBalance() + amount);
+    return driverRepository.save(driver);
+  }
 }

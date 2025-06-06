@@ -49,4 +49,10 @@ public class ChargingSession {
 
   @Column(name = "initial_battery_level", nullable = false)
   private Double initialBatteryLevel;
+
+  @Column(name = "energy_delivered")
+  private Double energyDelivered;
+
+  @Column(name = "payment_intent_id")
+  private String paymentIntentId;
 }

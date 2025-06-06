@@ -24,7 +24,7 @@ const LoginPage = () => {
       });
 
       console.log("Login successful:", response.data);
-      login(response.data.token, response.data.userType);
+      login(response.data.token, response.data.userType, response.data.id);
       navigate("/home");
     
 
