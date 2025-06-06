@@ -33,18 +33,8 @@ INSERT INTO driver_cars (driver_id, cars_id) VALUES
 (2, 4);
 
 
--- Estações de carregamento adicionais
+-- Estações de carregamento
 INSERT INTO charging_stations (municipality, address, latitude, longitude, countryCode, country) VALUES
-('Porto', 'Rua de Santa Catarina, 4000-447 Porto', 41.14961, -8.60747, 'PT', 'Portugal'),
-('Porto', 'Rua das Flores, 4050-265 Porto', 41.14141, -8.61107, 'PT', 'Portugal'),
-('Lisboa', 'Praça do Comércio, 1100-148 Lisboa', 38.70775, -9.13659, 'PT', 'Portugal'),
-('Lisboa', 'Avenida da Liberdade, 1250-140 Lisboa', 38.72057, -9.14584, 'PT', 'Portugal'),
-('Coimbra', 'Rua Ferreira Borges, 3000-179 Coimbra', 40.21010, -8.42920, 'PT', 'Portugal'),
-('Faro', 'Rua Dom Francisco Gomes, 8000-262 Faro', 37.01530, -7.93550, 'PT', 'Portugal'),
-('Braga', 'Avenida Central, 4710-229 Braga', 41.54877, -8.42761, 'PT', 'Portugal'),
-('Setúbal', 'Avenida Luísa Todi, 2900-461 Setúbal', 38.52357, -8.89267, 'PT', 'Portugal'),
-('Leiria', 'Rua Capitão Mouzinho de Albuquerque, 2400-193 Leiria', 39.74349, -8.80768, 'PT', 'Portugal'),
-('Aveiro', 'Estrada de São Bernardo, 3810-174 Aveiro', 40.63132, -8.64325, 'PT', 'Portugal'),
 ('Aveiro', 'Rua do Batalhão de Caçadores 10 10, 3810-064 Aveiro', 40.641029, -8.652739, 'PT', 'Portugal'),
 ('Aveiro', 'Rua Batalhão Caçadores Dez -, 3810-064 Aveiro', 40.641029, -8.652738, 'PT', 'Portugal'),
 ('Aveiro', 'Rua Príncipe Perfeito, 3810-151 Aveiro', 40.639324, -8.651682, 'PT', 'Portugal'),
