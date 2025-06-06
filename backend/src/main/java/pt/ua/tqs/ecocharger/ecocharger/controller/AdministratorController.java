@@ -2,6 +2,9 @@ package pt.ua.tqs.ecocharger.ecocharger.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +25,14 @@ public class AdministratorController {
     this.administratorService = administratorService;
   }
 
-  @Operation(
-      summary = "Create a new administrator",
-      description = "Registers a new administrator with email, password, and name.")
+  @Operation(summary = "Create a new administrator")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Administrator created successfully",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = Administrator.class)))
   @PostMapping
   public ResponseEntity<Administrator> createAdministrator(@RequestBody Administrator admin) {
     return ResponseEntity.ok(
@@ -32,9 +40,14 @@ public class AdministratorController {
             admin.getEmail(), admin.getPassword(), admin.getName()));
   }
 
-  @Operation(
-      summary = "Update a charging station",
-      description = "Updates an existing charging station identified by its ID.")
+  @Operation(summary = "Update a charging station")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Charging station updated successfully",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingStation.class)))
   @PutMapping("/stations/{stationId}")
   public ResponseEntity<ChargingStation> updateStation(
       @Parameter(description = "ID of the charging station to update") @PathVariable Long stationId,
@@ -43,9 +56,14 @@ public class AdministratorController {
     return ResponseEntity.ok(administratorService.updateChargingStation(station));
   }
 
-  @Operation(
-      summary = "Update a charging point",
-      description = "Updates a specific charging point within a station.")
+  @Operation(summary = "Update a charging point")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Charging point updated successfully",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingPoint.class)))
   @PutMapping("/stations/{stationId}/points/{pointId}")
   public ResponseEntity<ChargingPoint> updatePoint(
       @RequestBody ChargingPoint point,
@@ -57,9 +75,14 @@ public class AdministratorController {
     return ResponseEntity.ok(administratorService.updateChargingPoint(point, pointId));
   }
 
-  @Operation(
-      summary = "Delete a charging station",
-      description = "Deletes a charging station by ID and removes its related charging points.")
+  @Operation(summary = "Delete a charging station")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Charging station deleted successfully",
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingStation.class)))
   @DeleteMapping("/stations/{stationId}")
   public ResponseEntity<ChargingStation> deleteStation(
       @Parameter(description = "ID of the charging station to delete") @PathVariable

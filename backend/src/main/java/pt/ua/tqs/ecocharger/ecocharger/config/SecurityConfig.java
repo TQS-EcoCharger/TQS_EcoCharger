@@ -35,7 +35,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/auth/**")
+                auth.requestMatchers("/api/auth/**", "/api/v1/chargingStations/**")
                     .permitAll()
                     .requestMatchers("/swagger-ui/**", "/api-docs/**", "/actuator/**")
                     .permitAll()
