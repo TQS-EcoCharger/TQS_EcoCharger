@@ -74,7 +74,7 @@ class DriverControllerTestIT {
   void testCreateDriver() {
     String newDriverJson =
         """
-            { "email": "marcelorodriguez@example.com", "password": "password6", "name": "Marcelo Rodriguez", "enabled": true,"type": "drivers" }
+            { "email": "marcelorodriguez@example.com", "password": "password6", "name": "Marcelo Rodriguez", "enabled": true,"type": "drivers" , "balance": 0.0}
         """;
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -91,7 +91,7 @@ class DriverControllerTestIT {
   void testUpdateDriver() {
     String updatedDriverJson =
         """
-            { "email": "johndoe@example.com", "password": "newpassword", "name": "John Doe Updated", "enabled": true,"type": "drivers" }
+            { "email": "johndoe@example.com", "password": "newpassword", "name": "John Doe Updated", "enabled": true,"type": "drivers" , "balance": 4.0}
         """;
     RestAssuredMockMvc.given()
         .contentType("application/json")

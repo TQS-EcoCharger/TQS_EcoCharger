@@ -146,3 +146,7 @@ VALUES (8, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
 
 INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
 VALUES (9, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
+
+
+UPDATE drivers SET balance = 50.0 WHERE id = 1; 
+UPDATE drivers SET balance = 35.5 WHERE id = 2; 
