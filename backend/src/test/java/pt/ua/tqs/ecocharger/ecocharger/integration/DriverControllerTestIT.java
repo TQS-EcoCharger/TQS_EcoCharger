@@ -38,7 +38,6 @@ class DriverControllerTestIT {
     savedDriver =
         driverRepository.save(
             new Driver(null, "johndoe@example.com", "password1", "John Doe", true));
-    System.out.println("Saved driver: " + driverRepository.findAll());
     RestAssuredMockMvc.mockMvc(mockMvc);
   }
 
