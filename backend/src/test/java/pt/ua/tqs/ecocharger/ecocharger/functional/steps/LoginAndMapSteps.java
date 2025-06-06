@@ -54,8 +54,8 @@ public class LoginAndMapSteps {
   @When("the user clicks on a marker")
   public void user_clicks_on_marker() {
     wait.until(
-        ExpectedConditions.numberOfElementsToBeMoreThan(By.className("leaflet-marker-icon"), 2));
-    WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(2);
+        ExpectedConditions.numberOfElementsToBeMoreThan(By.className("leaflet-marker-icon"), 1));
+    WebElement marker = driver.findElements(By.className("leaflet-marker-icon")).get(4);
     marker.click();
   }
 }
