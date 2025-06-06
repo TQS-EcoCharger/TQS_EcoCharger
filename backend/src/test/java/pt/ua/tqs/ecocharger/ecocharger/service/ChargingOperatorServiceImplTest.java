@@ -1,10 +1,12 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,27 +31,25 @@ public class ChargingOperatorServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
         chargingOperator = new ChargingOperator(1L, "testOperator", "password", "Test Operator", true);
-        when(chargingOperatorRepository.findById(1L)).thenReturn(Optional.of(chargingOperator));
-        when(chargingOperatorRepository.existsById(1L)).thenReturn(true);
-
     }
 
     @Test
     @DisplayName("Test getting Charging Operator by ID")
     public void testGetChargingOperatorById() {
+        when(chargingOperatorRepository.findById(1L)).thenReturn(Optional.of(chargingOperator));
         ChargingOperator result = chargingOperatorService.getChargingOperatorById(1L);
-        assert result != null;
-        assert result.getId().equals(1L);
-        assert result.getName().equals("Test Operator");
+        assertNotEquals(null, result);
+        assertEquals(1L, result.getId());
+        assertEquals("Test Operator", result.getName());
     }
 
     @Test
     @DisplayName("Test finding out if id exists")
     public void testChargingOperatorExists() {
+        when(chargingOperatorRepository.existsById(1L)).thenReturn(true);
         boolean exists = chargingOperatorService.chargingOperatorExists(1L);
-        assert exists;
+        assertTrue(exists);
         verify(chargingOperatorRepository, times(1)).existsById(1L);
     }
     
