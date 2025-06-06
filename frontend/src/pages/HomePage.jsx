@@ -13,16 +13,20 @@ import { FaRoad, FaCity } from 'react-icons/fa';
 import { BsPlug, BsCheckCircle, BsXCircle } from 'react-icons/bs';
 import { TbBatteryCharging2 } from 'react-icons/tb';
 import { GiElectric } from 'react-icons/gi';
+import { useUser } from "../context/UserProvider.jsx";
+import { format } from 'date-fns'; // Place at top with other imports
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCar } from '@fortawesome/free-solid-svg-icons';
 
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Chargingicon from '../../public/ChargingStation.png';
-import { useUser } from '../context/UserContext';
 import ModalAddCharging from '../components/ModalAddCharging';
 import ModalEditCharging from '../components/ModalEditCharging';
 import ModalChargingPoints from '../components/ModalChargingPoints';
+import ChargingPointReservations from '../components/ChargingPointReservations';
 
 const customIcon = new L.Icon({
   iconUrl: Chargingicon,
@@ -36,18 +40,21 @@ const customIcon = new L.Icon({
 
 export default function HomePage() {
   const [stations, setStations] = useState([]);
+  const [currentReservations, setCurrentReservations] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [message, setMessage] = useState('');
-  const [setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const { userType } = useUser();
+  const me = JSON.parse(localStorage.getItem('me')) || {};
+
   const [existingReservations, setExistingReservations] = useState([]);
 
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const { userType } = useUser();
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddPointModal, setShowAddPointModal] = useState(false);
@@ -57,13 +64,28 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+
+    const fetchCurrentReservations = async () => {
+      console.log(`${CONFIG.API_URL}v1/reservation`);
+      const response = await axios.get(`http://localhost:8080/api/v1/reservation`, 
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      );
+      setCurrentReservations(response.data);
+      console.log("Current reservations fetched successfully:", response.data);
+    }
+
     const fetchSelf = async () => {
       if (!localStorage.getItem("me")) {
         try {
+          console.log(CONFIG.API_URL);
           const response = await axios.get(`${CONFIG.API_URL}auth/me`, {
             headers: {
-              Authorization: token,
-            },
+              "Authorization": `Bearer ${token}`
+            }
           });
           localStorage.setItem("me", JSON.stringify(response.data));
         } catch (error) {
@@ -72,10 +94,11 @@ export default function HomePage() {
       }
     };
     fetchSelf();
-  }, [token]);
+    fetchCurrentReservations();
+  }, []);
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) return userLocation;
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
@@ -115,10 +138,32 @@ export default function HomePage() {
       });
   }, [navigate, token]);
 
+  useEffect(() => {
+  const handleCustomEndTime = (e) => {
+    const date = new Date(e.detail);
+    setEndTime(date);
+  };
+  const handleCustomStartTime = (e) => {
+    const date = new Date(e.detail);
+    setStartTime(date);
+  };
+
+  window.addEventListener('set-test-end-time', handleCustomEndTime);
+  window.addEventListener('set-test-start-time', handleCustomStartTime);
+
+  return () => {
+    window.removeEventListener('set-test-end-time', handleCustomEndTime);
+    window.removeEventListener('set-test-start-time', handleCustomStartTime);
+  };
+}, []);
+
+
   const handleEditButtonClick = () => {
     if (selectedStation) setShowEditModal(true);
     else alert("Select a charging station to edit.");
   };
+
+  
 
   const handleReservation = () => {
     if (!selectedPoint || !startTime || !endTime) {
@@ -130,8 +175,8 @@ export default function HomePage() {
     const payload = {
       userId: parseInt(me.id),
       chargingPointId: selectedPoint.id,
-      startTime: startTime.toISOString(),
-      endTime: endTime.toISOString(),
+      startTime: format(startTime, "yyyy-MM-dd'T'HH:mm:ss"), 
+      endTime: format(endTime, "yyyy-MM-dd'T'HH:mm:ss"),
     };
 
     axios.post(`${CONFIG.API_URL}v1/reservation`, payload, {
@@ -146,6 +191,16 @@ export default function HomePage() {
           setStartTime(new Date());
           setEndTime(new Date());
         }, 2000);
+        setCurrentReservations((prev) => [
+          ...prev,
+          {
+            id: Date.now(), // Temporary ID for optimistic UI update
+            chargingPoint: selectedPoint,
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString(),
+            status: 'PENDING', // Assuming new reservations start as PENDING
+          },
+        ]);
       })
       .catch((error) => {
         setMessage(error.response?.data || error.message);
@@ -220,34 +275,47 @@ export default function HomePage() {
                       ) : (
                         <p className={styles.noConnectors}>No connectors available.</p>
                       )}
+                      {point.available ? (
+                      <div className={styles.buttonRow}>
+                        <ChargingPointReservations reservations={currentReservations} chargingPointId={point.id} />
+                        <button
+                          className={styles.reserveBtn}
+                          id={`reserve-button-${point.id}`}
+                          onClick={() => {
+                            setSelectedPoint(point);
+                            setIsModalOpen(true);
 
-                      <button
-                        className={styles.reserveBtn}
-                        id={`reserve-button-${point.id}`}
-                        onClick={() => {
-                          setSelectedPoint(point);
-                          setIsModalOpen(true);
-                          axios.get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                          })
-                          .then((res) => setExistingReservations(res.data))
-                          .catch((err) => {
-                            console.error('Failed to fetch existing reservations:', err);
-                            setExistingReservations([]);
-                          });
-                        }}
-                      >
-                        Reserve
-                      </button>
+                            axios
+                              .get(`${CONFIG.API_URL}v1/reservation/point/${point.id}/active`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                              })
+                              .then((res) => setExistingReservations(res.data))
+                              .catch((err) => {
+                                console.error('Failed to fetch existing reservations:', err);
+                                setExistingReservations([]);
+                              });
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCar} className={styles.faicon} />
+                          Reserve
+                        </button>
+                      </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   ))
-                ) : (
+                ) : (userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id))) ? (
                   <div className={styles.addChargingPointBox} onClick={() => setShowAddPointModal(true)}>
                     <span className={styles.addIcon}>+</span>
                     <p>Add Charging Point</p>
                   </div>
+                ) : (
+                  <div className={styles.addChargingPointBox}>
+                    <p className={styles.noChargingPoints}>No charging points available.</p>
+                  </div>
                 )}
-                {userType === 'administrator' && (
+                {userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id)) && (
                   <>
                     <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
                     <button className={styles.editBtn} onClick={handleRemoveButtonClick}>Remove</button>
@@ -259,7 +327,7 @@ export default function HomePage() {
               </div>
             </div>
           ) : (
-            <p id="select-station-placeholder">Select a station on the map</p>          )}
+            <p id="select-station-placeholder">Select a station on the map</p>)}
         </div>
 
         <div className={styles.mapWrapper}>
@@ -283,7 +351,7 @@ export default function HomePage() {
                     }
                   }}
                 >
-                  <Popup data-testid={`marker-popup-${station.id}`}>
+                  <Popup id={`marker-popup-${station.id}`}>
                     <div className={styles.popupContent}>
                       <p><FaCity className={styles.popupIcon} /> <strong>City Name:</strong> {station.cityName}</p>
                       <p><strong>Latitude:</strong> {station.latitude}</p>

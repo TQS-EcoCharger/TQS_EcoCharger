@@ -45,7 +45,7 @@ class AuthenticationControllerTest {
   @Requirement("ET-52")
   void testLoginSuccess() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "123456"))
-        .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "driver"));
+        .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "administrator"));
 
     String requestBody =
         """
@@ -61,7 +61,7 @@ class AuthenticationControllerTest {
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.message").value("Login successful"))
         .andExpect(jsonPath("$.token").value("token123"))
-        .andExpect(jsonPath("$.userType").value("driver"));
+        .andExpect(jsonPath("$.userType").value("administrator"));
   }
 
   @Test
@@ -142,7 +142,6 @@ class AuthenticationControllerTest {
   void testRegisterInvalidEmail() throws Exception {
     Mockito.when(authService.register("invalid-email", "123456", "Invalid"))
         .thenReturn(new AuthResultDTO(false, "Invalid email format", null, null));
-
     String requestBody =
         "{ \"email\": \" invalid-email\", \"password\": \"123456\", \"name\": \"Invalid\" }";
 
@@ -158,7 +157,6 @@ class AuthenticationControllerTest {
   void testRegisterInvalidName() throws Exception {
     Mockito.when(authService.register("john@example.com", "123456", ""))
         .thenReturn(new AuthResultDTO(false, "Name must be at least 3 characters", null, null));
-
     String requestBody =
         "{ \"email\": \" john@example.com\", \"password\": \"123456\", \"name\": \"\" }";
 

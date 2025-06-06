@@ -1,6 +1,9 @@
 package pt.ua.tqs.ecocharger.ecocharger.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -62,6 +65,32 @@ class ChargingPointControllerTest {
         .perform(post("/api/v1/points").contentType(MediaType.APPLICATION_JSON).content(json))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(10));
+  }
+
+  @Test
+  @DisplayName("Edit a charging point")
+  void testEditPoint() throws Exception {
+    ChargingPoint point = new ChargingPoint();
+    point.setId(1L);
+    point.setBrand("Tesla");
+    point.setAvailable(true);
+
+    Mockito.when(chargingPointService.updatePoint(eq(1L), any(ChargingPoint.class)))
+        .thenReturn(point);
+    String json =
+        """
+        {
+          "id": 1,
+          "brand": "Tesla",
+          "available": true
+        }
+        """;
+    mockMvc
+        .perform(put("/api/v1/points/1").contentType(MediaType.APPLICATION_JSON).content(json))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1L))
+        .andExpect(jsonPath("$.brand").value("Tesla"))
+        .andExpect(jsonPath("$.available").value(true));
   }
 
   @Test
@@ -122,5 +151,25 @@ class ChargingPointControllerTest {
     mockMvc.perform(delete("/api/v1/points/1")).andExpect(status().isNoContent());
 
     Mockito.verify(chargingPointService).deletePoint(1L);
+  }
+
+  @Test
+  @Requirement("ET-43")
+  @DisplayName("Get active session for a charging point")
+  void testGetActiveSessionForPoint() throws Exception {
+    var sessionDto =
+        new pt.ua.tqs.ecocharger.ecocharger.dto.ActiveSessionDTO(
+            5L, 1L, 3L, "Tesla Model S", 25, 85.0, 15.0, 12.5);
+
+    Mockito.when(chargingPointService.getActiveSessionForPoint(1L)).thenReturn(sessionDto);
+
+    mockMvc
+        .perform(get("/api/v1/points/1/active-session"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.sessionId").value(5L))
+        .andExpect(jsonPath("$.carName").value("Tesla Model S"))
+        .andExpect(jsonPath("$.batteryPercentage").value(85.0))
+        .andExpect(jsonPath("$.energyDelivered").value(15.0))
+        .andExpect(jsonPath("$.totalCost").value(12.5));
   }
 }

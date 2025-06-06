@@ -12,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
   @JsonSubTypes.Type(value = Administrator.class, name = "administrators"),
-  @JsonSubTypes.Type(value = Driver.class, name = "drivers")
+  @JsonSubTypes.Type(value = Driver.class, name = "drivers"),
+  @JsonSubTypes.Type(value = ChargingOperator.class, name = "chargingOperators")
 })
 @Data
 @NoArgsConstructor

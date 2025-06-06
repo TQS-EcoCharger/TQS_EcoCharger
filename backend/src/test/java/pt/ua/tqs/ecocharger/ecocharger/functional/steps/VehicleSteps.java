@@ -87,7 +87,6 @@ public class VehicleSteps {
     for (int i = 0; i < expectedData.size(); i++) {
       Map<String, String> expectedRow = expectedData.get(i);
       List<WebElement> cells = vehicleRows.get(i).findElements(By.tagName("td"));
-      System.out.println("Row " + (i + 1) + ": " + expectedRow);
       for (String key : expectedRow.keySet()) {
         int columnIndex = getColumnIndex(key);
         assertNotEquals(-1, columnIndex, "Column " + key + " not found");
@@ -145,9 +144,18 @@ public class VehicleSteps {
 
   @Then("the table should have {int} rows")
   public void the_table_should_have_rows(int expectedRowCount) {
+    try {
+      Thread.sleep(2000); // wait for the table to update
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     List<WebElement> vehicleRows = driver.findElements(By.cssSelector("#vehicles-table-body tr"));
+    System.out.println("Vehicle table rows: " + vehicleRows.size());
+    // Debugging: print out the text of each row
+    for (WebElement row : vehicleRows) {
+      System.out.println(row.getText());
+    }
     // print all the rows for debugging
-    vehicleRows.forEach(row -> System.out.println(row.getText()));
     assertEquals(
         expectedRowCount,
         vehicleRows.size(),

@@ -188,10 +188,11 @@
   justify-content: center;
   border-top: 1px solid #ccc;
   z-index: 10;
+
 }
 
 .reserveBtn {
-  width: 100%;
+  width: 45%;
   padding: 16px;
   background-color: #fdc459;
   color: #000;
@@ -200,10 +201,17 @@
   border: none;
   border-top: 1px solid #ddd;
   margin-top: 15px;
+  margin-left: 10px;
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
+.faicon {
+  margin-right: 0.5vw;
+  color: #000; /* gold color for icon */
+}
+
 
 
 .reserveBtn:hover {
@@ -390,8 +398,8 @@
 .message {
   margin-top: 1rem;
   font-size: 0.9rem;
-  color: #d9534f;
-  background-color: #f8d7da;
+  color: #020202;
+  background-color: #bad49e;
   text-align: center;
   border-radius: 6px;
   padding: 0.5rem;
@@ -463,3 +471,45 @@
 h2 {
   margin-top: 0;
 }
+
+.otpContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.otpBox {
+  width: 48px;
+  height: 60px;
+  font-size: 32px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.otpBox:focus {
+  border-color: #afaf4c;
+  box-shadow: 0 0 3px #afa04c;
+}
+
+.stationDetails1 {
+  width: 30%;
+  height: 78%;
+  overflow-y: auto;
+  position: relative;
+  margin-left: 10%;
+  margin-top: 7%;
+  background-color: #252525;
+  color: #ffffff;
+  border-radius: 15px;
+  padding: 5px;
+}
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1vh;
+}
+
