@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import styles from '../css/Sidebar.module.css';
-import { useUser } from '../context/UserContext';
 import axios from 'axios';
 import CONFIG from '../config';
 import Modal from 'react-modal';
@@ -19,7 +18,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      if (userType === 'client') {
+      if (userType === 'driver') {
         try {
           const res = await axios.get(`${CONFIG.API_URL}v1/driver/${userId}`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -83,7 +82,7 @@ export default function Sidebar() {
         <ul className={styles.bottomMenu}>
           <li><NavLink to="/profile" id="nav-profile">Profile</NavLink></li>
           <li><NavLink to="/logout" id="nav-logout">Logout</NavLink></li>
-          {userType === 'client' && (
+          {userType === 'driver' && (
             <>
               <li style={{ marginTop: '1rem', color: '#f4cc5d', fontWeight: 'bold' }}>
                 Balance: €{balance !== null ? balance.toFixed(2) : '...'}
@@ -117,7 +116,7 @@ export default function Sidebar() {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Top Up Balance"
+        contentLabel="Add Balance"
         style={{
           content: {
             top: '50%',
@@ -128,10 +127,11 @@ export default function Sidebar() {
             borderRadius: '12px',
             color: 'white',
             width: '400px',
+            height: '250px',
           },
         }}
       >
-        <h2 style={{ color: '#f4cc5d' }}>Top Up Balance</h2>
+        <h2 style={{ color: '#f4cc5d' }}>Add Balance</h2>
 
         <input
           type="number"
