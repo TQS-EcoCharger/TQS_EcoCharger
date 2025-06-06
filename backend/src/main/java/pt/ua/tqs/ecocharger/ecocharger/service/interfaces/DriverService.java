@@ -24,4 +24,6 @@ public interface DriverService {
   Driver removeCarFromDriver(Long id, Long carId);
 
   void deleteDriver(Long id);
+
+  Driver addBalanceToDriver(Long id, Double amount);
 }

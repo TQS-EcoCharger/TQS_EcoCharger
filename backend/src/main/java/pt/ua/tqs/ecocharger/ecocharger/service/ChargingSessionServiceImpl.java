@@ -1,15 +1,10 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
-import com.stripe.param.PaymentIntentCreateParams;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
 import pt.ua.tqs.ecocharger.ecocharger.repository.*;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingSessionService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,14 +17,6 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
   private final ChargingSessionRepository chargingSessionRepository;
   private final CarRepository carRepository;
   private final UserRepository userRepository;
-
-  @Value("${stripe.secret}")
-  private String stripeSecretKey;
-
-  @PostConstruct
-  public void init() {
-    Stripe.apiKey = stripeSecretKey;
-  }
 
   public ChargingSessionServiceImpl(
       OTPCodeRepository otpCodeRepository,
@@ -88,10 +75,8 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
       throw new IllegalArgumentException("OTP expired.");
     }
 
-    Car car =
-        carRepository
-            .findById(carId)
-            .orElseThrow(() -> new IllegalArgumentException("Car not found."));
+    Car car = carRepository.findById(carId)
+        .orElseThrow(() -> new IllegalArgumentException("Car not found."));
 
     reservation.setStatus(ReservationStatus.USED);
     reservationRepository.save(reservation);
@@ -110,10 +95,8 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
 
   @Override
   public ChargingSession endSession(Long sessionId) {
-    ChargingSession session =
-        chargingSessionRepository
-            .findById(sessionId)
-            .orElseThrow(() -> new IllegalArgumentException("Session not found."));
+    ChargingSession session = chargingSessionRepository.findById(sessionId)
+        .orElseThrow(() -> new IllegalArgumentException("Session not found."));
 
     if (session.getEndTime() != null) {
       throw new IllegalStateException("Session already ended.");
@@ -151,27 +134,13 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
     car.setBatteryLevel(newBatteryLevel);
     carRepository.save(car);
 
-    try {
-      long amountCents = Math.round(totalCost * 100);
-
-      PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-          .setAmount(amountCents)
-          .setCurrency("eur")
-          .setDescription("EV Charging session - EcoCharger")
-          .setReceiptEmail(session.getUser().getEmail())
-          .build();
-
-      PaymentIntent intent = PaymentIntent.create(params);
-      session.setPaymentIntentId(intent.getId());
-
-      // Update driver balance
-      if (session.getUser() instanceof Driver driver) {
-        driver.setBalance(driver.getBalance() + totalCost);
-        userRepository.save(driver);
+    if (session.getUser() instanceof Driver driver) {
+      double newBalance = driver.getBalance() - totalCost;
+      if (newBalance < 0) {
+        throw new IllegalStateException("Insufficient balance to complete the session, please recharge your balance.");
       }
-
-    } catch (StripeException e) {
-      throw new IllegalStateException("Payment failed: " + e.getMessage());
+      driver.setBalance(newBalance);
+      userRepository.save(driver);
     }
 
     return chargingSessionRepository.save(session);

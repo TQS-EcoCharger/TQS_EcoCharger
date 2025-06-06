@@ -117,7 +117,7 @@ public class ReservationSteps {
     assertFalse(cards.isEmpty(), "Expected at least one reservation card.");
 
     WebElement firstCard = cards.get(0);
-    String fullId = firstCard.getAttribute("id"); // e.g., reservation-card-42
+    String fullId = firstCard.getAttribute("id");
     String reservationId = fullId.replace("reservation-card-", "");
     TestMemoryContext.put("reservationId", reservationId);
 
@@ -143,13 +143,12 @@ public class ReservationSteps {
     WebElement button = firstCard.findElement(By.id("generate-otp-button-" + reservationId));
     button.click();
 
-    // Extract charging point ID from data attribute
     String chargingPointId = firstCard.getAttribute("data-charging-point-id");
     TestMemoryContext.put("chargingPointId", chargingPointId);
 
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("otp-code-" + reservationId)));
     WebElement otpEl = driver.findElement(By.id("otp-code-" + reservationId));
-    storedOtpCode = otpEl.getText().replaceAll("[^\\d]", ""); // Extract digits only
+    storedOtpCode = otpEl.getText().replaceAll("[^\\d]", "");
   }
 
   @Then("I store the OTP code for later use")

@@ -1,25 +1,32 @@
 package pt.ua.tqs.ecocharger.ecocharger.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
+import pt.ua.tqs.ecocharger.ecocharger.dto.BalanceTopUpRequest;
 import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.mockito.Mockito.doThrow;
 import static org.hamcrest.Matchers.hasSize;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @WebMvcTest(DriverController.class)
 @Import(SecurityDisableConfig.class)
@@ -239,4 +247,58 @@ class DriverControllerTest {
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$").value("Driver not found"));
   }
+
+  @Test
+  @Requirement("ET-42")
+  @DisplayName("Top-up creates Stripe session and returns URL")
+    void testTopUpBalanceCreatesStripeSession() throws Exception {
+        BalanceTopUpRequest request = new BalanceTopUpRequest();
+        request.setAmount(25.0);
+
+        Session mockSession = Mockito.mock(Session.class);
+        when(mockSession.getId()).thenReturn("sess_123");
+        when(mockSession.getUrl()).thenReturn("https://stripe.com/session");
+
+        try (MockedStatic<Session> mockedSession = Mockito.mockStatic(Session.class)) {
+            mockedSession.when(() -> Session.create(any(SessionCreateParams.class)))
+                        .thenReturn(mockSession);
+
+            mockMvc.perform(post("/api/v1/driver/1/balance")
+                    .contentType("application/json")
+                    .content("""
+                    {
+                        "amount": 25.0,
+                        "simulateSuccess": false
+                    }
+                    """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.sessionId").value("sess_123"))
+                .andExpect(jsonPath("$.url").value("https://stripe.com/session"));
+        }
+    }
+
+    @Test
+    @DisplayName("Checkout success updates driver balance from session metadata")
+    @Requirement("ET-42")
+    void testFinalizeTopUpUpdatesBalance() throws Exception {
+        Session mockSession = Mockito.mock(Session.class);
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("userId", "1");
+        metadata.put("amount", "25.0");
+
+        when(mockSession.getMetadata()).thenReturn(metadata);
+
+        try (MockedStatic<Session> mockedSession = Mockito.mockStatic(Session.class)) {
+            mockedSession.when(() -> Session.retrieve("sess_123")).thenReturn(mockSession);
+
+            mockMvc.perform(get("/api/v1/driver/checkout-success")
+                    .param("session_id", "sess_123"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"));
+        }
+
+        verify(driverService).addBalanceToDriver(1L, 25.0);
+    }
+
+
 }

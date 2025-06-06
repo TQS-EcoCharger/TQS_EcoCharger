@@ -5,6 +5,7 @@
   background-color: #1a1a1a;
   padding: 2rem;
   overflow-y: hidden;
+  height: 100vh;
 }
 
 .cardWrapper {

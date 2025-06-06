@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Driver extends User {
 
-  @Column(name = "balance", nullable = false)
+  @Column(name = "balance")
   private Double balance = 0.0;
 
   @OneToMany(fetch = FetchType.EAGER)
