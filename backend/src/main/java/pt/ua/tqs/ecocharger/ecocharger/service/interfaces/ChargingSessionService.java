@@ -1,5 +1,7 @@
 package pt.ua.tqs.ecocharger.ecocharger.service.interfaces;
 
+import java.util.List;
+
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
 
@@ -32,4 +34,19 @@ public interface ChargingSessionService {
    * @return the updated ChargingSession
    */
   ChargingSession endSession(Long sessionId);
+
+  /**
+   * Retrieves all charging sessions associated with a user ID.
+   *
+   * @param userId the ID of the user
+   * @return a list of ChargingSession objects
+   */
+  List<ChargingSession> getSessionsByUser(Long userId);
+
+  /**
+   * Retrieves all charging sessions in the system.
+   *
+   * @return a list of all ChargingSession objects
+   */
+  List<ChargingSession> getAllSessions();
 }

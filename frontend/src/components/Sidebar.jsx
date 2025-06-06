@@ -33,13 +33,19 @@ export default function Sidebar() {
     fetchBalance();
   }, [userType, userId, token]);
 
+    const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('me');
+    navigate('/'); 
+  };
+
   const handleTopUp = async () => {
     try {
       const res = await axios.post(
         `${CONFIG.API_URL}v1/driver/${userId}/balance`,
         {
           amount: parseFloat(amount),
-          simulateSuccess: false, // set true if simulating
+          simulateSuccess: false, 
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +60,6 @@ export default function Sidebar() {
         });
         setBalance(balRes.data.balance ?? 0);
       } else if (res.data.url) {
-        // Redirect to Stripe Checkout session
         window.location.href = res.data.url;
       }
 
@@ -70,15 +75,29 @@ export default function Sidebar() {
         <img src="/logo.png" alt="Logo" className={styles.profileImage} id="sidebar-logo" />
 
         <ul className={styles.menu} id="sidebar-menu">
-          <li><NavLink to="/home" id="nav-home">Map</NavLink></li>
-          <li><NavLink to="/stations" id="nav-stations">Charging Stations</NavLink></li>
+          {userType === 'administrator' ? (
+            <>
+              <li><NavLink to="/home" id="nav-dashboard">Dashboard</NavLink></li>
+              <li><NavLink to="/statistics" id="nav-statistics">Statistics</NavLink></li>
+            </>
+          ) : (
+            <li><NavLink to="/home" id="nav-home">Map</NavLink></li>
+          )}
           <li><NavLink to="/reservations" id="nav-reservations">Reservations</NavLink></li>
           <li><NavLink to="/vehicles" id="nav-vehicles">Vehicles</NavLink></li>
         </ul>
 
         <ul className={styles.bottomMenu}>
           <li><NavLink to="/profile" id="nav-profile">Profile</NavLink></li>
-          <li><NavLink to="/logout" id="nav-logout">Logout</NavLink></li>
+          <li>
+            <button
+              onClick={handleLogout}
+              className={styles.logoutBtn}
+              id="nav-logout"
+            >
+              Logout
+            </button>
+          </li>
           {userType === 'driver' && (
             <>
               <li style={{ marginTop: '1rem', color: '#f4cc5d', fontWeight: 'bold' }}>

@@ -223,7 +223,7 @@ export default function ModalFullChargingPoint({ stationId, onClose, onSuccess, 
         <div className={styles.actions}>
           {error && <div className={styles.errorMessage}>{error}</div>}
           <button onClick={handleSubmit}>Save</button>
-          <button onClick={onClose}>Cancel</button>
+          <button className={styles.closebtn} onClick={onClose}>Cancel</button>
         </div>
       </div>
     </div>

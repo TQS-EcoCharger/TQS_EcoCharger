@@ -7,6 +7,7 @@ import pt.ua.tqs.ecocharger.ecocharger.repository.*;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingSessionService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -149,4 +150,15 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
 
     return chargingSessionRepository.save(session);
   }
-}
+
+  @Override
+  public List<ChargingSession> getAllSessions() {
+    return chargingSessionRepository.findAll();
+  }
+
+  @Override
+  public List<ChargingSession> getSessionsByUser(Long userId) {
+    return chargingSessionRepository.findByUserId(userId);
+  }
+
+  }

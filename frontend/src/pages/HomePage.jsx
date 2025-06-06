@@ -59,6 +59,7 @@ export default function HomePage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddPointModal, setShowAddPointModal] = useState(false);
 
+
   const handleNewStation = (newStation) => {
     setStations(prev => [...prev, newStation]);
   };
@@ -194,11 +195,11 @@ export default function HomePage() {
         setCurrentReservations((prev) => [
           ...prev,
           {
-            id: Date.now(), // Temporary ID for optimistic UI update
+            id: Date.now(),
             chargingPoint: selectedPoint,
             startTime: startTime.toISOString(),
             endTime: endTime.toISOString(),
-            status: 'PENDING', // Assuming new reservations start as PENDING
+            status: 'PENDING', 
           },
         ]);
       })
@@ -315,7 +316,13 @@ export default function HomePage() {
                     <p className={styles.noChargingPoints}>No charging points available.</p>
                   </div>
                 )}
-                {userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id)) && (
+                {(
+                  userType === 'administrator' ||
+                  (
+                    userType === 'chargingOperator' &&
+                    me.chargingStations?.some(station => station.id === selectedStation.id)
+                  )
+                ) && (
                   <>
                     <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
                     <button className={styles.editBtn} onClick={handleRemoveButtonClick}>Remove</button>
