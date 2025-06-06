@@ -3,7 +3,7 @@ INSERT INTO users (email, password, name, enabled, user_type) VALUES
 ('afonso@gmail.com', 'pass', 'Afonso Ferreira', true, 'drivers'),
 ('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'drivers'),
 ('tomascliente@gmail.com', 'pass2', 'Tomás Cliente', true, 'drivers'),
-('tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators');
+('tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators'),
 ('chargingoperator@example.com', 'op1234', 'Charging Operator', true, 'chargingOperators');
 
 -- Criar drivers com IDs iguais aos criados em "users"
