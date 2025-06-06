@@ -140,5 +140,5 @@ public class DriverServiceImpl implements DriverService {
     Driver driver = getDriverById(id);
     driver.setBalance(driver.getBalance() + amount);
     return driverRepository.save(driver);
-}
+  }
 }

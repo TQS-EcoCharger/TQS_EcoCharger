@@ -14,20 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 public class OTPCodeRepositoryTest {
 
-  @Autowired
-  private OTPCodeRepository otpCodeRepository;
+  @Autowired private OTPCodeRepository otpCodeRepository;
 
-  @Autowired
-  private ReservationRepository reservationRepository;
+  @Autowired private ReservationRepository reservationRepository;
 
-  @Autowired
-  private ChargingPointRepository chargingPointRepository;
+  @Autowired private ChargingPointRepository chargingPointRepository;
 
-  @Autowired
-  private ChargingStationRepository chargingStationRepository;
+  @Autowired private ChargingStationRepository chargingStationRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   private Reservation createReservation(User user, ChargingPoint point) {
     Reservation reservation = new Reservation();
@@ -40,8 +35,8 @@ public class OTPCodeRepositoryTest {
   }
 
   private ChargingPoint createPoint() {
-    ChargingStation station = new ChargingStation(
-        "Test City", "Test Street", 1.23, 4.56, "1234-123", "PT");
+    ChargingStation station =
+        new ChargingStation("Test City", "Test Street", 1.23, 4.56, "1234-123", "PT");
     chargingStationRepository.save(station);
 
     ChargingPoint point = new ChargingPoint();

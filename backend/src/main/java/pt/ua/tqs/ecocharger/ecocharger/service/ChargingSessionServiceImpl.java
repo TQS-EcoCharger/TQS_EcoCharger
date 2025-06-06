@@ -23,8 +23,7 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
       ReservationRepository reservationRepository,
       ChargingSessionRepository chargingSessionRepository,
       CarRepository carRepository,
-      UserRepository userRepository
-  ) {
+      UserRepository userRepository) {
     this.otpCodeRepository = otpCodeRepository;
     this.reservationRepository = reservationRepository;
     this.chargingSessionRepository = chargingSessionRepository;
@@ -75,8 +74,10 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
       throw new IllegalArgumentException("OTP expired.");
     }
 
-    Car car = carRepository.findById(carId)
-        .orElseThrow(() -> new IllegalArgumentException("Car not found."));
+    Car car =
+        carRepository
+            .findById(carId)
+            .orElseThrow(() -> new IllegalArgumentException("Car not found."));
 
     reservation.setStatus(ReservationStatus.USED);
     reservationRepository.save(reservation);
@@ -95,8 +96,10 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
 
   @Override
   public ChargingSession endSession(Long sessionId) {
-    ChargingSession session = chargingSessionRepository.findById(sessionId)
-        .orElseThrow(() -> new IllegalArgumentException("Session not found."));
+    ChargingSession session =
+        chargingSessionRepository
+            .findById(sessionId)
+            .orElseThrow(() -> new IllegalArgumentException("Session not found."));
 
     if (session.getEndTime() != null) {
       throw new IllegalStateException("Session already ended.");
@@ -137,7 +140,8 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
     if (session.getUser() instanceof Driver driver) {
       double newBalance = driver.getBalance() - totalCost;
       if (newBalance < 0) {
-        throw new IllegalStateException("Insufficient balance to complete the session, please recharge your balance.");
+        throw new IllegalStateException(
+            "Insufficient balance to complete the session, please recharge your balance.");
       }
       driver.setBalance(newBalance);
       userRepository.save(driver);

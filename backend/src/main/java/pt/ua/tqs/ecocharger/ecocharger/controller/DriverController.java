@@ -12,11 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import pt.ua.tqs.ecocharger.ecocharger.dto.BalanceTopUpRequest;
 import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
-import pt.ua.tqs.ecocharger.ecocharger.service.StripeService;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
@@ -36,7 +34,6 @@ import com.stripe.param.checkout.SessionCreateParams;
 public class DriverController {
 
   private final DriverService driverService;
-
 
   public DriverController(DriverService driverService) {
     this.driverService = driverService;
@@ -138,7 +135,8 @@ public class DriverController {
   }
 
   @PostMapping("/{id}/balance")
-  public ResponseEntity<Object> topUpBalance(@PathVariable Long id, @RequestBody BalanceTopUpRequest request) {
+  public ResponseEntity<Object> topUpBalance(
+      @PathVariable Long id, @RequestBody BalanceTopUpRequest request) {
     try {
       if (request.getAmount() == null || request.getAmount() <= 0) {
         return ResponseEntity.badRequest().body(Map.of("error", "Amount must be greater than 0"));
@@ -146,33 +144,37 @@ public class DriverController {
 
       long amountInCents = Math.round(request.getAmount() * 100);
 
-      SessionCreateParams.LineItem lineItem = SessionCreateParams.LineItem.builder()
-          .setQuantity(1L)
-          .setPriceData(
-              SessionCreateParams.LineItem.PriceData.builder()
-                  .setCurrency("eur")
-                  .setUnitAmount(amountInCents)
-                  .setProductData(
-                      SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                          .setName("Balance Top-up for Driver #" + id)
-                          .build())
-                  .build())
-          .build();
+      SessionCreateParams.LineItem lineItem =
+          SessionCreateParams.LineItem.builder()
+              .setQuantity(1L)
+              .setPriceData(
+                  SessionCreateParams.LineItem.PriceData.builder()
+                      .setCurrency("eur")
+                      .setUnitAmount(amountInCents)
+                      .setProductData(
+                          SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                              .setName("Balance Top-up for Driver #" + id)
+                              .build())
+                      .build())
+              .build();
 
-      SessionCreateParams params = SessionCreateParams.builder()
-          .setMode(SessionCreateParams.Mode.PAYMENT)
-          .setSuccessUrl("http://localhost:5000/payment-success?session_id={CHECKOUT_SESSION_ID}")
-          .setCancelUrl("http://localhost:5000/cancel")
-          .addLineItem(lineItem)
-          .putMetadata("userId", String.valueOf(id))
-          .putMetadata("amount", String.valueOf(request.getAmount()))
-          .build();
+      SessionCreateParams params =
+          SessionCreateParams.builder()
+              .setMode(SessionCreateParams.Mode.PAYMENT)
+              .setSuccessUrl(
+                  "http://localhost:5000/payment-success?session_id={CHECKOUT_SESSION_ID}")
+              .setCancelUrl("http://localhost:5000/cancel")
+              .addLineItem(lineItem)
+              .putMetadata("userId", String.valueOf(id))
+              .putMetadata("amount", String.valueOf(request.getAmount()))
+              .build();
 
       Session session = Session.create(params);
 
-      return ResponseEntity.ok(Map.of(
-          "sessionId", session.getId(),
-          "url", session.getUrl()));
+      return ResponseEntity.ok(
+          Map.of(
+              "sessionId", session.getId(),
+              "url", session.getUrl()));
 
     } catch (Exception e) {
       return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
@@ -195,8 +197,7 @@ public class DriverController {
 
   @PatchMapping("/{id}/balance/add")
   public ResponseEntity<Object> manuallyAddBalance(
-      @PathVariable Long id,
-      @RequestBody BalanceTopUpRequest request) {
+      @PathVariable Long id, @RequestBody BalanceTopUpRequest request) {
     try {
       driverService.addBalanceToDriver(id, request.getAmount());
       return ResponseEntity.ok(Map.of("status", "balance updated"));

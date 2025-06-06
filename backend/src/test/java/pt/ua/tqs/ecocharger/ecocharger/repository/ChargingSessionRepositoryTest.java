@@ -71,7 +71,7 @@ public class ChargingSessionRepositoryTest {
     session.setCar(car);
     session.setStatus(ChargingStatus.IN_PROGRESS);
     session.setChargingPoint(point);
-    
+
     session.setStartTime(LocalDateTime.now());
     session.setInitialBatteryLevel(30.0);
     chargingSessionRepository.save(session);
