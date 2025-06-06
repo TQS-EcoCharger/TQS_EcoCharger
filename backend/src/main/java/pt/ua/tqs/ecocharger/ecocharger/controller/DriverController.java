@@ -162,8 +162,8 @@ public class DriverController {
           SessionCreateParams.builder()
               .setMode(SessionCreateParams.Mode.PAYMENT)
               .setSuccessUrl(
-                  "http://localhost:5000/payment-success?session_id={CHECKOUT_SESSION_ID}")
-              .setCancelUrl("http://localhost:5000/cancel")
+                  "http://deti-tqs-19.ua.pt:5000/payment-success?session_id={CHECKOUT_SESSION_ID}")
+              .setCancelUrl("http://deti-tqs-19.ua.pt:5000/cancel")
               .addLineItem(lineItem)
               .putMetadata("userId", String.valueOf(id))
               .putMetadata("amount", String.valueOf(request.getAmount()))
