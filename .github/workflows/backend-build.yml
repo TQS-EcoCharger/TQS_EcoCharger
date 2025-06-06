@@ -138,8 +138,8 @@ jobs:
           spring.jpa.defer-datasource-initialization=false
           spring.security.enabled=false
           jwt.secret=test-secret-key
-          stripe.secret= ${{ secrets.STRIPE_SECRET }}
-          stripe.public= ${{ secrets.STRIPE_PUBLIC }}
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
           EOF
           
       - name: Run full verification lifecycle
