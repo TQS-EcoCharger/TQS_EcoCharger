@@ -1,10 +1,14 @@
 
-    
 on:
   workflow_run:
     workflows: ["Test and Analyze Spring Boot Project (Unit Only)"]
     types:
       - completed
+
+permissions:
+  contents: read
+  actions: read
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
