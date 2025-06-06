@@ -26,24 +26,32 @@ public class ChargingStationController {
     this.chargingStationService = chargingStationService;
   }
 
-  @Operation(summary = "Create a new charging station",
-             description = "Creates a new charging station with the provided details")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Charging station created successfully"),
-      @ApiResponse(responseCode = "400", description = "Invalid charging station data")
-  })
+  @Operation(
+      summary = "Create a new charging station",
+      description = "Creates a new charging station with the provided details")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Charging station created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid charging station data")
+      })
   @PostMapping
   public ResponseEntity<ChargingStation> createStation(@RequestBody ChargingStation station) {
     ChargingStation savedStation = chargingStationService.createStation(station);
     return ResponseEntity.ok(savedStation);
   }
 
-  @Operation(summary = "Get all charging stations by city name",
-             description = "Retrieves all charging stations located in the specified city")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Charging stations retrieved successfully"),
-      @ApiResponse(responseCode = "404", description = "No charging stations found for the given city")
-  })
+  @Operation(
+      summary = "Get all charging stations by city name",
+      description = "Retrieves all charging stations located in the specified city")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Charging stations retrieved successfully"),
+        @ApiResponse(
+            responseCode = "404",
+            description = "No charging stations found for the given city")
+      })
   @GetMapping("/city/{cityName}")
   public ResponseEntity<List<ChargingStation>> getStationsByCity(
       @Parameter(description = "Name of the city") @PathVariable String cityName) {
@@ -51,12 +59,14 @@ public class ChargingStationController {
     return ResponseEntity.ok(stations);
   }
 
-  @Operation(summary = "Delete a charging station by ID",
-             description = "Deletes the charging station identified by the provided ID")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Charging station deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Charging station not found")
-  })
+  @Operation(
+      summary = "Delete a charging station by ID",
+      description = "Deletes the charging station identified by the provided ID")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "204", description = "Charging station deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Charging station not found")
+      })
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteStation(
       @Parameter(description = "ID of the charging station to delete") @PathVariable Long id) {
@@ -68,13 +78,15 @@ public class ChargingStationController {
     }
   }
 
-  @Operation(summary = "Update a charging station by ID",
-             description = "Updates the charging station identified by the provided ID")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Charging station updated successfully"),
-      @ApiResponse(responseCode = "404", description = "Charging station not found"),
-      @ApiResponse(responseCode = "400", description = "Invalid charging station data")
-  })
+  @Operation(
+      summary = "Update a charging station by ID",
+      description = "Updates the charging station identified by the provided ID")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Charging station updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Charging station not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid charging station data")
+      })
   @PutMapping("/{id}")
   public ResponseEntity<ChargingStation> updateStation(
       @Parameter(description = "ID of the charging station to update") @PathVariable Long id,
@@ -87,11 +99,13 @@ public class ChargingStationController {
     }
   }
 
-  @Operation(summary = "Get all charging stations",
-             description = "Retrieves all charging stations available in the system")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Charging stations retrieved successfully")
-  })
+  @Operation(
+      summary = "Get all charging stations",
+      description = "Retrieves all charging stations available in the system")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Charging stations retrieved successfully")
+      })
   @GetMapping
   public ResponseEntity<List<ChargingStation>> getAllStations() {
     List<ChargingStation> stations = chargingStationService.getAllStations();

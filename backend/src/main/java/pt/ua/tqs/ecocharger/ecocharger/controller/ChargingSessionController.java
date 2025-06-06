@@ -34,9 +34,10 @@ public class ChargingSessionController {
   @ApiResponse(
       responseCode = "200",
       description = "OTP validation result",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = OtpValidationResponse.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = OtpValidationResponse.class)))
   @ApiResponse(responseCode = "400", description = "Invalid OTP")
   @PostMapping("/validate-otp")
   public ResponseEntity<OtpValidationResponse> validateOtp(
@@ -61,11 +62,14 @@ public class ChargingSessionController {
   @ApiResponse(
       responseCode = "200",
       description = "Charging session started successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ChargingSession.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingSession.class)))
   @ApiResponse(responseCode = "400", description = "Invalid input or OTP")
-  @ApiResponse(responseCode = "409", description = "Session conflict or other business rules violation")
+  @ApiResponse(
+      responseCode = "409",
+      description = "Session conflict or other business rules violation")
   @PostMapping
   public ResponseEntity<?> startCharging(@RequestBody StartChargingRequestDTO request) {
     try {
@@ -87,11 +91,14 @@ public class ChargingSessionController {
   @ApiResponse(
       responseCode = "200",
       description = "Charging session ended successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ChargingSession.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = ChargingSession.class)))
   @ApiResponse(responseCode = "404", description = "Session not found")
-  @ApiResponse(responseCode = "409", description = "Session cannot be ended due to conflict or invalid state")
+  @ApiResponse(
+      responseCode = "409",
+      description = "Session cannot be ended due to conflict or invalid state")
   @PostMapping("/{sessionId}/end")
   public ResponseEntity<?> endCharging(
       @Parameter(description = "ID of the charging session to end") @PathVariable Long sessionId) {

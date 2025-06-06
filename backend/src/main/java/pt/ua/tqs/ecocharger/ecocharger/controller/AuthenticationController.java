@@ -21,7 +21,9 @@ import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Authentication", description = "Endpoints for user login, registration, and current user info")
+@Tag(
+    name = "Authentication",
+    description = "Endpoints for user login, registration, and current user info")
 public class AuthenticationController {
 
   private final AuthenticationService authService;
@@ -36,9 +38,10 @@ public class AuthenticationController {
   @ApiResponse(
       responseCode = "200",
       description = "Successfully authenticated and returned token",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = AuthResultDTO.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = AuthResultDTO.class)))
   @ApiResponse(responseCode = "401", description = "Invalid credentials or authentication failed")
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -57,9 +60,10 @@ public class AuthenticationController {
   @ApiResponse(
       responseCode = "200",
       description = "User registered successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = AuthResultDTO.class)))
+      content =
+          @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = AuthResultDTO.class)))
   @ApiResponse(responseCode = "400", description = "Missing required fields or invalid input")
   @PostMapping("/register")
   public ResponseEntity<Object> register(@RequestBody Map<String, String> user) {
@@ -91,14 +95,14 @@ public class AuthenticationController {
   @ApiResponse(
       responseCode = "200",
       description = "Current authenticated user retrieved successfully",
-      content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = User.class)))
+      content =
+          @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
   @ApiResponse(responseCode = "401", description = "Invalid or missing authentication token")
   @ApiResponse(responseCode = "403", description = "User not authorized or not found")
   @GetMapping("/me")
   public ResponseEntity<Object> getCurrentUser(
-      @Parameter(description = "Bearer token obtained at login") @RequestHeader("Authorization") String token) {
+      @Parameter(description = "Bearer token obtained at login") @RequestHeader("Authorization")
+          String token) {
     String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 
     try {
