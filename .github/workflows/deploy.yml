@@ -1,9 +1,6 @@
 on:
   workflow_run:
-    workflows: ["Run Functional Tests (Chrome)", "Build and Analyze Backend"]
     branches: [master]
-    types: 
-      - completed
     
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
