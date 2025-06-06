@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChargingPointTest {
+class ChargingPointTest {
 
   @Test
   @DisplayName("Test ChargingPoint constructor and getters")

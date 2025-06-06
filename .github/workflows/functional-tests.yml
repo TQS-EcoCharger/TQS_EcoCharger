@@ -1,4 +1,4 @@
-name: Run Selenium Tests with Firefox
+name: Run Selenium Tests with Chrome
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   selenium-firefox-tests:
-    name: Run Functional Tests (Firefox)
+    name: Run Functional Tests (Chrome)
     runs-on: ubuntu-latest
 
     steps:
@@ -71,6 +71,8 @@ jobs:
           springdoc.swagger-ui.path=/swagger-ui-custom.html
           springdoc.api-docs.path=/api-docs
           jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
           EOF
 
       - name: Cache Maven packages
@@ -80,16 +82,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Install Firefox and GeckoDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox wget unzip jq
-          
-          GECKO_URL=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r '.assets[] | select(.name | test("linux64\\.tar\\.gz$")) | .browser_download_url')
-          wget "$GECKO_URL" -O geckodriver.tar.gz
-          tar -xzf geckodriver.tar.gz
-          sudo mv geckodriver /usr/bin/geckodriver
-          sudo chmod +x /usr/bin/geckodriver
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: '124.0.6367.91'  # Match this with your installed Chrome version
 
       - name: Build backend
         working-directory: ./backend
@@ -125,7 +121,13 @@ jobs:
             -Dxray.reportFile=target/surefire-reports/TEST-pt.ua.tqs.ecocharger.ecocharger.functional.CucumberTest.xml \
             app.getxray:xray-maven-plugin:import-results
 
-          
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-screenshots
+          path: backend/target/screenshots/screenshots/
+                
       - name: Stop containers
         run: docker compose -f docker-compose.yml down
         

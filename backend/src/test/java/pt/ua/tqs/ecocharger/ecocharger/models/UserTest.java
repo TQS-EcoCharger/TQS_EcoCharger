@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 
-public class UserTest {
+class UserTest {
 
   @Test
   @DisplayName("Test User constructor and getters")
@@ -45,5 +45,46 @@ public class UserTest {
 
     assertEquals(user1, user2);
     assertEquals(user1.hashCode(), user2.hashCode());
+  }
+
+  @Test
+  void createDriver() {
+    Driver driver = new Driver(1L, "john@example.com", "password123", "John Doe", true);
+
+    assertEquals(1L, driver.getId());
+    assertEquals("john@example.com", driver.getEmail());
+    assertEquals("password123", driver.getPassword());
+    assertEquals("John Doe", driver.getName());
+    assertTrue(driver.isEnabled());
+    assertNotNull(driver.getCars());
+    assertTrue(driver.getCars().isEmpty());
+
+    Car car = new Car();
+    driver.addCar(car);
+    assertEquals(1, driver.getCars().size());
+    assertEquals(car, driver.getCars().get(0));
+    driver.removeCar(car);
+    assertTrue(driver.getCars().isEmpty());
+  }
+
+  @Test
+  void createChargingOperator() {
+    ChargingOperator operator =
+        new ChargingOperator(5L, "charging@operator.com", "securepass", "Operator Name", true);
+
+    assertEquals(5L, operator.getId());
+    assertEquals("charging@operator.com", operator.getEmail());
+    assertEquals("securepass", operator.getPassword());
+    assertEquals("Operator Name", operator.getName());
+    assertTrue(operator.isEnabled());
+    assertNotNull(operator.getChargingStations());
+    assertTrue(operator.getChargingStations().isEmpty());
+
+    ChargingStation station = new ChargingStation();
+    operator.addChargingStation(station);
+    assertEquals(1, operator.getChargingStations().size());
+    assertEquals(station, operator.getChargingStations().get(0));
+    operator.removeChargingStation(station);
+    assertTrue(operator.getChargingStations().isEmpty());
   }
 }

@@ -7,6 +7,7 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingStationRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingStationService;
 import org.springframework.stereotype.Service;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 @Service
 public class ChargingStationServiceImpl implements ChargingStationService {
@@ -19,12 +20,31 @@ public class ChargingStationServiceImpl implements ChargingStationService {
 
   @Override
   public ChargingStation createStation(ChargingStation station) {
-    Optional<ChargingStation> existingStation =
+    Optional<List<ChargingStation>> existingStations =
         chargingStationRepository.findByCityName(station.getCityName());
+    for (ChargingStation existingStation : existingStations.orElse(List.of())) {
+      if (existingStation.getCityName().equalsIgnoreCase(station.getCityName())) {
+        return existingStation;
+      }
+    }
+    return chargingStationRepository.save(station);
+  }
+
+  @Override
+  public ChargingStation updateStation(Long id, ChargingStation station) {
+    Optional<ChargingStation> existingStation = chargingStationRepository.findById(id);
     if (existingStation.isPresent()) {
-      return existingStation.get();
+      ChargingStation updatedStation = existingStation.get();
+      updatedStation.setCityName(station.getCityName());
+      updatedStation.setAddress(station.getAddress());
+      updatedStation.setLatitude(station.getLatitude());
+      updatedStation.setLongitude(station.getLongitude());
+      updatedStation.setCountryCode(station.getCountryCode());
+      updatedStation.setCountry(station.getCountry());
+      updatedStation.setChargingPoints(station.getChargingPoints());
+      return chargingStationRepository.save(updatedStation);
     } else {
-      return chargingStationRepository.save(station);
+      throw new NotFoundException("Station not found");
     }
   }
 

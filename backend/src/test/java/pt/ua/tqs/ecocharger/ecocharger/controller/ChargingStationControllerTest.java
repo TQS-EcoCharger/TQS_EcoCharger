@@ -21,13 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ChargingStationController.class)
 @Import(SecurityDisableConfig.class)
-public class ChargingStationControllerTest {
+class ChargingStationControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
@@ -42,7 +42,7 @@ public class ChargingStationControllerTest {
   @Requirement("ET-18")
   void testCreateStation() throws Exception {
     ChargingStation mockStation =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     mockStation.setId(1L);
 
     Mockito.when(chargingStationService.createStation(any(ChargingStation.class)))
@@ -59,11 +59,32 @@ public class ChargingStationControllerTest {
   }
 
   @Test
+  @DisplayName("Successfully edit station")
+  @Requirement("ET-22")
+  void testEditStation() throws Exception {
+    ChargingStation mockStation =
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
+    mockStation.setId(1L);
+    mockStation.setCityName("Updated City");
+
+    Mockito.when(chargingStationService.updateStation(eq(1L), any(ChargingStation.class)))
+        .thenReturn(mockStation);
+    mockMvc
+        .perform(
+            put("/api/v1/chargingStations/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mockStation)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1L))
+        .andExpect(jsonPath("$.cityName").value("Updated City"));
+  }
+
+  @Test
   @DisplayName("Return 404 when station not found")
   @Requirement("ET-18")
   void testGetAllStations() throws Exception {
     ChargingStation mockStation =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     mockStation.setId(1L);
 
     Mockito.when(chargingStationService.getAllStations()).thenReturn(List.of(mockStation));
@@ -79,7 +100,7 @@ public class ChargingStationControllerTest {
   @Requirement("ET-18")
   void testGetStationsByCity() throws Exception {
     ChargingStation mockStation =
-        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "Rua A", "PT", "Portugal", "Electric");
+        new ChargingStation("Aveiro", "Rua A", 40.0, -8.0, "PT", "Portugal");
     mockStation.setId(1L);
 
     Mockito.when(chargingStationService.getAllStationsByCityName("Aveiro"))
