@@ -5,6 +5,7 @@ import RegisterPage from "./pages/RegisterPage";
 import { UserProvider } from "./context/UserContext";
 import VehiclesPage from "./pages/VehiclesPage";
 import ReservationsPage from "./pages/ReservationsPage";
+import StatisticsPage from "./pages/StatisticsPage";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/vehicles" element={<VehiclesPage />} />
         <Route path="/reservations" element={<ReservationsPage />} />
+        <Route path="/statistics" element={<StatisticsPage />} />
       </Routes>
     </Router>
     </UserProvider>

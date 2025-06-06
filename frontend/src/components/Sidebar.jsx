@@ -18,7 +18,7 @@ export default function Sidebar() {
 
         <ul className={styles.menu} id="sidebar-menu">
           {userType === 'administrator' && (
-            <li><NavLink to="/home" id="nav-dashboard">Dashboard</NavLink></li>
+            <><li><NavLink to="/home" id="nav-dashboard">Dashboard</NavLink></li><li><NavLink to="/statistics" id="nav-statistics">Statistics</NavLink></li></>
           )}
           <li><NavLink to="/home" id="nav-home">Map</NavLink></li>
           <li><NavLink to="/stations" id="nav-stations">Charging Stations</NavLink></li>
