@@ -1,7 +1,11 @@
+
+    
 on:
   workflow_run:
-    branches: [master]
-    
+    workflows: ["Test and Analyze Spring Boot Project (Unit Only)"]
+    types:
+      - completed
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
