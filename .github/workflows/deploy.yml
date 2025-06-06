@@ -1,9 +1,7 @@
-
-on:
-  workflow_run:
-    workflows: ["Test and Analyze Spring Boot Project (Unit Only)"]
-    types:
-      - completed
+on: 
+  push:
+    branches:
+      - master
 
 permissions:
   contents: read
@@ -21,7 +19,6 @@ jobs:
 
 
     name: Eco_Charger Deploy
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     
       - name: Checkout
