@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
+import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingOperatorService;
+import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
@@ -16,6 +19,7 @@ import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -28,6 +32,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class AuthenticationServiceTest {
 
   @Mock private UserRepository userRepository;
+
+  @Mock private DriverService driverService;
+
+  @Mock private ChargingOperatorService chargingOperatorService;
 
   @Mock private JwtUtil jwtUtil;
 
@@ -110,7 +118,7 @@ class AuthenticationServiceTest {
     assertThat(result.isSuccess()).isTrue();
     assertThat(result.getMessage()).isEqualTo("Registration successful");
     assertThat(result.getToken()).isEqualTo("reg-jwt");
-    verify(userRepository).save(any(User.class));
+    verify(driverService).createDriver(any(Driver.class));
   }
 
   @Test
