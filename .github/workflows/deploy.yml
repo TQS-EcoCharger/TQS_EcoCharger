@@ -12,17 +12,51 @@ concurrency:
 jobs:
   deploy: 
     runs-on: self-hosted
+
+
+
     name: Eco_Charger Deploy
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+    
       - name: Checkout
         uses: actions/checkout@v4.1.1
+
+      - name: Create .env file
+        run: |
+          echo "SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ecocharger" >> .env
+          echo "SPRING_DATASOURCE_USERNAME=ecocharger" >> .env
+          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+
+      - name: Create application.properties
+        run: |
+          cat <<EOF > backend/src/main/resources/application.properties
+          spring.application.name=ecocharger
+          spring.datasource.url=jdbc:postgresql://db:5432/ecocharger
+          spring.datasource.username=ecocharger
+          spring.datasource.password=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          spring.datasource.driver-class-name=org.postgresql.Driver
+          spring.jpa.show-sql=true
+          spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+          spring.jpa.hibernate.ddl-auto=update
+          spring.jpa.defer-datasource-initialization=true
+          spring.flyway.enabled=false
+          springdoc.api-docs.path=/api-docs
+          springdoc.swagger-ui.path=/documentation
+          jwt.secret=${{ secrets.JWT_SECRET_KEY }}
+          EOF
+
 
       - name: Down containers
         run: docker compose down
       
       - name: Remove build caches
         run: docker builder prune -a -f
+
+      - name: Package backend
+        run: mvn clean package -DskipTests
+        working-directory: ./backend
 
       - name: Build and up 
         run: docker compose -f docker-compose.yml up --build -d
