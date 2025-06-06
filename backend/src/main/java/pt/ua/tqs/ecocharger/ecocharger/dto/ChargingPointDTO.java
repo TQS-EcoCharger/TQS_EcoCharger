@@ -16,6 +16,7 @@ public class ChargingPointDTO {
   private boolean available;
   private Double pricePerKWh;
   private Double pricePerMinute;
+  private Double chargingRateKWhPerMinute;
   private List<ConnectorDTO> connectors;
   private ChargingStationDTO chargingStation;
 }

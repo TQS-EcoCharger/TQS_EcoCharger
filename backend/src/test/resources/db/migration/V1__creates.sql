@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS charging_stations (
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
     countrycode VARCHAR(255) NOT NULL,
-    country VARCHAR(255) NOT NULL
+    country VARCHAR(255) NOT NULL,
+    administrator_id BIGINT,
+    CONSTRAINT fk_station_admin FOREIGN KEY (administrator_id) REFERENCES administrators(id)
 );
 
 -- CHARGING_POINTS
@@ -37,10 +39,12 @@ CREATE TABLE IF NOT EXISTS charging_points (
     station_id BIGINT NOT NULL,
     available BOOLEAN NOT NULL,
     brand VARCHAR(255) NOT NULL,
-    price_per_kwh DOUBLE PRECISION,
-    price_per_minute DOUBLE PRECISION,
-    FOREIGN KEY (station_id) REFERENCES charging_stations(id)
+    price_per_kwh DOUBLE,
+    price_per_minute DOUBLE,
+    charging_rate_kwh_per_minute DOUBLE NOT NULL,
+    CONSTRAINT fk_cp_station FOREIGN KEY (station_id) REFERENCES charging_stations(id)
 );
+
 
 -- CONNECTORS
 CREATE TABLE IF NOT EXISTS connectors (
@@ -54,7 +58,24 @@ CREATE TABLE IF NOT EXISTS connectors (
     FOREIGN KEY (charging_point_id) REFERENCES charging_points(id)
 );
 
--- CARS
+-- RESERVATIONS
+CREATE TABLE IF NOT EXISTS reservations (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    charging_point_id BIGINT NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_res_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_res_cp FOREIGN KEY (charging_point_id) REFERENCES charging_points(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS driver (
+    id BIGINT PRIMARY KEY,
+    FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS car (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -78,17 +99,61 @@ CREATE TABLE IF NOT EXISTS driver_cars (
     FOREIGN KEY (cars_id) REFERENCES car(id) ON DELETE CASCADE
 );
 
--- RESERVATIONS
-CREATE TABLE IF NOT EXISTS reservations (
-    id BIGSERIAL PRIMARY KEY,
+
+CREATE TABLE IF NOT EXISTS otp_codes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(255) NOT NULL,
+    expiration_time TIMESTAMP NOT NULL,
+    reservation_id BIGINT NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+);
+
+CREATE TABLE IF NOT EXISTS charging_sessions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reservation_id BIGINT,
     user_id BIGINT NOT NULL,
     charging_point_id BIGINT NOT NULL,
+    car_id BIGINT NOT NULL,
     start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP,
+    duration_minutes BIGINT,
+    total_cost DOUBLE,
     status VARCHAR(50) NOT NULL,
+    initial_battery_level DOUBLE NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (charging_point_id) REFERENCES charging_points(id)
+    FOREIGN KEY (charging_point_id) REFERENCES charging_points(id),
+    FOREIGN KEY (car_id) REFERENCES car(id)
 );
+
+
+
+CREATE TABLE IF NOT EXISTS otp_codes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(255) NOT NULL,
+    expiration_time TIMESTAMP NOT NULL,
+    reservation_id BIGINT NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+);
+
+CREATE TABLE IF NOT EXISTS charging_sessions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reservation_id BIGINT,
+    user_id BIGINT NOT NULL,
+    charging_point_id BIGINT NOT NULL,
+    car_id BIGINT NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP,
+    duration_minutes BIGINT,
+    total_cost DOUBLE,
+    status VARCHAR(50) NOT NULL,
+    initial_battery_level DOUBLE NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (charging_point_id) REFERENCES charging_points(id),
+    FOREIGN KEY (car_id) REFERENCES car(id)
+);
+
 
 -- USERS
 INSERT INTO users (email, password, name, enabled, user_type)
