@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingStationService;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 @RestController
 @RequestMapping("/api/v1/chargingStations")
@@ -40,6 +42,17 @@ public class ChargingStationController {
   public ResponseEntity<Void> deleteStation(@PathVariable Long id) {
     chargingStationService.deleteStation(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<ChargingStation> updateStation(
+      @PathVariable Long id, @RequestBody ChargingStation station) {
+    try {
+      ChargingStation updatedStation = chargingStationService.updateStation(id, station);
+      return ResponseEntity.ok(updatedStation);
+    } catch (NotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @GetMapping

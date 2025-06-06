@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import styles from '../css/Sidebar.module.css';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../context/UserProvider.jsx';
 
 export default function Sidebar() {
   const { userType } = useUser();

@@ -38,7 +38,6 @@ public class DriverController {
   public ResponseEntity<Object> getDriverById(@PathVariable Long id) {
     try {
       Driver existingDriver = driverService.getDriverById(id);
-      System.out.println("Driver found: " + existingDriver);
       return ResponseEntity.ok(existingDriver);
     } catch (NotFoundException e) {
       return ResponseEntity.status(404).body(e.getMessage());
@@ -70,8 +69,6 @@ public class DriverController {
   @PatchMapping("{id}/cars/")
   public ResponseEntity<Object> addCarToDriver(@PathVariable Long id, @RequestBody Car car) {
     try {
-      System.out.println("Adding car to driver with ID: " + id);
-      System.out.println("Car details: " + car);
       Driver updatedDriver = driverService.addCarToDriver(id, car);
       return ResponseEntity.ok(updatedDriver);
     } catch (NotFoundException e) {

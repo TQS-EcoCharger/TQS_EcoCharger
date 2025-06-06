@@ -14,6 +14,8 @@ public interface ChargingPointService {
 
   List<ChargingPoint> getPointsByStationId(Long stationId);
 
+  ChargingPoint updatePoint(Long id, ChargingPoint point);
+
   void deletePoint(Long id);
 
   ActiveSessionDTO getActiveSessionForPoint(Long pointId);

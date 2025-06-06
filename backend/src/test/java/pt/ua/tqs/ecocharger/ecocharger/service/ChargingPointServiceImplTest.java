@@ -14,6 +14,7 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingPointRepository;
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingSessionRepository;
 
 import java.time.LocalDateTime;
@@ -105,6 +106,37 @@ class ChargingPointServiceImplTest {
   }
 
   @Test
+  @DisplayName("Should successfully update an existing charging point")
+  @Requirement("ET-22")
+  void testUpdatePoint_Exists() {
+    ChargingPoint updatedPoint = new ChargingPoint();
+    updatedPoint.setId(1L);
+    updatedPoint.setBrand("Updated Brand");
+
+    when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
+    when(chargingPointRepository.save(any(ChargingPoint.class))).thenReturn(updatedPoint);
+
+    ChargingPoint result = chargingPointService.updatePoint(1L, updatedPoint);
+    assertEquals("Updated Brand", result.getBrand());
+    verify(chargingPointRepository).save(updatedPoint);
+  }
+
+  @Test
+  @DisplayName("Should throw exception when trying to update non-existent charging point")
+  @Requirement("ET-22")
+  void testUpdatePoint_NotFound() {
+    ChargingPoint updatedPoint = new ChargingPoint();
+    updatedPoint.setId(2L);
+
+    when(chargingPointRepository.findById(2L)).thenReturn(Optional.empty());
+    Exception exception =
+        assertThrows(
+            NotFoundException.class, () -> chargingPointService.updatePoint(2L, updatedPoint));
+    assertEquals("Point not found", exception.getMessage());
+    verify(chargingPointRepository, never()).save(any());
+  }
+
+  @Test
   @DisplayName("Should throw exception when no available points found")
   @Requirement("ET-18")
   void testGetAvailablePoints_Empty() {
@@ -164,6 +196,25 @@ class ChargingPointServiceImplTest {
         assertThrows(RuntimeException.class, () -> chargingPointService.getPointsByStationId(1L));
 
     assertEquals("No points found for this station", exception.getMessage());
+  }
+
+  @Test
+  @DisplayName("Update point with valid information")
+  @Requirement("ET-22")
+  void testUpdatePoint_Valid() {
+    ChargingPoint updatedPoint = new ChargingPoint();
+    updatedPoint.setId(1L);
+    updatedPoint.setBrand("Updated Brand");
+    updatedPoint.setAvailable(false);
+
+    when(chargingPointRepository.findById(1L)).thenReturn(Optional.of(point));
+    when(chargingPointRepository.save(any(ChargingPoint.class))).thenReturn(updatedPoint);
+
+    ChargingPoint result = chargingPointService.updatePoint(1L, updatedPoint);
+
+    assertEquals("Updated Brand", result.getBrand());
+    assertFalse(result.isAvailable());
+    verify(chargingPointRepository).save(updatedPoint);
   }
 
   @Test
