@@ -49,6 +49,7 @@ public class OTPCodeRepositoryTest {
     point.setAvailable(true);
     point.setBrand("TestBrand");
     point.setPricePerKWh(0.25);
+    point.setChargingRateKWhPerMinute(2.0);
     point.setPricePerMinute(0.03);
     return chargingPointRepository.save(point);
   }
@@ -67,6 +68,7 @@ public class OTPCodeRepositoryTest {
     OTPCode otp = new OTPCode();
     otp.setCode("123456");
     otp.setReservation(reservation);
+    otp.setExpirationTime(LocalDateTime.now().plusMinutes(10));
     otpCodeRepository.save(otp);
 
     Optional<OTPCode> found = otpCodeRepository.findByCodeAndReservation("123456", reservation);
@@ -85,6 +87,7 @@ public class OTPCodeRepositoryTest {
 
     OTPCode otp = new OTPCode();
     otp.setCode("654321");
+    otp.setExpirationTime(LocalDateTime.now().plusMinutes(10));
     otp.setReservation(reservation);
     otpCodeRepository.save(otp);
 

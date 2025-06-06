@@ -37,11 +37,9 @@ public class DriverController {
 
   private final DriverService driverService;
 
-  private final StripeService stripeService;
 
-  public DriverController(DriverService driverService, StripeService stripeService) {
+  public DriverController(DriverService driverService) {
     this.driverService = driverService;
-    this.stripeService = stripeService;
   }
 
   @Operation(summary = "Get all drivers")

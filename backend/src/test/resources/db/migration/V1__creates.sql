@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS administrators (
 
 CREATE TABLE IF NOT EXISTS drivers (
     id BIGINT PRIMARY KEY,
+    balance DOUBLE PRECISION DEFAULT 0,
     FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS driver_cars (
 );
 
 
-CREATE TABLE IF NOT EXISTS otp_codes (
+CREATE TABLE IF NOT EXISTS otp_code (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(255) NOT NULL,
     expiration_time TIMESTAMP NOT NULL,
@@ -120,34 +121,8 @@ CREATE TABLE IF NOT EXISTS charging_sessions (
     total_cost DOUBLE,
     status VARCHAR(50) NOT NULL,
     initial_battery_level DOUBLE NOT NULL,
-    FOREIGN KEY (reservation_id) REFERENCES reservations(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (charging_point_id) REFERENCES charging_points(id),
-    FOREIGN KEY (car_id) REFERENCES car(id)
-);
-
-CREATE TABLE IF NOT EXISTS otp_codes (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    code VARCHAR(255) NOT NULL,
-    expiration_time TIMESTAMP NOT NULL,
-    reservation_id BIGINT NOT NULL,
-    FOREIGN KEY (reservation_id) REFERENCES reservations(id)
-);
-
-CREATE TABLE IF NOT EXISTS charging_sessions (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    reservation_id BIGINT,
-    user_id BIGINT NOT NULL,
-    charging_point_id BIGINT NOT NULL,
-    car_id BIGINT NOT NULL,
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP,
-    duration_minutes BIGINT,
-    total_cost DOUBLE,
-    status VARCHAR(50) NOT NULL,
-    initial_battery_level DOUBLE NOT NULL,
-    energy_delivered DOUBLE;
-    payment_intent_id VARCHAR(255);
+    energy_delivered DOUBLE,
+    payment_intent_id VARCHAR(255),
     FOREIGN KEY (reservation_id) REFERENCES reservations(id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (charging_point_id) REFERENCES charging_points(id),
