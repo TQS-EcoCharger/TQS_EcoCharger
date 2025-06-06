@@ -21,13 +21,11 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingOperator;
 @ExtendWith(MockitoExtension.class)
 public class ChargingOperatorServiceImplTest {
 
-    @Mock
-    private ChargingOperatorRepository chargingOperatorRepository;
+  @Mock private ChargingOperatorRepository chargingOperatorRepository;
 
-    @InjectMocks
-    private ChargingOperatorServiceImpl chargingOperatorService;
+  @InjectMocks private ChargingOperatorServiceImpl chargingOperatorService;
 
-    ChargingOperator chargingOperator;
+  ChargingOperator chargingOperator;
 
     @BeforeEach
     public void setUp() {
