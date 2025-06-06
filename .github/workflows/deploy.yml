@@ -58,6 +58,8 @@ jobs:
           management.endpoint.metrics.show-details=always
           management.endpoint.prometheus.enabled=true
           management.metrics.export.prometheus.enabled=true
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
           EOF
 
 
