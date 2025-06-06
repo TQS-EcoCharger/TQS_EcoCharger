@@ -145,9 +145,8 @@ jobs:
 
       - name: Write it-test application-it.properties
         run: |
-          mkdir -p backend/src/integration-test/resources
-          
-          cat <<EOF > backend/src/integration-test/resources/application-it.properties
+          mkdir -p backend/src/test/resources
+          cat <<EOF > backend/src/test/resources/application-it.properties
           spring.flyway.enabled=true
           spring.flyway.locations=classpath:db/migration
           spring.flyway.clean-disabled=false
