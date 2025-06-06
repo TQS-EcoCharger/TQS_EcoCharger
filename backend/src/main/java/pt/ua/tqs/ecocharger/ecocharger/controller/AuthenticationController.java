@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.AuthResultDTO;
@@ -18,9 +21,7 @@ import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(
-    name = "Authentication",
-    description = "Endpoints for user login, registration, and current user info")
+@Tag(name = "Authentication", description = "Endpoints for user login, registration, and current user info")
 public class AuthenticationController {
 
   private final AuthenticationService authService;
@@ -32,6 +33,13 @@ public class AuthenticationController {
   @Operation(
       summary = "User login",
       description = "Authenticates a user with email and password, returns a token if successful")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Successfully authenticated and returned token",
+      content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = AuthResultDTO.class)))
+  @ApiResponse(responseCode = "401", description = "Invalid credentials or authentication failed")
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest request) {
     AuthResultDTO result = authService.authenticate(request.getEmail(), request.getPassword());
@@ -46,6 +54,13 @@ public class AuthenticationController {
   @Operation(
       summary = "User registration",
       description = "Registers a new user with email, password, and name")
+  @ApiResponse(
+      responseCode = "200",
+      description = "User registered successfully",
+      content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = AuthResultDTO.class)))
+  @ApiResponse(responseCode = "400", description = "Missing required fields or invalid input")
   @PostMapping("/register")
   public ResponseEntity<Object> register(@RequestBody Map<String, String> user) {
     String email = user.get("email");
@@ -73,10 +88,17 @@ public class AuthenticationController {
   @Operation(
       summary = "Get current user",
       description = "Retrieves the current authenticated user based on JWT token")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Current authenticated user retrieved successfully",
+      content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = User.class)))
+  @ApiResponse(responseCode = "401", description = "Invalid or missing authentication token")
+  @ApiResponse(responseCode = "403", description = "User not authorized or not found")
   @GetMapping("/me")
   public ResponseEntity<Object> getCurrentUser(
-      @Parameter(description = "Bearer token obtained at login") @RequestHeader("Authorization")
-          String token) {
+      @Parameter(description = "Bearer token obtained at login") @RequestHeader("Authorization") String token) {
     String jwtToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 
     try {

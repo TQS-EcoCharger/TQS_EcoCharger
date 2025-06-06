@@ -67,7 +67,7 @@ export default function HomePage() {
 
     const fetchCurrentReservations = async () => {
       console.log(`${CONFIG.API_URL}v1/reservation`);
-      const response = await axios.get(`http://localhost:8080/api/v1/reservation`, 
+      const response = await axios.get(`${CONFIG.API_URL}v1/reservation`, 
         {
           headers: {
             "Authorization": `Bearer ${token}`

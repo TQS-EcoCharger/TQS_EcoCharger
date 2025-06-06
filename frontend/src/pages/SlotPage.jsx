@@ -17,6 +17,7 @@ export default function SlotPage() {
   const [loading, setLoading] = useState(true);
   const [otp, setOtp] = useState(Array(6).fill(''));
   const [cars, setCars] = useState([]);
+  const [curCar, setCurCar] = useState(null);
   const [isOtpValid, setIsOtpValid] = useState(false);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
@@ -60,6 +61,13 @@ export default function SlotPage() {
       setMessage('Failed to end session.');
     }
   };
+
+  const handleCarChange = (selected) => {
+    const fullCar = cars.find(car => car.id === selected.value);
+    console.log(fullCar);
+    setCurCar(fullCar);
+    setSelectedCarOption(selected);
+  }
 
   const handleValidateOtp = async () => {
     const otpCode = otp.join('');
@@ -114,6 +122,7 @@ export default function SlotPage() {
     }
   };
 
+
   const handleOtpChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
     const newOtp = [...otp];
@@ -136,24 +145,34 @@ export default function SlotPage() {
           {loading ? (
             <p id="loading">Loading...</p>
           ) : session ? (
-            <div className={styles.sessionCard} id="session-info">
-              <ChargingRingWithBubbles batteryPercentage={session.batteryPercentage.toFixed(2)} />
+            <div className={styles.comparisonContainer} id="session-container">
+              <div className={styles.sessionCard} id="session-info">
+                <ChargingRingWithBubbles batteryPercentage={session.batteryPercentage.toFixed(2)} />
 
-              <h2>Charging Slot #{chargingPointId}</h2>
-              <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
-              <p><BsBatteryCharging className={styles.sessionIcon} /> <strong>Battery:</strong> {(session.batteryPercentage ?? 0).toFixed(2)}%</p>
-              <p><FaBolt className={styles.sessionIcon} /> <strong>Energy:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
-              <p><FaClock className={styles.sessionIcon} /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
-              <p><FaBolt className={styles.sessionIcon} /> <strong>Cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
+                <h2>Charging Slot #{chargingPointId}</h2>
+                <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
+                <p><BsBatteryCharging className={styles.sessionIcon} /> <strong>Battery:</strong> {(session.batteryPercentage ?? 0).toFixed(2)}%</p>
+                <p><FaBolt className={styles.sessionIcon} /> <strong>Energy:</strong> {(session.energyDelivered ?? 0).toFixed(2)} kWh</p>
+                <p><FaClock className={styles.sessionIcon} /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
+                <p><FaBolt className={styles.sessionIcon} /> <strong>Cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
 
-              <button
-                onClick={handleEndCharging}
-                className={styles.endChargingBtn}
-                id="end-charging-button"
-              >
-                <FaPowerOff /> End Charging
-              </button>
-            </div>
+                  <button
+                    onClick={handleEndCharging}
+                    className={styles.endChargingBtn}
+                    id="end-charging-button"
+                  >
+                    <FaPowerOff /> End Charging
+                  </button>
+                </div>
+
+                <div className={styles.comparisonCard} id="comparison-info">
+                  <h2>Comparison with a Ford Raptor</h2>
+                  <p>{session.carName} autonomy: {(session.energyDelivered * 100 / curCar.consumption).toFixed(2)}km's</p>
+                  <p>Ford Raptor liters needed: {(13.8 * (session.energyDelivered * 100 / curCar.consumption)/ 100).toFixed(2)}L</p>
+                  <p>Price of fuel needed: {(1.65 * (13.8 * (session.energyDelivered * 100 / curCar.consumption)/ 100)).toFixed(2)}€</p>
+                  <p>Difference: {-(session.totalCost - (1.65 * (13.8 * (session.energyDelivered * 100 / curCar.consumption)/ 100))).toFixed(2)}€</p>
+                </div>
+              </div>
 
           ) : (
             <div id="no-session-info">
@@ -201,7 +220,7 @@ export default function SlotPage() {
                       classNamePrefix="custom-car-select"
                       className="custom-car-select-container"
                       value={selectedCarOption}
-                      onChange={(selected) => setSelectedCarOption(selected)}
+                      onChange={(selected) => handleCarChange(selected)}
                       options={cars.map(car => ({
                         value: car.id,
                         label: `${car.make} ${car.model} (ID: ${car.id})`

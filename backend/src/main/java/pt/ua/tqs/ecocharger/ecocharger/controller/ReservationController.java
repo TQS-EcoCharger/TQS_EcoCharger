@@ -72,8 +72,12 @@ public class ReservationController {
     return ResponseEntity.ok(reservations);
   }
 
+  @Operation(
+      summary = "Generate an OTP code for a reservation",
+      description = "Generates a one-time password (OTP) code for verifying the reservation")
   @PostMapping("/{reservationId}/otp")
-  public ResponseEntity<OTPCode> generateOtp(@PathVariable Long reservationId) {
+  public ResponseEntity<OTPCode> generateOtp(
+      @Parameter(description = "ID of the reservation") @PathVariable Long reservationId) {
     try {
       OTPCode otp = otpService.generateOtp(reservationId);
       return ResponseEntity.ok(otp);

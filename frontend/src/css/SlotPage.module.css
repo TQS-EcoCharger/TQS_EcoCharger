@@ -39,6 +39,46 @@
   padding: 5px;
 }
 
+.comparisonContainer {
+  display:flex;
+  flex-direction: column; /* stack vertically */
+  gap: 1rem; /* optional: add some spacing between cards */
+}
+
+/* Redesigned session info card */
+.comparisonCard {
+  background: #2a2a2a;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+  border: 2px solid #f4cc5d;
+  transition: transform 0.2s ease;
+}
+
+.comparisonCard:hover {
+  transform: translateY(-3px);
+}
+
+.comparisonCard h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  color: #f4cc5d;
+}
+
+.comparisonCard p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 
 .stationDetails h2 {
   text-align: center;
