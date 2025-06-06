@@ -17,7 +17,7 @@ export default function SlotPage() {
   const [loading, setLoading] = useState(true);
   const [otp, setOtp] = useState(Array(6).fill(''));
   const [cars, setCars] = useState([]);
-  const [curCar, setCurCar] = useState(null);
+  const [curCar, setCurCar] = useState(localStorage.getItem('curCar') ? JSON.parse(localStorage.getItem('curCar')) : null);
   const [isOtpValid, setIsOtpValid] = useState(false);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
@@ -66,6 +66,7 @@ export default function SlotPage() {
     const fullCar = cars.find(car => car.id === selected.value);
     console.log(fullCar);
     setCurCar(fullCar);
+    localStorage.setItem('curCar', JSON.stringify(fullCar));
     setSelectedCarOption(selected);
   }
 
