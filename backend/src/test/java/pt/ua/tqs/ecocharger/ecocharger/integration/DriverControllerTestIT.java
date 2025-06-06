@@ -257,5 +257,23 @@ class DriverControllerTestIT {
           .body("status", equalTo("success"));
   }
 
+  @Test
+  @DisplayName("Stripe top-up fails with invalid amount")
+  void testStripeTopUpInvalidAmount() {
+      String json = """
+          { "amount": 0.0 }
+      """;
+
+      RestAssuredMockMvc.given()
+          .contentType("application/json")
+          .body(json)
+          .when()
+          .post("/api/v1/driver/" + savedDriver.getId() + "/balance")
+          .then()
+          .statusCode(400)
+          .body("error", equalTo("Amount must be greater than 0"));
+  }
+
+
 
 }
