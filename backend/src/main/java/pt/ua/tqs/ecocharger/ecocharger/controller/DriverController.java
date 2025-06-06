@@ -8,12 +8,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
-import com.stripe.param.PaymentIntentCreateParams;
 
 import pt.ua.tqs.ecocharger.ecocharger.dto.BalanceTopUpRequest;
 import pt.ua.tqs.ecocharger.ecocharger.models.Car;
@@ -21,7 +19,6 @@ import pt.ua.tqs.ecocharger.ecocharger.models.Driver;
 import pt.ua.tqs.ecocharger.ecocharger.service.StripeService;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
-import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
