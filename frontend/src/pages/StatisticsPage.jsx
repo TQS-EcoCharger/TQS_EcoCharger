@@ -1,3 +1,4 @@
+/*
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend, CartesianGrid } from 'recharts';
 import axios from 'axios';
@@ -113,3 +114,4 @@ function StatisticsPage() {
 }
 
 export default StatisticsPage;
+*/

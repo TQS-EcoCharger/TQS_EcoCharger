@@ -156,14 +156,14 @@ export default function SlotPage() {
                 <p><FaClock className={styles.sessionIcon} /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
                 <p><FaBolt className={styles.sessionIcon} /> <strong>Cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
 
-                  <button
-                    onClick={handleEndCharging}
-                    className={styles.endChargingBtn}
-                    id="end-charging-button"
-                  >
-                    <FaPowerOff /> End Charging
-                  </button>
-                </div>
+                <button
+                  onClick={handleEndCharging}
+                  className={styles.endChargingBtn}
+                  id="end-charging-button"
+                >
+                  <FaPowerOff /> End Charging
+                </button>
+              </div>
 
                 <div className={styles.comparisonCard} id="comparison-info">
                   <h2>Comparison with a Ford Raptor</h2>
@@ -172,7 +172,7 @@ export default function SlotPage() {
                   <p>Price of fuel needed: {(1.65 * (13.8 * (session.energyDelivered * 100 / curCar.consumption)/ 100)).toFixed(2)}€</p>
                   <p>Difference: {-(session.totalCost - (1.65 * (13.8 * (session.energyDelivered * 100 / curCar.consumption)/ 100))).toFixed(2)}€</p>
                 </div>
-              </div>
+            </div>
 
           ) : (
             <div id="no-session-info">
