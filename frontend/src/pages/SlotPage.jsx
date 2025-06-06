@@ -17,7 +17,7 @@ export default function SlotPage() {
   const [loading, setLoading] = useState(true);
   const [otp, setOtp] = useState(Array(6).fill(''));
   const [cars, setCars] = useState([]);
-  const [curCar, setCurCar] = useState(null);
+  const [curCar, setCurCar] = useState(localStorage.getItem('curCar') ? JSON.parse(localStorage.getItem('curCar')) : null);
   const [isOtpValid, setIsOtpValid] = useState(false);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
@@ -66,6 +66,7 @@ export default function SlotPage() {
     const fullCar = cars.find(car => car.id === selected.value);
     console.log(fullCar);
     setCurCar(fullCar);
+    localStorage.setItem('curCar', JSON.stringify(fullCar));
     setSelectedCarOption(selected);
   }
 
@@ -103,7 +104,7 @@ export default function SlotPage() {
   const handleStartCharging = async () => {
     const otpCode = otp.join('');
     try {
-      const res = await axios.post(`${CONFIG.API_URL}v1/sessions`, {
+      await axios.post(`${CONFIG.API_URL}v1/sessions`, {
         otp: otpCode,
         carId: parseInt(selectedCarOption?.value),
         chargingPointId: parseInt(chargingPointId)
@@ -111,7 +112,7 @@ export default function SlotPage() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setSession(res.data);
+      await fetchSession();
       setMessage('');
       setOtp(Array(6).fill(''));
       setCars([]);
@@ -146,8 +147,8 @@ export default function SlotPage() {
             <p id="loading">Loading...</p>
           ) : session ? (
             <div className={styles.comparisonContainer} id="session-container">
-                <div className={styles.sessionCard} id="session-info">
-                  <ChargingRingWithBubbles batteryPercentage={session.batteryPercentage.toFixed(2)} />
+              <div className={styles.sessionCard} id="session-info">
+                <ChargingRingWithBubbles batteryPercentage={(session.batteryPercentage ?? 0).toFixed(2)} />
 
                   <h2>Charging Slot #{chargingPointId}</h2>
                   <p><FaCar className={styles.sessionIcon} /> <strong>Car:</strong> {session.carName || session.car.model}</p>
@@ -156,14 +157,14 @@ export default function SlotPage() {
                   <p><FaClock className={styles.sessionIcon} /> <strong>Duration:</strong> {session.durationMinutes ?? 0} min</p>
                   <p><FaBolt className={styles.sessionIcon} /> <strong>Cost:</strong> €{(session.totalCost ?? 0).toFixed(2)}</p>
 
-                  <button
-                    onClick={handleEndCharging}
-                    className={styles.endChargingBtn}
-                    id="end-charging-button"
-                  >
-                    <FaPowerOff /> End Charging
-                  </button>
-                </div>
+                <button
+                  onClick={handleEndCharging}
+                  className={styles.endChargingBtn}
+                  id="end-charging-button"
+                >
+                  <FaPowerOff /> End Charging
+                </button>
+              </div>
 
                 <div className={styles.comparisonCard} id="comparison-info">
                   <h2>Comparison with a Ford Raptor</h2>
