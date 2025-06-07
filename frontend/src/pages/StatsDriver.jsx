@@ -154,7 +154,7 @@ function StatsDriver() {
           <InfoCard title="Savings vs Diesel" value={`€${totalSavings.gasoleo}`} />
           <InfoCard title="Savings vs GPL" value={`€${totalSavings.gpl}`} />
           <div className={styles.cardStatistics}>
-            <h3 className={styles.cardTitleStatistics}>Editar Preços de Combustível (€)</h3>
+            <h3 className={styles.cardTitleStatistics}>Edit Fuel Prices</h3>
             <div className={styles.priceListStatistics}>
               {['gasolina', 'gasoleo', 'gpl'].map(type => (
                 <div key={type} className={styles.inputGroup}>
