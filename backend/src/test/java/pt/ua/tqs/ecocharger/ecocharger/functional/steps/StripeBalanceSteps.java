@@ -58,11 +58,10 @@ public class StripeBalanceSteps {
     WebElement emailInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("email")));
     emailInput.sendKeys("example@example.com");
     WebDriverWait stripeWait = new WebDriverWait(driver, Duration.ofSeconds(20));
-    WebElement cardAccordionButton = stripeWait.until(
-        ExpectedConditions.presenceOfElementLocated(
-            By.cssSelector("button[data-testid='card-accordion-item-button']")
-        )
-    );
+    WebElement cardAccordionButton =
+        stripeWait.until(
+            ExpectedConditions.presenceOfElementLocated(
+                By.cssSelector("button[data-testid='card-accordion-item-button']")));
     ((JavascriptExecutor) driver)
         .executeScript("arguments[0].scrollIntoView(true);", cardAccordionButton);
     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", cardAccordionButton);
