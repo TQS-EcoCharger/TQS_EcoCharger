@@ -154,7 +154,7 @@ function StatisticsPage() {
         });
       })
       .catch(err => console.error('Failed to load sessions:', err));
-  }, [token]);
+}, [token, cityFuelPrices]);
 
   useEffect(() => {
   const totals = { gasolina: 0, gasoleo: 0, gpl: 0 };
@@ -239,9 +239,10 @@ function StatisticsPage() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie data={monthlyData} dataKey="kWh" nameKey="month" outerRadius={80} label>
-                  {monthlyData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
+                  {monthlyData.map((entry) => (
+  <Cell key={`cell-${entry.month}`} fill={COLORS[monthlyData.indexOf(entry) % COLORS.length]} />
+))}
+
                 </Pie>
                 <Tooltip formatter={(value) => `${value} kWh`} />
                 <Legend />
