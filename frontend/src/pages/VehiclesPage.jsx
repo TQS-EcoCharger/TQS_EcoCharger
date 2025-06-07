@@ -51,10 +51,6 @@ export default function VehiclesPage() {
       fetchVehicles();
     };
 
-    console.log("meId:", localStorage.getItem("me"));
-    console.log("token:", localStorage.getItem("token"));
-    console.log("API URL:", CONFIG.API_URL);
-    console.log("user type:", localStorage.getItem("userType"));
     fetchSelf();
   }, []);
 

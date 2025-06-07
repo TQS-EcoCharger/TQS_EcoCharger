@@ -83,7 +83,7 @@ export default function Sidebar() {
               <li><NavLink to="/statistics" id="nav-statistics">Statistics</NavLink></li>
             </>
           ) : (
-            <li><NavLink to="/home" id="nav-home">Map</NavLink></li>
+            <><li><NavLink to="/home" id="nav-home">Map</NavLink></li><li><NavLink to="/statsDriver" id="nav-statsDriver">Statistics</NavLink></li></>
           )}
           <li><NavLink to="/reservations" id="nav-reservations">Reservations</NavLink></li>
           <li><NavLink to="/vehicles" id="nav-vehicles">Vehicles</NavLink></li>
