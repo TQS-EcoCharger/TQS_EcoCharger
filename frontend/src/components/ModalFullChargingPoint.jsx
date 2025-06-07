@@ -11,12 +11,13 @@ export default function ModalFullChargingPoint({ stationId, onClose, onSuccess, 
   const [error, setError] = useState('');
 
   const [form, setForm] = useState({
-    brand: '',
-    available: true,
-    pricePerKWh: '',
-    pricePerMinute: '',
-    connectors: [],
-  });
+  brand: '',
+  available: true,
+  pricePerKWh: '',
+  pricePerMinute: '',
+  chargingRateKWhPerMinute: '',
+  connectors: [],
+});
 
   const [connector, setConnector] = useState({
     connectorType: '',
@@ -34,6 +35,8 @@ export default function ModalFullChargingPoint({ stationId, onClose, onSuccess, 
         pricePerKWh: pointToEdit.pricePerKWh?.toString() || '',
         pricePerMinute: pointToEdit.pricePerMinute?.toString() || '',
         connectors: pointToEdit.connectors || [],
+        chargingRateKWhPerMinute: pointToEdit.chargingRateKWhPerMinute?.toString() || '',
+
       });
     }
   }, [pointToEdit]);
@@ -106,25 +109,27 @@ export default function ModalFullChargingPoint({ stationId, onClose, onSuccess, 
         return;
       }
     }
+const payload = pointToEdit
+  ? {
+      brand: form.brand,
+      available: form.available,
+      pricePerKWh: parseFloat(form.pricePerKWh),
+      pricePerMinute: parseFloat(form.pricePerMinute),
+      chargingRateKWhPerMinute: parseFloat(form.chargingRateKWhPerMinute),
+      connectors: form.connectors,
+    }
+  : {
+      point: {
+        brand: form.brand,
+        available: form.available,
+        pricePerKWh: parseFloat(form.pricePerKWh),
+        pricePerMinute: parseFloat(form.pricePerMinute),
+        chargingRateKWhPerMinute: parseFloat(form.chargingRateKWhPerMinute),
+        connectors: form.connectors,
+      },
+      station: { id: stationId },
+    };
 
-    const payload = pointToEdit
-      ? {
-          brand: form.brand,
-          available: form.available,
-          pricePerKWh: parseFloat(form.pricePerKWh),
-          pricePerMinute: parseFloat(form.pricePerMinute),
-          connectors: form.connectors,
-        }
-      : {
-          point: {
-            brand: form.brand,
-            available: form.available,
-            pricePerKWh: parseFloat(form.pricePerKWh),
-            pricePerMinute: parseFloat(form.pricePerMinute),
-            connectors: form.connectors,
-          },
-          station: { id: stationId },
-        };
 
     const url = pointToEdit
       ? `${CONFIG.API_URL}v1/admin/stations/${stationId}/points/${pointToEdit.id}`
@@ -166,6 +171,18 @@ export default function ModalFullChargingPoint({ stationId, onClose, onSuccess, 
           <label>Price per Minute (€)</label>
           <input type="number" name="pricePerMinute" value={form.pricePerMinute} onChange={handleFormChange} />
         </div>
+
+        <div className={styles.fieldGroup}>
+          <label>Charging Rate (kWh/min)</label>
+          <input
+            type="number"
+            step="0.01"
+            name="chargingRateKWhPerMinute"
+            value={form.chargingRateKWhPerMinute || ''}
+            onChange={handleFormChange}
+          />
+        </div>
+
 
         <h3>Connectors</h3>
         <div className={styles.connectorFields}>
