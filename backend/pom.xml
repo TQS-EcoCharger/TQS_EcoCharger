@@ -113,7 +113,7 @@
                     <include>**/*IT.java</include>
                 </includes>
                 <excludes>
-                    <exclude>*/functional/**</exclude>
+                <exclude>*/functional/**</exclude>
                     <exclude>**/*Test.java</exclude>
                 </excludes>
                 </configuration>
@@ -205,6 +205,11 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                          <configuration>
+                            <excludes>
+                            <exclude>**/config/**</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>post-unit-test</id>
