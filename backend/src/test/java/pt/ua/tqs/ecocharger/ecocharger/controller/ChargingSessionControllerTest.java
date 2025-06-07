@@ -211,7 +211,7 @@ class ChargingSessionControllerTest {
   }
 
   @Test
-    @Requirement("ET-561")
+  @Requirement("ET-561")
   @DisplayName("Get all charging sessions handles internal error")
   void testGetAllChargingSessionsError() throws Exception {
     Mockito.when(chargingSessionService.getAllSessions())
@@ -224,7 +224,7 @@ class ChargingSessionControllerTest {
   }
 
   @Test
-    @Requirement("ET-38")
+  @Requirement("ET-38")
   @DisplayName("Get all sessions returns 500 on error")
   void testGetAllSessionsFailure() throws Exception {
     Mockito.when(chargingSessionService.getAllSessions())
