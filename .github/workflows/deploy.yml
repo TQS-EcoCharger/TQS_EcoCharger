@@ -60,6 +60,7 @@ jobs:
           management.metrics.export.prometheus.enabled=true
           stripe.secret=${{ secrets.STRIPE_SECRET }}
           stripe.public=${{ secrets.STRIPE_PUBLIC }}
+          app.base-url=http://deti-tqs-19.ua.pt:5000
           EOF
 
 

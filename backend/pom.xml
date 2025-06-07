@@ -112,6 +112,10 @@
                 <includes>
                     <include>**/*IT.java</include>
                 </includes>
+                <excludes>
+                    <exclude>*/functional/**</exclude>
+                    <exclude>**/*Test.java</exclude>
+                </excludes>
                 </configuration>
             </plugin>
             </plugins>

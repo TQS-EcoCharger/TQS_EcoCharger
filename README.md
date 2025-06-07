@@ -3,11 +3,16 @@ Repository for the TQS project EcoCharger
 
 <img src="resources/EcoCharger_Logo.png" alt="EcoChargerLogo" width="400"/>
 
+# Team
+
 | Student         | Roles         | Nmec   |
 | --------------- | ------------- | ------ |
 | Afonso Ferreira     | Team Manager and DevOps Master | 113480  |
 | Ricardo Antunes | Q&A Engineer | 115243 |
 | Tomás Brás | Product Owner | 112665 |
+
+# Jira Link
+[EcoCharger Jira](https://ua-deti-alof.atlassian.net/jira/software/projects/ET/boards/2)
 
 # Abstract
 
