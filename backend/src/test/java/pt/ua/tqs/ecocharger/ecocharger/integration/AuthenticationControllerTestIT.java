@@ -30,7 +30,8 @@ class AuthenticationControllerIT {
   @Test
   @DisplayName("Register user successfully")
   void testRegisterSuccess() {
-    String requestBody = """
+    String requestBody =
+        """
         {
           "email": "testuser@example.com",
           "password": "securepass",
@@ -55,7 +56,8 @@ class AuthenticationControllerIT {
   void testLoginSuccess() {
     testRegisterSuccess();
 
-    String requestBody = """
+    String requestBody =
+        """
         {
           "email": "testuser@example.com",
           "password": "securepass"
@@ -76,7 +78,8 @@ class AuthenticationControllerIT {
   @Test
   @DisplayName("Login fails with wrong password")
   void testLoginFailure() {
-    String requestBody = """
+    String requestBody =
+        """
         {
           "email": "testuser@example.com",
           "password": "wrongpass"
@@ -97,7 +100,8 @@ class AuthenticationControllerIT {
   @DisplayName("Fetch current user with valid token")
   void testGetCurrentUser() {
     // First register and login to get token
-    String registerJson = """
+    String registerJson =
+        """
         {
           "email": "tokenuser@example.com",
           "password": "securepass",
