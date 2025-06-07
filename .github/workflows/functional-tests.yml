@@ -48,6 +48,7 @@ jobs:
           spring.jpa.defer-datasource-initialization=false
           spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration+
           spring.security.enabled=false
+          app.base-url=http://localhost:5000
           EOF
 
       - name: Write runtime application.properties
@@ -73,6 +74,8 @@ jobs:
           jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
           stripe.secret=${{ secrets.STRIPE_SECRET }}
           stripe.public=${{ secrets.STRIPE_PUBLIC }}
+          app.base-url=http://localhost:5000
+
           EOF
 
       - name: Cache Maven packages
