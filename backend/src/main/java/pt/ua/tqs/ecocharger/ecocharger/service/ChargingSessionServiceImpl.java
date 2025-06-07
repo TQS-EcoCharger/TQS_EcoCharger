@@ -210,58 +210,59 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
         .toList();
   }
 
-@Override
-public List<ChargingSessionResponseDTO> getSessionsByUser(Long userId) {
+  @Override
+  public List<ChargingSessionResponseDTO> getSessionsByUser(Long userId) {
     List<ChargingSession> sessions = chargingSessionRepository.findByUserId(userId);
 
     return sessions.stream()
-        .map(session -> {
-            ChargingStation station = session.getChargingPoint().getChargingStation();
+        .map(
+            session -> {
+              ChargingStation station = session.getChargingPoint().getChargingStation();
 
-            ChargingStationDTO stationDTO = new ChargingStationDTO(
-                station.getId(),
-                station.getCityName(),
-                station.getAddress(),
-                station.getLatitude(),
-                station.getLongitude()
-            );
+              ChargingStationDTO stationDTO =
+                  new ChargingStationDTO(
+                      station.getId(),
+                      station.getCityName(),
+                      station.getAddress(),
+                      station.getLatitude(),
+                      station.getLongitude());
 
-            List<ConnectorDTO> connectors = session.getChargingPoint().getConnectors().stream()
-                .map(connector -> new ConnectorDTO(
-                    connector.getId(),
-                    connector.getConnectorType(),
-                    connector.getRatedPowerKW(),
-                    connector.getVoltageV(),
-                    connector.getCurrentA()
-                ))
-                .toList();
+              List<ConnectorDTO> connectors =
+                  session.getChargingPoint().getConnectors().stream()
+                      .map(
+                          connector ->
+                              new ConnectorDTO(
+                                  connector.getId(),
+                                  connector.getConnectorType(),
+                                  connector.getRatedPowerKW(),
+                                  connector.getVoltageV(),
+                                  connector.getCurrentA()))
+                      .toList();
 
-            ChargingPointDTO pointDTO = new ChargingPointDTO(
-                session.getChargingPoint().getId(),
-                session.getChargingPoint().getBrand(),
-                session.getChargingPoint().isAvailable(),
-                session.getChargingPoint().getPricePerKWh(),
-                session.getChargingPoint().getPricePerMinute(),
-                session.getChargingPoint().getChargingRateKWhPerMinute(),
-                connectors,
-                stationDTO
-            );
+              ChargingPointDTO pointDTO =
+                  new ChargingPointDTO(
+                      session.getChargingPoint().getId(),
+                      session.getChargingPoint().getBrand(),
+                      session.getChargingPoint().isAvailable(),
+                      session.getChargingPoint().getPricePerKWh(),
+                      session.getChargingPoint().getPricePerMinute(),
+                      session.getChargingPoint().getChargingRateKWhPerMinute(),
+                      connectors,
+                      stationDTO);
 
-            return new ChargingSessionResponseDTO(
-                session.getId(),
-                session.getStartTime(),
-                session.getEndTime(),
-                session.getDurationMinutes(),
-                session.getTotalCost(),
-                session.getStatus(),
-                session.getInitialBatteryLevel(),
-                session.getEnergyDelivered(),
-                pointDTO,
-                session.getUser(),
-                session.getCar()
-            );
-        })
+              return new ChargingSessionResponseDTO(
+                  session.getId(),
+                  session.getStartTime(),
+                  session.getEndTime(),
+                  session.getDurationMinutes(),
+                  session.getTotalCost(),
+                  session.getStatus(),
+                  session.getInitialBatteryLevel(),
+                  session.getEnergyDelivered(),
+                  pointDTO,
+                  session.getUser(),
+                  session.getCar());
+            })
         .toList();
-}
-
+  }
 }

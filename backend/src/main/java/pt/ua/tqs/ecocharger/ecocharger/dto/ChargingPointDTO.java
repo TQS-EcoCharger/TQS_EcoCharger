@@ -20,6 +20,7 @@ public class ChargingPointDTO {
   private Double pricePerMinute;
   private Double chargingRateKWhPerMinute;
   private List<ConnectorDTO> connectors;
-  @JsonProperty("chargingStation") 
+
+  @JsonProperty("chargingStation")
   private ChargingStationDTO chargingStation;
 }

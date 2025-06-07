@@ -180,7 +180,6 @@ class ChargingSessionControllerTest {
         .andExpect(jsonPath("$[0].status").value("COMPLETED"));
   }
 
-
   @Test
   @DisplayName("Get sessions by user returns 500 on exception")
   void testGetSessionsByUserFailure() throws Exception {
