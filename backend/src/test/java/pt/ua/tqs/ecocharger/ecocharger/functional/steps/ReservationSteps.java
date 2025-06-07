@@ -89,7 +89,7 @@ public class ReservationSteps {
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))",
         futureEnd);
-    takeScreenshot(driver, "screenshots/newreservation.png");
+    // takeScreenshot(driver, "screenshots/newreservation.png");
     try {
       Thread.sleep(100);
     } catch (InterruptedException ignored) {
@@ -153,7 +153,7 @@ public class ReservationSteps {
 
   @Then("I store the OTP code for later use")
   public void storeOtp() {
-    takeScreenshot(driver, "screenshots/storeOtpCode.png");
+    // takeScreenshot(driver, "screenshots/storeOtpCode.png");
     assertNotNull(storedOtpCode);
   }
 
@@ -205,7 +205,7 @@ public class ReservationSteps {
       assertNotNull(control, "Car dropdown control not visible or enabled");
 
     } catch (Exception e) {
-      takeScreenshot(driver, "screenshots/verifyCarDropdown_failed.png");
+      // takeScreenshot(driver, "screenshots/verifyCarDropdown_failed.png");
       throw e;
     }
   }
