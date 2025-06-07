@@ -16,7 +16,7 @@ export default function VehiclesPage() {
   const [successMessage, setSuccessMessage] = useState("");  // NEW
 
   const fetchVehicles = async () => {
-    const userId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
+    const meId = localStorage.getItem("me") ? JSON.parse(localStorage.getItem("me")).id : null;
 
     try {
       const response = await axios.get(`${CONFIG.API_URL}v1/driver/${meId}`, {
@@ -51,10 +51,6 @@ export default function VehiclesPage() {
       fetchVehicles();
     };
 
-    console.log("meId:", localStorage.getItem("me"));
-    console.log("token:", localStorage.getItem("token"));
-    console.log("API URL:", CONFIG.API_URL);
-    console.log("user type:", localStorage.getItem("userType"));
     fetchSelf();
   }, []);
 

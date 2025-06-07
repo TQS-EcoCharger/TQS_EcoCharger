@@ -211,7 +211,7 @@ class ChargingSessionServiceImplTest {
 
 
   @Test
-@Requirement("ET-39")
+@Requirement("ET-561")
 void testGetSessionsByUser_returnsMappedDTOs() {
   Long userId = 200L;
 

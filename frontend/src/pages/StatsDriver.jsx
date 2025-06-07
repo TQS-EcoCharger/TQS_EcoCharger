@@ -69,8 +69,8 @@ function StatsDriver() {
   const [monthlyData, setMonthlyData] = useState([]);
   const [regionData, setRegionData] = useState([]);
   const [co2Data, setCo2Data] = useState([]);
-  const [averageCost, setAverageCost] = useState('0.00');
-  const [peakMonth, setPeakMonth] = useState('');
+  const [averageCost] = useState('0.00');
+  const [peakMonth] = useState('');
   const [totalSavings, setTotalSavings] = useState({ gasolina: '0.00', gasoleo: '0.00', gpl: '0.00' });
   const [manualFuelPrices, setManualFuelPrices] = useState({
     gasolina: fuelTypes.gasolina.price,
