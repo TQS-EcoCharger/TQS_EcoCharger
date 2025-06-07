@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,5 +20,7 @@ public class ChargingPointDTO {
   private Double pricePerMinute;
   private Double chargingRateKWhPerMinute;
   private List<ConnectorDTO> connectors;
+
+  @JsonProperty("chargingStation")
   private ChargingStationDTO chargingStation;
 }

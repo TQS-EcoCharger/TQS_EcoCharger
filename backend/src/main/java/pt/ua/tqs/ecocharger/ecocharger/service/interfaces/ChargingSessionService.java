@@ -42,7 +42,7 @@ public interface ChargingSessionService {
    * @param userId the ID of the user
    * @return a list of ChargingSession objects
    */
-  List<ChargingSession> getSessionsByUser(Long userId);
+  List<ChargingSessionResponseDTO> getSessionsByUser(Long userId);
 
   /**
    * Retrieves all charging sessions in the system.

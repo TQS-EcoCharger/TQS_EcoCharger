@@ -1,0 +1,195 @@
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.sidebarPanel {
+  width: 240px;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.cardValue {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.cardStatistics {
+  background-color: white;
+  padding: 1.2rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.cardTitleStatistics {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.priceListStatistics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.inputGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardLabel {
+  font-weight: 500;
+}
+
+.input {
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  width: 80px;
+}
+
+.priceSummary {
+  margin-top: 1rem;
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  margin-top: 0.3rem;
+}
+
+.icon {
+  color: #666;
+}
+
+.chartArea {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.chartBox {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.sessionList {
+  padding-top: 2rem;
+}
+
+.sessionCard {
+  background-color: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sessionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.sessionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  gap: 0.3rem;
+}
+
+.completed {
+  color: green;
+}
+
+.pending {
+  color: orange;
+}
+
+.sessionDetail {
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.batteryContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.batteryBar {
+  flex: 1;
+  height: 10px;
+  background-color: #eee;
+  border-radius: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.batteryLevel {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.batteryText {
+  margin-left: 0.5rem;
+  font-weight: 500;
+}

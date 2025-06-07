@@ -1,16 +1,22 @@
 package pt.ua.tqs.ecocharger.ecocharger.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingSessionResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationRequestDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
 import pt.ua.tqs.ecocharger.ecocharger.dto.StartChargingRequestDTO;
+import pt.ua.tqs.ecocharger.ecocharger.models.Car;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStatus;
+import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,6 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -143,12 +150,34 @@ class ChargingSessionControllerTest {
   }
 
   @Test
+  @Requirement("ET-38")
   @DisplayName("Get sessions by user returns 200 with data")
   void testGetSessionsByUserSuccess() throws Exception {
-    List<ChargingSession> mockSessions = List.of(new ChargingSession());
-    Mockito.when(chargingSessionService.getSessionsByUser(5L)).thenReturn(mockSessions);
+    Long userId = 42L;
 
-    mockMvc.perform(get("/api/v1/sessions/user/5")).andExpect(status().isOk());
+    ChargingSessionResponseDTO sessionDTO = new ChargingSessionResponseDTO();
+    sessionDTO.setId(1L);
+    sessionDTO.setTotalCost(10.0);
+    sessionDTO.setStatus(ChargingStatus.COMPLETED);
+    sessionDTO.setStartTime(LocalDateTime.now().minusHours(1));
+    sessionDTO.setEndTime(LocalDateTime.now());
+    sessionDTO.setDurationMinutes(60L);
+    sessionDTO.setInitialBatteryLevel(20.0);
+    sessionDTO.setEnergyDelivered(15.0);
+    sessionDTO.setChargingPoint(new ChargingPointDTO());
+    sessionDTO.setUser(new User());
+    sessionDTO.setCar(new Car());
+
+    List<ChargingSessionResponseDTO> mockList = List.of(sessionDTO);
+
+    Mockito.when(chargingSessionService.getSessionsByUser(userId)).thenReturn(mockList);
+
+    mockMvc
+        .perform(get("/api/v1/sessions/user/" + userId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1L))
+        .andExpect(jsonPath("$[0].totalCost").value(10.0))
+        .andExpect(jsonPath("$[0].status").value("COMPLETED"));
   }
 
   @Test
@@ -182,6 +211,7 @@ class ChargingSessionControllerTest {
   }
 
   @Test
+    @Requirement("ET-561")
   @DisplayName("Get all charging sessions handles internal error")
   void testGetAllChargingSessionsError() throws Exception {
     Mockito.when(chargingSessionService.getAllSessions())
@@ -194,6 +224,7 @@ class ChargingSessionControllerTest {
   }
 
   @Test
+    @Requirement("ET-38")
   @DisplayName("Get all sessions returns 500 on error")
   void testGetAllSessionsFailure() throws Exception {
     Mockito.when(chargingSessionService.getAllSessions())

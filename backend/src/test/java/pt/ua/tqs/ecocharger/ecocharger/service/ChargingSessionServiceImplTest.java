@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingSessionResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
 import pt.ua.tqs.ecocharger.ecocharger.repository.*;
@@ -15,8 +16,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
-import pt.ua.tqs.ecocharger.ecocharger.models.Connectors;
 
 class ChargingSessionServiceImplTest {
 
@@ -146,6 +145,7 @@ class ChargingSessionServiceImplTest {
   }
 
   @Test
+  @Requirement("ET-38")
   void testGetAllSessions_returnsMappedDTOs() {
     ChargingStation station = new ChargingStation();
     station.setId(1L);
@@ -207,5 +207,67 @@ class ChargingSessionServiceImplTest {
     assertEquals("Porto", dto.getChargingPoint().getChargingStation().getCityName());
     assertEquals(1, dto.getChargingPoint().getConnectors().size());
     assertEquals("Type2", dto.getChargingPoint().getConnectors().get(0).getConnectorType());
+  }
+
+  @Test
+@Requirement("ET-561")
+void testGetSessionsByUser_returnsMappedDTOs() {
+  Long userId = 200L;
+
+    ChargingStation station = new ChargingStation();
+    station.setId(1L);
+    station.setCityName("Aveiro");
+    station.setAddress("Rua A");
+    station.setLatitude(40.0);
+    station.setLongitude(-8.0);
+
+    Connectors connector = new Connectors();
+    connector.setId(101L);
+    connector.setConnectorType("CCS");
+    connector.setVoltageV(400);
+    connector.setCurrentA(32);
+
+    ChargingPoint point = new ChargingPoint();
+    point.setId(10L);
+    point.setBrand("Ionity");
+    point.setAvailable(true);
+    point.setPricePerKWh(0.40);
+    point.setPricePerMinute(0.12);
+    point.setChargingRateKWhPerMinute(2.0);
+    point.setChargingStation(station);
+    point.setConnectors(List.of(connector));
+
+    User user = new User();
+    user.setId(userId);
+    user.setName("Ana Silva");
+
+    Car car = new Car();
+    car.setId(301L);
+    car.setName("Renault Zoe");
+
+    ChargingSession session = new ChargingSession();
+    session.setId(600L);
+    session.setStartTime(LocalDateTime.now().minusMinutes(30));
+    session.setEndTime(LocalDateTime.now());
+    session.setTotalCost(6.00);
+    session.setStatus(ChargingStatus.COMPLETED);
+    session.setInitialBatteryLevel(30.0);
+    session.setEnergyDelivered(12.0);
+    session.setChargingPoint(point);
+    session.setUser(user);
+    session.setCar(car);
+
+    when(sessionRepo.findByUserId(userId)).thenReturn(List.of(session));
+
+    List<ChargingSessionResponseDTO> sessions = service.getSessionsByUser(userId);
+
+    assertEquals(1, sessions.size());
+    ChargingSessionResponseDTO dto = sessions.get(0);
+    assertEquals(600L, dto.getId());
+    assertEquals("Ana Silva", dto.getUser().getName());
+    assertEquals("Renault Zoe", dto.getCar().getName());
+    assertEquals("Ionity", dto.getChargingPoint().getBrand());
+    assertEquals("Aveiro", dto.getChargingPoint().getChargingStation().getCityName());
+    assertEquals("CCS", dto.getChargingPoint().getConnectors().get(0).getConnectorType());
   }
 }
