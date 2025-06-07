@@ -49,5 +49,5 @@ public interface ChargingSessionService {
    *
    * @return a list of all ChargingSession objects
    */
-  List<ChargingSessionResponseDTO>  getAllSessions();
+  List<ChargingSessionResponseDTO> getAllSessions();
 }

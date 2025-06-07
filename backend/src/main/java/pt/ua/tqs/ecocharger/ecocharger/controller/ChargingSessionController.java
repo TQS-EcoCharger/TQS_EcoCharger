@@ -112,10 +112,9 @@ public class ChargingSessionController {
     }
   }
 
-
   @Operation(
-    summary = "Get all charging sessions for a user",
-    description = "Returns a list of all charging sessions associated with a specific user ID")
+      summary = "Get all charging sessions for a user",
+      description = "Returns a list of all charging sessions associated with a specific user ID")
   @ApiResponse(
       responseCode = "200",
       description = "List of sessions returned successfully",
@@ -127,13 +126,14 @@ public class ChargingSessionController {
       var sessions = chargingSessionService.getSessionsByUser(userId);
       return ResponseEntity.ok(sessions);
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error: " + e.getMessage());
     }
   }
 
   @Operation(
-    summary = "Get all charging sessions",
-    description = "Returns a list of all charging sessions from all users")
+      summary = "Get all charging sessions",
+      description = "Returns a list of all charging sessions from all users")
   @ApiResponse(
       responseCode = "200",
       description = "List of all charging sessions returned successfully",
@@ -144,10 +144,8 @@ public class ChargingSessionController {
       var sessions = chargingSessionService.getAllSessions();
       return ResponseEntity.ok(sessions);
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error: " + e.getMessage());
     }
-}
-
-
-  
+  }
 }

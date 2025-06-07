@@ -1,5 +1,3 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
-public class StatisticsService {
-    
-}
+public class StatisticsService {}
