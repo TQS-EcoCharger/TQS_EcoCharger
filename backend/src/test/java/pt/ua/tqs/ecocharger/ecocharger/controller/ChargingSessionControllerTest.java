@@ -32,7 +32,8 @@ class ChargingSessionControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @SuppressWarnings("removal")
-  @MockBean private ChargingSessionService chargingSessionService;
+  @MockBean
+  private ChargingSessionService chargingSessionService;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -44,9 +45,11 @@ class ChargingSessionControllerTest {
 
     Mockito.when(chargingSessionService.validateOtp("123456", 1L)).thenReturn(response);
 
-    mockMvc.perform(post("/api/v1/sessions/validate-otp")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            post("/api/v1/sessions/validate-otp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.valid").value(true))
         .andExpect(jsonPath("$.reason").value("OTP is valid."));
@@ -60,9 +63,11 @@ class ChargingSessionControllerTest {
 
     Mockito.when(chargingSessionService.validateOtp("000000", 2L)).thenReturn(response);
 
-    mockMvc.perform(post("/api/v1/sessions/validate-otp")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            post("/api/v1/sessions/validate-otp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.valid").value(false))
         .andExpect(jsonPath("$.reason").value("Invalid OTP."));
@@ -82,9 +87,11 @@ class ChargingSessionControllerTest {
     Mockito.when(chargingSessionService.startSessionWithOtp(1L, "123456", 10L))
         .thenReturn(mockSession);
 
-    mockMvc.perform(post("/api/v1/sessions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            post("/api/v1/sessions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(99L));
   }
@@ -100,9 +107,11 @@ class ChargingSessionControllerTest {
     Mockito.when(chargingSessionService.startSessionWithOtp(1L, "badotp", 10L))
         .thenThrow(new IllegalArgumentException("Invalid OTP"));
 
-    mockMvc.perform(post("/api/v1/sessions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            post("/api/v1/sessions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string("Invalid OTP"));
   }
@@ -115,7 +124,8 @@ class ChargingSessionControllerTest {
 
     Mockito.when(chargingSessionService.endSession(101L)).thenReturn(mockSession);
 
-    mockMvc.perform(post("/api/v1/sessions/101/end"))
+    mockMvc
+        .perform(post("/api/v1/sessions/101/end"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(101L));
   }
@@ -126,7 +136,8 @@ class ChargingSessionControllerTest {
     Mockito.when(chargingSessionService.endSession(202L))
         .thenThrow(new IllegalArgumentException("Session not found"));
 
-    mockMvc.perform(post("/api/v1/sessions/202/end"))
+    mockMvc
+        .perform(post("/api/v1/sessions/202/end"))
         .andExpect(status().isNotFound())
         .andExpect(content().string("Session not found"));
   }
@@ -137,8 +148,7 @@ class ChargingSessionControllerTest {
     List<ChargingSession> mockSessions = List.of(new ChargingSession());
     Mockito.when(chargingSessionService.getSessionsByUser(5L)).thenReturn(mockSessions);
 
-    mockMvc.perform(get("/api/v1/sessions/user/5"))
-        .andExpect(status().isOk());
+    mockMvc.perform(get("/api/v1/sessions/user/5")).andExpect(status().isOk());
   }
 
   @Test
@@ -147,41 +157,41 @@ class ChargingSessionControllerTest {
     Mockito.when(chargingSessionService.getSessionsByUser(999L))
         .thenThrow(new RuntimeException("Database down"));
 
-    mockMvc.perform(get("/api/v1/sessions/user/999"))
+    mockMvc
+        .perform(get("/api/v1/sessions/user/999"))
         .andExpect(status().isInternalServerError())
         .andExpect(content().string(containsString("Database down")));
   }
 
-@Test
-@DisplayName("Get all charging sessions returns list")
-void testGetAllChargingSessionsSuccess() throws Exception {
-  ChargingSessionResponseDTO dto = new ChargingSessionResponseDTO();
-  dto.setId(1L);
-  dto.setTotalCost(10.5);
-  dto.setStatus(ChargingStatus.COMPLETED);
+  @Test
+  @DisplayName("Get all charging sessions returns list")
+  void testGetAllChargingSessionsSuccess() throws Exception {
+    ChargingSessionResponseDTO dto = new ChargingSessionResponseDTO();
+    dto.setId(1L);
+    dto.setTotalCost(10.5);
+    dto.setStatus(ChargingStatus.COMPLETED);
 
-  Mockito.when(chargingSessionService.getAllSessions()).thenReturn(List.of(dto));
+    Mockito.when(chargingSessionService.getAllSessions()).thenReturn(List.of(dto));
 
-  mockMvc
-      .perform(get("/api/v1/sessions"))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$[0].id").value(1L))
-      .andExpect(jsonPath("$[0].totalCost").value(10.5))
-      .andExpect(jsonPath("$[0].status").value("COMPLETED"));
-}
+    mockMvc
+        .perform(get("/api/v1/sessions"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1L))
+        .andExpect(jsonPath("$[0].totalCost").value(10.5))
+        .andExpect(jsonPath("$[0].status").value("COMPLETED"));
+  }
 
-@Test
-@DisplayName("Get all charging sessions handles internal error")
-void testGetAllChargingSessionsError() throws Exception {
-  Mockito.when(chargingSessionService.getAllSessions())
-      .thenThrow(new RuntimeException("Database failure"));
+  @Test
+  @DisplayName("Get all charging sessions handles internal error")
+  void testGetAllChargingSessionsError() throws Exception {
+    Mockito.when(chargingSessionService.getAllSessions())
+        .thenThrow(new RuntimeException("Database failure"));
 
-  mockMvc
-      .perform(get("/api/v1/sessions"))
-      .andExpect(status().isInternalServerError())
-      .andExpect(content().string("Error: Database failure"));
-}
-
+    mockMvc
+        .perform(get("/api/v1/sessions"))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string("Error: Database failure"));
+  }
 
   @Test
   @DisplayName("Get all sessions returns 500 on error")
@@ -189,8 +199,9 @@ void testGetAllChargingSessionsError() throws Exception {
     Mockito.when(chargingSessionService.getAllSessions())
         .thenThrow(new RuntimeException("Unexpected error"));
 
-    mockMvc.perform(get("/api/v1/sessions"))
+    mockMvc
+        .perform(get("/api/v1/sessions"))
         .andExpect(status().isInternalServerError())
         .andExpect(content().string(containsString("Unexpected error")));
   }
-} 
+}
