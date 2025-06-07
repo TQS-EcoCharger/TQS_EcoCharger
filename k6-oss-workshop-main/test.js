@@ -11,10 +11,12 @@ export const options = {
   thresholds: {
     http_req_failed: ['rate<0.05'],
     checks: ['rate>0.95'],
+    http_req_duration: ['p(80)<2000'], 
+
   },
 };
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'http://deti-tqs-19.ua.pt:5000';
 
 const users = [
   { email: 'afonso@gmail.com', password: 'pass', userId: 1 },
@@ -38,14 +40,11 @@ export default function () {
   check(loginRes, {
     'login succeeded': (r) => r.status === 200,
     'token received': (r) => !!r.json('token'),
+    'login time < 2000ms': (r) => r.timings.duration < 2000,
   });
-
   const token = loginRes.json('token');
   if (!token) return;
 
-  // -----------------------
-  // GERAR HORÁRIO ÚNICO
-  // -----------------------
 const now = new Date();
 const start = new Date(now);
 
