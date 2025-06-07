@@ -12,15 +12,27 @@ public class StripeBalanceSteps {
     private final WebDriver driver = WebDriverSingleton.getDriver();
     private final WebDriverWait wait = WebDriverSingleton.getWait();
 
+    private double initialBalance;
+    private double topUpAmount;
+
     @When("I open the balance top-up modal")
     public void iOpenTopUpModal() {
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(), 'Charge Balance')]")));
+        WebElement balanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//li[contains(text(), 'Balance:')]")));
+        String balanceText = balanceLabel.getText();
+        initialBalance = extractBalance(balanceText);
+
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//button[contains(text(), 'Charge Balance')]")));
         button.click();
     }
 
     @And("I enter {string} as the top-up amount")
     public void iEnterAmount(String amount) {
-        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[type='number']")));
+        topUpAmount = Double.parseDouble(amount);
+
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.cssSelector("input[type='number']")));
         input.clear();
         input.sendKeys(amount);
     }
@@ -31,31 +43,65 @@ public class StripeBalanceSteps {
         wait.until(ExpectedConditions.urlContains("checkout.stripe.com"));
         Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://checkout.stripe.com"), "Not on Stripe checkout page.");
     }
+    
     @When("I complete the test Stripe payment")
     public void iCompleteStripePayment() {
-        // Fill out Stripe form – use Stripe's test card 4242 4242 4242 4242
-        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector("iframe[name^='privateStripeFrame']")));
 
-        WebElement cardInput = wait.until(ExpectedConditions.elementToBeClickable(By.name("cardnumber")));
+        WebElement emailInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("email")));
+        emailInput.sendKeys("example@example.com");
+
+        WebElement cardAccordionButton = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.cssSelector("button[data-testid='card-accordion-item-button']")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cardAccordionButton);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", cardAccordionButton);
+
+
+
+        WebElement cardInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("cardNumber")));
         cardInput.sendKeys("4242424242424242");
 
-        driver.findElement(By.name("exp-date")).sendKeys("1234");
-        driver.findElement(By.name("cvc")).sendKeys("123");
-        driver.findElement(By.name("postal")).sendKeys("10000");
+        WebElement expDateInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("cardExpiry")));
+        expDateInput.sendKeys("1234"); // MMYY
 
-        driver.switchTo().defaultContent();
 
-        WebElement payBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[type='submit']")));
-        payBtn.click();
+        WebElement billingName = wait.until(ExpectedConditions.elementToBeClickable(By.id("billingName")));
 
-        // Wait for redirect
-        wait.until(driver -> driver.getCurrentUrl().contains("/payment-success"));
+        billingName.sendKeys("Afonso Ferreira");
+
+        WebElement cvcInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("cardCvc")));
+        cvcInput.sendKeys("123");
+
+        WebElement payButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.cssSelector("button[data-testid='hosted-payment-submit-button']")));
+        payButton.click();
+
+
+        wait.until(ExpectedConditions.urlContains("/payment-success"));
     }
+
+
 
     @Then("I should be redirected back and see updated balance")
     public void iShouldSeeUpdatedBalance() {
-        WebElement balanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[contains(text(), 'Balance:')]")));
-        String text = balanceLabel.getText();
-        Assertions.assertTrue(text.matches(".*€\\d+\\.\\d{2}"), "Balance not updated: " + text);
+        wait.until(ExpectedConditions.urlContains("/home"));
+
+        WebElement balanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//li[contains(text(), 'Balance:')]")));
+
+        String updatedText = balanceLabel.getText();
+        double newBalance = extractBalance(updatedText);
+
+        double expectedBalance = initialBalance + topUpAmount;
+        Assertions.assertEquals(expectedBalance, newBalance, 0.01,
+            String.format("Expected balance %.2f but found %.2f", expectedBalance, newBalance));
+    }
+
+    private double extractBalance(String text) {
+        try {
+            String number = text.replaceAll("[^0-9,\\.]", "").replace(",", ".");
+            return Double.parseDouble(number);
+        } catch (Exception e) {
+            throw new AssertionError("Could not parse balance from: " + text);
+        }
     }
 }
