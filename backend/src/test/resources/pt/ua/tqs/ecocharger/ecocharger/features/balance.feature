@@ -1,3 +1,4 @@
+@stripe
 Feature: Stripe Balance Top-Up
 
   Background:
