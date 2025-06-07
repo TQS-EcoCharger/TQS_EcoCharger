@@ -1,6 +1,9 @@
 package pt.ua.tqs.ecocharger.ecocharger.functional.steps;
 
 import io.cucumber.java.en.*;
+
+import java.time.Duration;
+
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -54,11 +57,12 @@ public class StripeBalanceSteps {
 
     WebElement emailInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("email")));
     emailInput.sendKeys("example@example.com");
-
-    WebElement cardAccordionButton =
-        wait.until(
-            ExpectedConditions.presenceOfElementLocated(
-                By.cssSelector("button[data-testid='card-accordion-item-button']")));
+    WebDriverWait stripeWait = new WebDriverWait(driver, Duration.ofSeconds(20));
+    WebElement cardAccordionButton = stripeWait.until(
+        ExpectedConditions.presenceOfElementLocated(
+            By.cssSelector("button[data-testid='card-accordion-item-button']")
+        )
+    );
     ((JavascriptExecutor) driver)
         .executeScript("arguments[0].scrollIntoView(true);", cardAccordionButton);
     ((JavascriptExecutor) driver).executeScript("arguments[0].click();", cardAccordionButton);
