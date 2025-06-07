@@ -156,60 +156,62 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
     return chargingSessionRepository.save(session);
   }
 
-public List<ChargingSessionResponseDTO> getAllSessions() {
-    return chargingSessionRepository.findAll().stream().map(session -> {
-        ChargingPoint point = session.getChargingPoint();
-        ChargingStation station = point.getChargingStation();
+  public List<ChargingSessionResponseDTO> getAllSessions() {
+    return chargingSessionRepository.findAll().stream()
+        .map(
+            session -> {
+              ChargingPoint point = session.getChargingPoint();
+              ChargingStation station = point.getChargingStation();
 
-        List<ConnectorDTO> connectorDtos = point.getConnectors().stream().map(conn -> 
-            new ConnectorDTO(
-                conn.getId(),
-                conn.getConnectorType(),
-                conn.getRatedPowerKW(),
-                conn.getVoltageV(),
-                conn.getCurrentA()
-            )
-        ).toList();
+              List<ConnectorDTO> connectorDtos =
+                  point.getConnectors().stream()
+                      .map(
+                          conn ->
+                              new ConnectorDTO(
+                                  conn.getId(),
+                                  conn.getConnectorType(),
+                                  conn.getRatedPowerKW(),
+                                  conn.getVoltageV(),
+                                  conn.getCurrentA()))
+                      .toList();
 
-        ChargingStationDTO stationDto = new ChargingStationDTO(
-            station.getId(),
-            station.getCityName(),
-            station.getAddress(),
-            station.getLatitude(),
-            station.getLongitude()
-        );
+              ChargingStationDTO stationDto =
+                  new ChargingStationDTO(
+                      station.getId(),
+                      station.getCityName(),
+                      station.getAddress(),
+                      station.getLatitude(),
+                      station.getLongitude());
 
-        ChargingPointDTO pointDto = new ChargingPointDTO(
-            point.getId(),
-            point.getBrand(),
-            point.isAvailable(),
-            point.getPricePerKWh(),
-            point.getPricePerMinute(),
-            point.getChargingRateKWhPerMinute(),
-            connectorDtos,
-            stationDto
-        );
+              ChargingPointDTO pointDto =
+                  new ChargingPointDTO(
+                      point.getId(),
+                      point.getBrand(),
+                      point.isAvailable(),
+                      point.getPricePerKWh(),
+                      point.getPricePerMinute(),
+                      point.getChargingRateKWhPerMinute(),
+                      connectorDtos,
+                      stationDto);
 
-        return new ChargingSessionResponseDTO(
-            session.getId(),
-            session.getStartTime(),
-            session.getEndTime(),
-            session.getDurationMinutes(),
-            session.getTotalCost(),
-            session.getStatus(),
-            session.getInitialBatteryLevel(),
-            session.getEnergyDelivered(),
-            pointDto,
-            session.getUser(),
-            session.getCar()
-        );
-    }).toList();
-}
-
+              return new ChargingSessionResponseDTO(
+                  session.getId(),
+                  session.getStartTime(),
+                  session.getEndTime(),
+                  session.getDurationMinutes(),
+                  session.getTotalCost(),
+                  session.getStatus(),
+                  session.getInitialBatteryLevel(),
+                  session.getEnergyDelivered(),
+                  pointDto,
+                  session.getUser(),
+                  session.getCar());
+            })
+        .toList();
+  }
 
   @Override
   public List<ChargingSession> getSessionsByUser(Long userId) {
     return chargingSessionRepository.findByUserId(userId);
   }
-
-  }
+}

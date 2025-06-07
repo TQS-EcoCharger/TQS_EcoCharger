@@ -13,15 +13,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChargingSessionResponseDTO {
-    private Long id;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Long durationMinutes;
-    private Double totalCost;
-    private ChargingStatus status;
-    private Double initialBatteryLevel;
-    private Double energyDelivered;
-    private ChargingPointDTO chargingPoint;
-    private User user;
-    private Car car;
+  private Long id;
+  private LocalDateTime startTime;
+  private LocalDateTime endTime;
+  private Long durationMinutes;
+  private Double totalCost;
+  private ChargingStatus status;
+  private Double initialBatteryLevel;
+  private Double energyDelivered;
+  private ChargingPointDTO chargingPoint;
+  private User user;
+  private Car car;
 }

@@ -146,7 +146,7 @@ class ChargingSessionServiceImplTest {
   }
 
   @Test
-void testGetAllSessions_returnsMappedDTOs() {
+  void testGetAllSessions_returnsMappedDTOs() {
     ChargingStation station = new ChargingStation();
     station.setId(1L);
     station.setCityName("Porto");
@@ -157,7 +157,7 @@ void testGetAllSessions_returnsMappedDTOs() {
     Connectors connector = new Connectors();
     connector.setId(100L);
     connector.setConnectorType("Type2");
-    connector.setConnectorType ("Type2");
+    connector.setConnectorType("Type2");
     connector.setVoltageV(400);
     connector.setCurrentA(32);
 
@@ -208,8 +208,5 @@ void testGetAllSessions_returnsMappedDTOs() {
     assertEquals("Porto", dto.getChargingPoint().getChargingStation().getCityName());
     assertEquals(1, dto.getChargingPoint().getConnectors().size());
     assertEquals("Type2", dto.getChargingPoint().getConnectors().get(0).getConnectorType());
-}
-
-
-
+  }
 }

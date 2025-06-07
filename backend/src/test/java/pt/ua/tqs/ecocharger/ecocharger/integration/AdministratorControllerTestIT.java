@@ -42,10 +42,12 @@ class AdministratorControllerTestIT {
     stationRepository.deleteAll();
     administratorRepository.deleteAll();
 
-    Administrator admin = new Administrator(null,"admin@example.com", "adminpass","Tomas", true);
+    Administrator admin = new Administrator(null, "admin@example.com", "adminpass", "Tomas", true);
     administratorRepository.save(admin);
 
-    savedStation = stationRepository.save(new ChargingStation("Aveiro", "Rua 1", 40.641, -8.653, "PT", "Portugal"));
+    savedStation =
+        stationRepository.save(
+            new ChargingStation("Aveiro", "Rua 1", 40.641, -8.653, "PT", "Portugal"));
     RestAssuredMockMvc.mockMvc(mockMvc);
   }
 
@@ -76,7 +78,7 @@ class AdministratorControllerTestIT {
 
   @Test
   @DisplayName("Test update charging station")
-    @Requirement("ET-561")
+  @Requirement("ET-561")
   void testUpdateStation() {
     String updatedJson =
         """
@@ -103,13 +105,12 @@ class AdministratorControllerTestIT {
 
   @Test
   @DisplayName("Test update charging point")
-    @Requirement("ET-561")
-
+  @Requirement("ET-561")
   void testUpdateChargingPoint() {
     ChargingPoint point = new ChargingPoint();
     point.setBrand("Bosch");
     point.setAvailable(true);
-    point.setChargingRateKWhPerMinute(12.5);  // OBRIGATÓRIO
+    point.setChargingRateKWhPerMinute(12.5); // OBRIGATÓRIO
     point.setChargingStation(savedStation);
     point = pointRepository.save(point);
 
@@ -135,8 +136,7 @@ class AdministratorControllerTestIT {
 
   @Test
   @DisplayName("Test delete charging station")
-    @Requirement("ET-561")
-
+  @Requirement("ET-561")
   void testDeleteChargingStation() {
     RestAssuredMockMvc.given()
         .when()
