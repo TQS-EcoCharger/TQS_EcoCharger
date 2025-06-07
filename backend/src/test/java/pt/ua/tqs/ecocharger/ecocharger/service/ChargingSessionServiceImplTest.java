@@ -3,15 +3,20 @@ package pt.ua.tqs.ecocharger.ecocharger.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingSessionResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
 import pt.ua.tqs.ecocharger.ecocharger.repository.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+
+import pt.ua.tqs.ecocharger.ecocharger.models.Connectors;
 
 class ChargingSessionServiceImplTest {
 
@@ -138,5 +143,69 @@ class ChargingSessionServiceImplTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> service.startSessionWithOtp(pointId, "invalid", carId));
+  }
+
+  @Test
+  void testGetAllSessions_returnsMappedDTOs() {
+    ChargingStation station = new ChargingStation();
+    station.setId(1L);
+    station.setCityName("Porto");
+    station.setAddress("Rua A");
+    station.setLatitude(41.1579);
+    station.setLongitude(-8.6291);
+
+    Connectors connector = new Connectors();
+    connector.setId(100L);
+    connector.setConnectorType("Type2");
+    connector.setVoltageV(400);
+    connector.setCurrentA(32);
+
+    ChargingPoint point = new ChargingPoint();
+    point.setId(10L);
+    point.setBrand("Tesla");
+    point.setAvailable(true);
+    point.setPricePerKWh(0.30);
+    point.setPricePerMinute(0.10);
+    point.setChargingRateKWhPerMinute(1.5);
+    point.setChargingStation(station);
+    point.setConnectors(List.of(connector));
+
+    User user = new User();
+    user.setId(200L);
+    user.setName("Test User");
+
+    Car car = new Car();
+    car.setId(300L);
+    car.setName("Nissan Leaf");
+
+    ChargingSession session = new ChargingSession();
+    session.setId(500L);
+    session.setStartTime(LocalDateTime.now().minusMinutes(45));
+    session.setEndTime(LocalDateTime.now());
+    session.setTotalCost(5.25);
+    session.setStatus(ChargingStatus.COMPLETED);
+    session.setInitialBatteryLevel(20.0);
+    session.setEnergyDelivered(15.0);
+    session.setChargingPoint(point);
+    session.setUser(user);
+    session.setCar(car);
+
+    when(sessionRepo.findAll()).thenReturn(List.of(session));
+
+    List<ChargingSessionResponseDTO> result = service.getAllSessions();
+
+    assertEquals(1, result.size());
+    ChargingSessionResponseDTO dto = result.get(0);
+    assertEquals(500L, dto.getId());
+    assertEquals(5.25, dto.getTotalCost());
+    assertEquals("COMPLETED", dto.getStatus().name());
+    assertEquals("Test User", dto.getUser().getName());
+    assertEquals("Nissan Leaf", dto.getCar().getName());
+
+    assertNotNull(dto.getChargingPoint());
+    assertEquals("Tesla", dto.getChargingPoint().getBrand());
+    assertEquals("Porto", dto.getChargingPoint().getChargingStation().getCityName());
+    assertEquals(1, dto.getChargingPoint().getConnectors().size());
+    assertEquals("Type2", dto.getChargingPoint().getConnectors().get(0).getConnectorType());
   }
 }

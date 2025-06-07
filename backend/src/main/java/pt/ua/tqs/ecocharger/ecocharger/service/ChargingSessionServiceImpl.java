@@ -1,12 +1,18 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import org.springframework.stereotype.Service;
+
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingPointDTO;
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingSessionResponseDTO;
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingStationDTO;
+import pt.ua.tqs.ecocharger.ecocharger.dto.ConnectorDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
 import pt.ua.tqs.ecocharger.ecocharger.repository.*;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingSessionService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -148,5 +154,64 @@ public class ChargingSessionServiceImpl implements ChargingSessionService {
     }
 
     return chargingSessionRepository.save(session);
+  }
+
+  public List<ChargingSessionResponseDTO> getAllSessions() {
+    return chargingSessionRepository.findAll().stream()
+        .map(
+            session -> {
+              ChargingPoint point = session.getChargingPoint();
+              ChargingStation station = point.getChargingStation();
+
+              List<ConnectorDTO> connectorDtos =
+                  point.getConnectors().stream()
+                      .map(
+                          conn ->
+                              new ConnectorDTO(
+                                  conn.getId(),
+                                  conn.getConnectorType(),
+                                  conn.getRatedPowerKW(),
+                                  conn.getVoltageV(),
+                                  conn.getCurrentA()))
+                      .toList();
+
+              ChargingStationDTO stationDto =
+                  new ChargingStationDTO(
+                      station.getId(),
+                      station.getCityName(),
+                      station.getAddress(),
+                      station.getLatitude(),
+                      station.getLongitude());
+
+              ChargingPointDTO pointDto =
+                  new ChargingPointDTO(
+                      point.getId(),
+                      point.getBrand(),
+                      point.isAvailable(),
+                      point.getPricePerKWh(),
+                      point.getPricePerMinute(),
+                      point.getChargingRateKWhPerMinute(),
+                      connectorDtos,
+                      stationDto);
+
+              return new ChargingSessionResponseDTO(
+                  session.getId(),
+                  session.getStartTime(),
+                  session.getEndTime(),
+                  session.getDurationMinutes(),
+                  session.getTotalCost(),
+                  session.getStatus(),
+                  session.getInitialBatteryLevel(),
+                  session.getEnergyDelivered(),
+                  pointDto,
+                  session.getUser(),
+                  session.getCar());
+            })
+        .toList();
+  }
+
+  @Override
+  public List<ChargingSession> getSessionsByUser(Long userId) {
+    return chargingSessionRepository.findByUserId(userId);
   }
 }

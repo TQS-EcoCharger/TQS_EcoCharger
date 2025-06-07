@@ -116,7 +116,7 @@ class DriverControllerTestIT {
   @Test
   @DisplayName("Test delete driver not found")
   void testDeleteDriverNotFound() {
-    RestAssuredMockMvc.given().when().delete("/api/v1/drivers/99999/").then().statusCode(404);
+    RestAssuredMockMvc.given().when().delete("/api/v1/driver/99999/").then().statusCode(404);
   }
 
   @Test
