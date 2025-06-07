@@ -4,6 +4,7 @@ import styles from '../css/Sidebar.module.css';
 import axios from 'axios';
 import CONFIG from '../config';
 import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 import { useUser } from '../context/UserProvider.jsx';
@@ -15,6 +16,7 @@ export default function Sidebar() {
   const [balance, setBalance] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [amount, setAmount] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBalance = async () => {

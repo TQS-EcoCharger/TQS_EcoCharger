@@ -121,15 +121,24 @@ export default function HomePage() {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        const stationsData = res.data.map((station) => ({
-          ...station,
-          chargingPoints: (station.chargingPoints || []).map((cp) => ({
-            ...cp,
-            connectors: cp.connectors || [],
-          })),
-        }));
-        setStations(stationsData);
-      })
+  console.log("Fetched stations response:", res.data);
+
+  const stationList = Array.isArray(res.data)
+    ? res.data
+    : Array.isArray(res.data.data)
+    ? res.data.data
+    : [];
+
+  const stationsData = stationList.map((station) => ({
+    ...station,
+    chargingPoints: (station.chargingPoints || []).map((cp) => ({
+      ...cp,
+      connectors: cp.connectors || [],
+    })),
+  }));
+
+  setStations(stationsData);
+})
       .catch((error) => {
         if ([401, 403].includes(error.response?.status)) {
           localStorage.removeItem("token");

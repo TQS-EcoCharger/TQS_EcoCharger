@@ -2,6 +2,7 @@ package pt.ua.tqs.ecocharger.ecocharger.service.interfaces;
 
 import java.util.List;
 
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingSessionResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
 
@@ -48,5 +49,5 @@ public interface ChargingSessionService {
    *
    * @return a list of all ChargingSession objects
    */
-  List<ChargingSession> getAllSessions();
+  List<ChargingSessionResponseDTO>  getAllSessions();
 }
