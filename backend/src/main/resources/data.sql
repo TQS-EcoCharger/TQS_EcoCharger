@@ -4,13 +4,15 @@ INSERT INTO users (email, password, name, enabled, user_type) VALUES
 ('ricardo.antunes2002@gmail.com', 'banana', 'Ricardo Antunes', true, 'drivers'),
 ('tomascliente@gmail.com', 'pass2', 'Tomás Cliente', true, 'drivers'),
 ('tomas@gmail.com', 'pass1', 'Tomás Silva', true, 'administrators'),
-('chargingoperator@example.com', 'op1234', 'Charging Operator', true, 'chargingOperators');
+('chargingoperator@example.com', 'op1234', 'Charging Operator', true, 'chargingOperators'),
+('driver@example.com', 'driver', 'Driver User', true, 'drivers'),
+('admin@example.com', 'admin1', 'Admin User', true, 'administrators');
 
 -- Criar drivers com IDs iguais aos criados em "users"
 INSERT INTO drivers (id) VALUES
 (1),
 (2),
-(3);
+(6);
 
 INSERT INTO administrators (id) VALUES
 (4);
@@ -23,14 +25,20 @@ INSERT INTO car (name, make, model, manufacture_year, license_plate, battery_cap
 ('Tesla Model 3', 'Tesla', 'Model 3', 2022, 'AA-12-BB', 75.0, 40.0, 25000, 15.0, true),
 ('Nissan Leaf', 'Nissan', 'Leaf', 2021, 'CC-34-DD', 40.0, 20.0, 32000, 14.5, true),
 ('Hyundai Kona Electric', 'Hyundai', 'Kona Electric', 2020, 'EE-56-FF', 64.0, 55.0, 15000, 16.2, true),
-('Renault Zoe', 'Renault', 'Zoe', 2023, 'II-90-JJ', 52.0, 48.0, 9000, 12.8, true);
+('Renault Zoe', 'Renault', 'Zoe', 2023, 'II-90-JJ', 52.0, 48.0, 9000, 12.8, true),
+('BMW i3', 'BMW', 'i3', 2019, 'KK-11-LL', 42.0, 30.0, 20000, 13.5, true),
+('Audi e-tron', 'Audi', 'e-tron', 2022, 'MM-22-NN', 95.0, 70.0, 5000, 20.0, true),
+('Volkswagen ID.4', 'Volkswagen', 'ID.4', 2021, 'OO-33-PP', 82.0, 60.0, 12000, 18.0, true);
 
 -- Associar carros a drivers
 INSERT INTO driver_cars (driver_id, cars_id) VALUES
 (1, 1),
 (1, 2),
 (2, 3),
-(2, 4);
+(2, 4),
+(6, 5),
+(6, 6);
+
 
 
 -- Estações de carregamento
@@ -147,7 +155,15 @@ VALUES (8, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
 INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type)
 VALUES (9, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
 
+-- Add connectors for charging points 10 to 18
+INSERT INTO connectors (charging_point_id, connector_type, rated_power_kw, voltage_v, current_a, current_type) VALUES
+(10, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+(11, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+(12, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+(13, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+(14, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3'),
+(15, 'IEC62196Type2Outlet', 22, 230, 32, 'AC3');
 
 UPDATE drivers SET balance = 50.0 WHERE id = 1; 
 UPDATE drivers SET balance = 35.5 WHERE id = 2; 
-
+UPDATE drivers SET balance = 20.0 WHERE id = 6;

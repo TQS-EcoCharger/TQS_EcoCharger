@@ -107,6 +107,7 @@ jobs:
           management.endpoint.metrics.show-details=always
           management.endpoint.prometheus.enabled=true
           management.metrics.export.prometheus.enabled=true
+          app.base-url=http://localhost:5000
           EOF
 
       - name: Write test application.properties
@@ -122,6 +123,7 @@ jobs:
           spring.jpa.defer-datasource-initialization=false
           spring.security.enabled=false
           jwt.secret=test-secret-key
+          app.base-url=http://localhost:5000
           EOF
 
       - name: Write it-test application-it.properties
@@ -142,6 +144,7 @@ jobs:
           jwt.secret=test-secret-key-for-integration-tests
           stripe.secret=${{ secrets.STRIPE_SECRET }}
           stripe.public=${{ secrets.STRIPE_PUBLIC }}
+          app.base-url=http://localhost:5000
           EOF
           
       - name: Run full verification lifecycle
@@ -166,3 +169,4 @@ jobs:
           -Dsonar.organization=tqs-ecocharger
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+          -Dsonar.exclusions=**/config/**

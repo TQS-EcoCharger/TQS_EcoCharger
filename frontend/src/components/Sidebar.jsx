@@ -176,6 +176,7 @@ export default function Sidebar() {
               border: 'none',
               width: '100%',
             }}
+            id="top-up-button"
           >
             Proceed to Payment
           </button>
