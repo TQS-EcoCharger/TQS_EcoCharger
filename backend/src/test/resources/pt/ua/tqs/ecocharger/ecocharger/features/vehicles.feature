@@ -47,9 +47,9 @@ Feature: Check and Manage Vehicles
             | ID | Name                  | Make    |
             | 3  | Hyundai Kona Electric | Hyundai |
             | 4  | Renault Zoe           | Renault |
-            | 5  | Tesla Model 3         | Tesla   |
-            | 6  | Toyota Prius          | Toyota  |
-            | 7  | Citroen C4            | Citroen |
+            | 8  | Tesla Model 3         | Tesla   |
+            | 9  | Toyota Prius          | Toyota  |
+            | 10  | Citroen C4            | Citroen |
 
     Scenario: Checking the details of a vehicle
         When I click the "_iconButton_1foq6_34" button for the vehicle "Hyundai Kona Electric"

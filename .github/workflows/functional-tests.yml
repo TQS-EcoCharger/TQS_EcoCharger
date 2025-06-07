@@ -48,6 +48,7 @@ jobs:
           spring.jpa.defer-datasource-initialization=false
           spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration+
           spring.security.enabled=false
+          app.base-url=http://localhost:5000
           EOF
 
       - name: Write runtime application.properties
@@ -73,6 +74,8 @@ jobs:
           jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
           stripe.secret=${{ secrets.STRIPE_SECRET }}
           stripe.public=${{ secrets.STRIPE_PUBLIC }}
+          app.base-url=http://localhost:5000
+
           EOF
 
       - name: Cache Maven packages
@@ -85,7 +88,7 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2
         with:
-          chromedriver-version: '124.0.6367.91'  # Match this with your installed Chrome version
+          chromedriver-version: '124.0.6367.91' 
 
       - name: Build backend
         working-directory: ./backend
@@ -121,13 +124,6 @@ jobs:
             -Dxray.reportFile=target/surefire-reports/TEST-pt.ua.tqs.ecocharger.ecocharger.functional.CucumberTest.xml \
             app.getxray:xray-maven-plugin:import-results
 
-      - name: Upload Screenshots
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-screenshots
-          path: backend/target/screenshots/screenshots/
-                
       - name: Stop containers
         run: docker compose -f docker-compose.yml down
         
