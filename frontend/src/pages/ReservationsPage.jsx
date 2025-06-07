@@ -129,6 +129,9 @@ export default function ReservationsPage() {
 
                   {/* Details */}
                   <div className={styles.cardBody}>
+                    <p id={`reservation-id-${reservation.id}`}>
+                      <strong>Charging Point ID:</strong> {reservation.chargingPoint.id}
+                    </p>
                     <p id={`reservation-status-${reservation.id}`}>
                       <BsInfoCircle className={styles.inlineIcon} />
                       <strong>Status:</strong> {reservation.status}
@@ -151,17 +154,9 @@ export default function ReservationsPage() {
 
                     <p>
                       <FaStopwatch className={styles.inlineIcon} />
-                      <strong>Price per Minute:</strong> €{cp?.pricePerMinute?.toFixed(2) ?? 'N/A'}
+                      <strong>kWh per minute:</strong> {cp?.chargingRateKWhPerMinute?.toFixed(2) ?? 'N/A'}
                     </p>
 
-                    <p>
-                      {cp?.available ? (
-                        <FaCheck className={styles.availableIcon} />
-                      ) : (
-                        <FaTimes className={styles.unavailableIcon} />
-                      )}
-                      <strong>Available:</strong> {cp?.available ? 'Yes' : 'No'}
-                    </p>
 
                     {cs && (
                       <p>
@@ -201,3 +196,4 @@ export default function ReservationsPage() {
     </div>
   );
 }
+
