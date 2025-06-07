@@ -169,3 +169,4 @@ jobs:
           -Dsonar.organization=tqs-ecocharger
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+          -Dsonar.exclusions=**/config/**
