@@ -100,6 +100,28 @@
             </plugins>
         </build>
         </profile>
+        <profile>
+        <id>integration-tests</id>
+        <build>
+            <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                <includes>
+                    <include>**/*IT.java</include>
+                </includes>
+                <excludes>
+                <exclude>*/functional/**</exclude>
+                    <exclude>**/*Test.java</exclude>
+                </excludes>
+                </configuration>
+            </plugin>
+            </plugins>
+        </build>
+        </profile>
+
 
 
     </profiles>
@@ -183,6 +205,12 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                          <configuration>
+                            <excludes>
+                            <exclude>**/config/SecurityConfig.java</exclude>
+                            <exclude>**/config/**</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>post-unit-test</id>
