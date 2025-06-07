@@ -207,6 +207,7 @@
                         </goals>
                           <configuration>
                             <excludes>
+                            <exclude>**/config/SecurityConfig.java</exclude>
                             <exclude>**/config/**</exclude>
                             </excludes>
                         </configuration>
