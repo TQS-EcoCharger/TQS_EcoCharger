@@ -81,7 +81,7 @@ function StatisticsPage() {
   const [peakMonth, setPeakMonth] = useState('');
   const [totalSavings, setTotalSavings] = useState({ gasolina: '0.00', gasoleo: '0.00', gpl: '0.00' });
   const token = localStorage.getItem('token');
-  const [cityFuelPrices, setCityFuelPrices] = useState({});
+  const [cityFuelPrices] = useState({});
   const [manualFuelPrices, setManualFuelPrices] = useState({
     gasolina: fuelTypes.gasolina.price,
     gasoleo: fuelTypes.gasoleo.price,
@@ -192,7 +192,7 @@ function StatisticsPage() {
           <InfoCard title="Savings vs Gasoline" value={`€${totalSavings.gasolina}`} />
           <InfoCard title="Savings vs Diesel" value={`€${totalSavings.gasoleo}`} />
           <InfoCard title="Savings vs GPL" value={`€${totalSavings.gpl}`} />
-          <div className={styles.cardStatistics }>
+          <div className={styles.cardStatistics}>
             <h3 className={styles.cardTitleStatistics}>Editar Preços de Combustível (€)</h3>
 
             <div className={styles.priceListStatistics}>

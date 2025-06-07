@@ -157,7 +157,6 @@ void testGetAllSessions_returnsMappedDTOs() {
     Connectors connector = new Connectors();
     connector.setId(100L);
     connector.setConnectorType("Type2");
-    connector.setConnectorType ("Type2");
     connector.setVoltageV(400);
     connector.setCurrentA(32);
 
