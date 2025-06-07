@@ -1,10 +1,8 @@
-on:
-  workflow_run:
-    workflows: ["Run Functional Tests (Chrome)", "Build and Analyze Backend"]
-    branches: [master]
-    types: 
-      - completed
-    
+on: 
+  push:
+    branches:
+      - master
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -12,17 +10,69 @@ concurrency:
 jobs:
   deploy: 
     runs-on: self-hosted
+
+
+
     name: Eco_Charger Deploy
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+    
       - name: Checkout
         uses: actions/checkout@v4.1.1
+
+      - name: Write .env file
+        run: |
+          cat <<EOF > .env
+          SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ecocharger
+          SPRING_DATASOURCE_USERNAME=ecocharger
+          SPRING_DATASOURCE_PASSWORD=ecocharger
+          EOF
+          
+      - name: Write runtime application.properties
+        run: |
+          mkdir -p backend/src/main/resources
+          cat <<EOF > backend/src/main/resources/application.properties
+          spring.application.name=ecocharger
+          spring.datasource.url=jdbc:postgresql://db:5432/ecocharger
+          spring.datasource.username=ecocharger
+          spring.datasource.password=ecocharger
+          spring.datasource.driver-class-name=org.postgresql.Driver
+          spring.jpa.show-sql=true
+          spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+          spring.jpa.hibernate.ddl-auto=create
+          spring.sql.init.data-locations=classpath:data.sql
+          spring.sql.init.mode=always
+          spring.sql.init.continue-on-error=false
+          spring.sql.init.platform=postgres
+          spring.jpa.defer-datasource-initialization=true
+          spring.flyway.enabled=false
+          springdoc.swagger-ui.path=/swagger-ui-custom.html
+          springdoc.api-docs.path=/api-docs
+          jwt.secret=xg7!X@rT#98sdufKL2l7lfksm10*4dlfj34&89#fKlasdf4!dskf
+          management.endpoint.health.show-details=always
+          management.endpoint.health.access=unrestricted
+          management.endpoints.web.exposure.include=health,info,metrics,prometheus
+          management.endpoint.prometheus.show-details=always
+          management.endpoint.info.access=unrestricted
+          management.endpoint.info.show-details=always
+          management.endpoint.metrics.access=unrestricted
+          management.endpoint.metrics.show-details=always
+          management.endpoint.prometheus.enabled=true
+          management.metrics.export.prometheus.enabled=true
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
+          EOF
+
+
 
       - name: Down containers
         run: docker compose down
       
       - name: Remove build caches
         run: docker builder prune -a -f
+
+      - name: Package backend
+        run: mvn clean package -DskipTests
+        working-directory: ./backend
 
       - name: Build and up 
         run: docker compose -f docker-compose.yml up --build -d
