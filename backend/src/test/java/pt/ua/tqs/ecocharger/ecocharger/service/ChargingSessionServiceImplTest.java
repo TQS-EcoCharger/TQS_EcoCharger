@@ -210,9 +210,9 @@ class ChargingSessionServiceImplTest {
   }
 
   @Test
-@Requirement("ET-561")
-void testGetSessionsByUser_returnsMappedDTOs() {
-  Long userId = 200L;
+  @Requirement("ET-561")
+  void testGetSessionsByUser_returnsMappedDTOs() {
+    Long userId = 200L;
 
     ChargingStation station = new ChargingStation();
     station.setId(1L);
