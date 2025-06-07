@@ -5,10 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
+import pt.ua.tqs.ecocharger.ecocharger.dto.ChargingSessionResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationRequestDTO;
 import pt.ua.tqs.ecocharger.ecocharger.dto.OtpValidationResponse;
 import pt.ua.tqs.ecocharger.ecocharger.dto.StartChargingRequestDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingSession;
+import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStatus;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +19,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -26,7 +31,9 @@ class ChargingSessionControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
-  @MockBean private ChargingSessionService chargingSessionService;
+  @SuppressWarnings("removal")
+  @MockBean
+  private ChargingSessionService chargingSessionService;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -133,5 +140,68 @@ class ChargingSessionControllerTest {
         .perform(post("/api/v1/sessions/202/end"))
         .andExpect(status().isNotFound())
         .andExpect(content().string("Session not found"));
+  }
+
+  @Test
+  @DisplayName("Get sessions by user returns 200 with data")
+  void testGetSessionsByUserSuccess() throws Exception {
+    List<ChargingSession> mockSessions = List.of(new ChargingSession());
+    Mockito.when(chargingSessionService.getSessionsByUser(5L)).thenReturn(mockSessions);
+
+    mockMvc.perform(get("/api/v1/sessions/user/5")).andExpect(status().isOk());
+  }
+
+  @Test
+  @DisplayName("Get sessions by user returns 500 on exception")
+  void testGetSessionsByUserFailure() throws Exception {
+    Mockito.when(chargingSessionService.getSessionsByUser(999L))
+        .thenThrow(new RuntimeException("Database down"));
+
+    mockMvc
+        .perform(get("/api/v1/sessions/user/999"))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string(containsString("Database down")));
+  }
+
+  @Test
+  @DisplayName("Get all charging sessions returns list")
+  void testGetAllChargingSessionsSuccess() throws Exception {
+    ChargingSessionResponseDTO dto = new ChargingSessionResponseDTO();
+    dto.setId(1L);
+    dto.setTotalCost(10.5);
+    dto.setStatus(ChargingStatus.COMPLETED);
+
+    Mockito.when(chargingSessionService.getAllSessions()).thenReturn(List.of(dto));
+
+    mockMvc
+        .perform(get("/api/v1/sessions"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1L))
+        .andExpect(jsonPath("$[0].totalCost").value(10.5))
+        .andExpect(jsonPath("$[0].status").value("COMPLETED"));
+  }
+
+  @Test
+  @DisplayName("Get all charging sessions handles internal error")
+  void testGetAllChargingSessionsError() throws Exception {
+    Mockito.when(chargingSessionService.getAllSessions())
+        .thenThrow(new RuntimeException("Database failure"));
+
+    mockMvc
+        .perform(get("/api/v1/sessions"))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string("Error: Database failure"));
+  }
+
+  @Test
+  @DisplayName("Get all sessions returns 500 on error")
+  void testGetAllSessionsFailure() throws Exception {
+    Mockito.when(chargingSessionService.getAllSessions())
+        .thenThrow(new RuntimeException("Unexpected error"));
+
+    mockMvc
+        .perform(get("/api/v1/sessions"))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string(containsString("Unexpected error")));
   }
 }
