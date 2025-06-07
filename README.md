@@ -1,1 +1,34 @@
-# Frontend Repo
+# EcoCharger
+Repository for the TQS project EcoCharger
+
+<img src="resources/EcoCharger_Logo.png" alt="EcoChargerLogo" width="400"/>
+
+| Student         | Roles         | Nmec   |
+| --------------- | ------------- | ------ |
+| Afonso Ferreira     | Team Manager and DevOps Master | 113480  |
+| Ricardo Antunes | Q&A Engineer | 115243 |
+| Tomás Brás | Product Owner | 112665 |
+
+# Abstract
+
+**EcoCharger** is a software application that is designed to improve the electric vehicle (EV) charging ecosystem by addressing the challenges of charging services. The project focuses on delivering a seamless experience for EV drivers and station operators through features such as real-time charging station discovery, slot booking, payment integration, and consumption monitoring.
+
+**EcoCharger** was built following **Software Quality Assurance** and **DevOps** practices, including **Continuous Integration**, **Continuous Delivery**, and **Continuous Testing**. By applying agile methodologies and a test driven development, the project aims to deliver an efficient product that enhances the EV charging experience and management of charging stations.
+
+# Structure
+
+```
+├── frontend/                  -- Frontend code
+├── backend/                   -- Backend code
+├── minutes/                    -- Minutes of the meetings
+├── presentations/              -- Materials used in the presentations
+├── README.md                   -- Context
+├── reports/                    -- Project specifications
+├── resources/                  -- Images and other resources
+├── docker-compose.yml         -- Docker compose file
+├── k6-oss-workshop-main      -- K6 OSS Workshop
+├── grafana                     -- Grafana dashboard and datasource
+```
+
+# Architecture
+![Architecture](resources/architecture.png)
