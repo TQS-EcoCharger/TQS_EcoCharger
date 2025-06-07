@@ -111,4 +111,41 @@ public class ChargingSessionController {
       return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
   }
+
+  @Operation(
+      summary = "Get all charging sessions for a user",
+      description = "Returns a list of all charging sessions associated with a specific user ID")
+  @ApiResponse(
+      responseCode = "200",
+      description = "List of sessions returned successfully",
+      content = @Content(mediaType = "application/json"))
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<?> getChargingSessionsByUser(
+      @Parameter(description = "ID of the user") @PathVariable Long userId) {
+    try {
+      var sessions = chargingSessionService.getSessionsByUser(userId);
+      return ResponseEntity.ok(sessions);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error: " + e.getMessage());
+    }
+  }
+
+  @Operation(
+      summary = "Get all charging sessions",
+      description = "Returns a list of all charging sessions from all users")
+  @ApiResponse(
+      responseCode = "200",
+      description = "List of all charging sessions returned successfully",
+      content = @Content(mediaType = "application/json"))
+  @GetMapping
+  public ResponseEntity<?> getAllChargingSessions() {
+    try {
+      var sessions = chargingSessionService.getAllSessions();
+      return ResponseEntity.ok(sessions);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error: " + e.getMessage());
+    }
+  }
 }

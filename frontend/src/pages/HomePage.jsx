@@ -59,6 +59,7 @@ export default function HomePage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddPointModal, setShowAddPointModal] = useState(false);
 
+
   const handleNewStation = (newStation) => {
     setStations(prev => [...prev, newStation]);
   };
@@ -120,15 +121,24 @@ export default function HomePage() {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        const stationsData = res.data.map((station) => ({
-          ...station,
-          chargingPoints: (station.chargingPoints || []).map((cp) => ({
-            ...cp,
-            connectors: cp.connectors || [],
-          })),
-        }));
-        setStations(stationsData);
-      })
+  console.log("Fetched stations response:", res.data);
+
+  const stationList = Array.isArray(res.data)
+    ? res.data
+    : Array.isArray(res.data.data)
+    ? res.data.data
+    : [];
+
+  const stationsData = stationList.map((station) => ({
+    ...station,
+    chargingPoints: (station.chargingPoints || []).map((cp) => ({
+      ...cp,
+      connectors: cp.connectors || [],
+    })),
+  }));
+
+  setStations(stationsData);
+})
       .catch((error) => {
         if ([401, 403].includes(error.response?.status)) {
           localStorage.removeItem("token");
@@ -194,11 +204,11 @@ export default function HomePage() {
         setCurrentReservations((prev) => [
           ...prev,
           {
-            id: Date.now(), // Temporary ID for optimistic UI update
+            id: Date.now(),
             chargingPoint: selectedPoint,
             startTime: startTime.toISOString(),
             endTime: endTime.toISOString(),
-            status: 'PENDING', // Assuming new reservations start as PENDING
+            status: 'PENDING', 
           },
         ]);
       })
@@ -315,7 +325,13 @@ export default function HomePage() {
                     <p className={styles.noChargingPoints}>No charging points available.</p>
                   </div>
                 )}
-                {userType === 'administrator' || (userType === 'chargingOperator' && me.chargingStations?.some(station => station.id === selectedStation.id)) && (
+                {(
+                  userType === 'administrator' ||
+                  (
+                    userType === 'chargingOperator' &&
+                    me.chargingStations?.some(station => station.id === selectedStation.id)
+                  )
+                ) && (
                   <>
                     <button className={styles.editBtn} onClick={handleEditButtonClick}>Edit</button>
                     <button className={styles.editBtn} onClick={handleRemoveButtonClick}>Remove</button>

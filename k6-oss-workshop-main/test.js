@@ -45,9 +45,6 @@ export default function () {
   const token = loginRes.json('token');
   if (!token) return;
 
-  // -----------------------
-  // GERAR HORÁRIO ÚNICO
-  // -----------------------
 const now = new Date();
 const start = new Date(now);
 

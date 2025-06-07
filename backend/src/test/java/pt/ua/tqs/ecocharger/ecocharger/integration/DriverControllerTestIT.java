@@ -116,7 +116,7 @@ class DriverControllerTestIT {
   @Test
   @DisplayName("Test delete driver not found")
   void testDeleteDriverNotFound() {
-    RestAssuredMockMvc.given().when().delete("/api/v1/drivers/99999/").then().statusCode(404);
+    RestAssuredMockMvc.given().when().delete("/api/v1/driver/99999/").then().statusCode(404);
   }
 
   @Test
@@ -202,5 +202,77 @@ class DriverControllerTestIT {
         .post("/api/v1/driver/99999/cars")
         .then()
         .statusCode(404);
+  }
+
+  @Test
+  @DisplayName("Real Stripe test: create session and validate redirect URL")
+  void testRealStripeTopUp() {
+    String json =
+        """
+        {
+            "amount": 10.0,
+            "simulateSuccess": false
+        }
+        """;
+
+    RestAssuredMockMvc.given()
+        .contentType("application/json")
+        .body(json)
+        .when()
+        .post("/api/v1/driver/" + savedDriver.getId() + "/balance")
+        .then()
+        .statusCode(200)
+        .body("sessionId", org.hamcrest.Matchers.notNullValue())
+        .body("url", org.hamcrest.Matchers.startsWith("https://checkout.stripe.com"));
+  }
+
+  @Test
+  @DisplayName("Finalize Stripe payment with mock session_id")
+  void testFinalizeTopUpStripe() throws Exception {
+    String json =
+        """
+        {
+            "amount": 5.0,
+            "simulateSuccess": false
+        }
+        """;
+
+    var sessionId =
+        RestAssuredMockMvc.given()
+            .contentType("application/json")
+            .body(json)
+            .when()
+            .post("/api/v1/driver/" + savedDriver.getId() + "/balance")
+            .then()
+            .statusCode(200)
+            .extract()
+            .jsonPath()
+            .getString("sessionId");
+
+    // Simulate success callback
+    RestAssuredMockMvc.given()
+        .when()
+        .get("/api/v1/driver/checkout-success?session_id=" + sessionId)
+        .then()
+        .statusCode(200)
+        .body("status", equalTo("success"));
+  }
+
+  @Test
+  @DisplayName("Stripe top-up fails with invalid amount")
+  void testStripeTopUpInvalidAmount() {
+    String json =
+        """
+            { "amount": 0.0 }
+        """;
+
+    RestAssuredMockMvc.given()
+        .contentType("application/json")
+        .body(json)
+        .when()
+        .post("/api/v1/driver/" + savedDriver.getId() + "/balance")
+        .then()
+        .statusCode(400)
+        .body("error", equalTo("Amount must be greater than 0"));
   }
 }

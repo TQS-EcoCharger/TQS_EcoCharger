@@ -14,13 +14,14 @@ import {
 } from 'react-icons/fa';
 import { BsInfoCircle } from 'react-icons/bs';
 import Sidebar from '../components/Sidebar';
+import { useUser } from '../context/UserProvider';
 
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [error, setError] = useState('');
   const [me, setMe] = useState(null);
   const token = localStorage.getItem('token');
-
+  const { userType } = useUser();
   const [otpData, setOtpData] = useState({});
   const [timers, setTimers] = useState({});
 
@@ -69,22 +70,27 @@ export default function ReservationsPage() {
           console.error('Failed to fetch user info:', err);
           setError('Unable to fetch user information.');
         });
-    }
+    }""
   }, [token]);
 
-  useEffect(() => {
-    if (!token || !me) return;
+ useEffect(() => {
+  if (!token || !me) return;
+  console.log('Fetching reservations for:', me);
 
-    axios
-      .get(`${CONFIG.API_URL}v1/reservation/user/${me.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setReservations(res.data))
-      .catch((err) => {
-        console.error('Failed to load reservations:', err);
-        setError('Failed to load reservations.');
-      });
-  }, [token, me]);
+  const url = me.type === 'administrators'
+    ? `${CONFIG.API_URL}v1/reservation`
+    : `${CONFIG.API_URL}v1/reservation/user/${me.id}`;
+
+  axios
+    .get(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => setReservations(res.data))
+    .catch((err) => {
+      console.error('Failed to load reservations:', err);
+      setError('Failed to load reservations.');
+    });
+}, [token, me]);
 
   if (error) {
     return <div className={styles.message}>{error}</div>;
@@ -94,8 +100,12 @@ export default function ReservationsPage() {
     <div className={styles.page} id="reservations-page">
       <Sidebar />
       <div className={styles.container}>
-        <h2 className={styles.title} id="reservations-title">My Reservations</h2>
-
+        { userType === 'administrators' && (
+          <h1 className={styles.title} id="admin-reservations-title">All Reservations</h1>
+        )}
+        { userType === 'driver' && (
+          <h1 className={styles.title} id="user-reservations-title">My Reservations</h1>
+        )}
         {reservations.length === 0 ? (
           <p className={styles.message} id="no-reservations">You have no reservations.</p>
         ) : (
@@ -129,6 +139,9 @@ export default function ReservationsPage() {
 
                   {/* Details */}
                   <div className={styles.cardBody}>
+                    <p id={`reservation-id-${reservation.id}`}>
+                      <strong>Charging Point ID:</strong> {reservation.chargingPoint.id}
+                    </p>
                     <p id={`reservation-status-${reservation.id}`}>
                       <BsInfoCircle className={styles.inlineIcon} />
                       <strong>Status:</strong> {reservation.status}
@@ -154,13 +167,6 @@ export default function ReservationsPage() {
                       <strong>kWh per minute:</strong> {cp?.chargingRateKWhPerMinute?.toFixed(2) ?? 'N/A'}
                     </p>
 
-                    <p>
-                      {cp?.available ? (
-                        <FaCheck className={styles.availableIcon} />
-                      ) : (
-                        <FaTimes className={styles.unavailableIcon} />
-                      )}
-                    </p>
 
                     {cs && (
                       <p>
