@@ -134,7 +134,7 @@ public class ChargingPointController {
             description = "Charging point or active session not found")
       })
   @GetMapping("/{id}/active-session")
-  public ResponseEntity<?> getActiveSessionForPoint(
+  public ResponseEntity<Object> getActiveSessionForPoint(
       @Parameter(description = "ID of the charging point") @PathVariable Long id) {
     return ResponseEntity.ok(chargingPointService.getActiveSessionForPoint(id));
   }

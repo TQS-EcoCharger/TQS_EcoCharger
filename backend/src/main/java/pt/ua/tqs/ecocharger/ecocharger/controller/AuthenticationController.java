@@ -44,7 +44,7 @@ public class AuthenticationController {
               schema = @Schema(implementation = AuthResultDTO.class)))
   @ApiResponse(responseCode = "401", description = "Invalid credentials or authentication failed")
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+  public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
     AuthResultDTO result = authService.authenticate(request.getEmail(), request.getPassword());
 
     if (!result.isSuccess()) {
