@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    build: ./backend
+    build: ./EcoCharger/backend
     ports:
       - "8080:8080"
     env_file: .env
@@ -22,7 +22,7 @@ services:
       - observability
 
   frontend:
-    build: ./frontend
+    build: ./EcoCharger/frontend
     ports:
       - "5000:5000"
     environment:
