@@ -15,10 +15,11 @@ import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
 import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
-
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -162,4 +163,50 @@ class AuthenticationServiceTest {
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getMessage()).isEqualTo("Invalid email format");
   }
+
+  @Test
+  @DisplayName("ET-49: Should return correct user type as driver")
+  @Requirement("ET-49")
+  void testUserTypeAsDriver() {
+    when(userRepository.findByEmail("john@example.com")).thenReturn(Optional.of(enabledUser));
+    when(jwtUtil.generateToken("john@example.com")).thenReturn("mocked-jwt");
+    when(driverService.driverExists(anyLong())).thenReturn(true);
+
+    AuthResultDTO result = authService.authenticate("john@example.com", "123456");
+
+    assertThat(result.getUserType()).isEqualTo("driver");
+  }
+
+  @Test
+  @DisplayName("ET-49: Should throw for invalid token format")
+  @Requirement("ET-49")
+  void testInvalidTokenFormat() {
+    when(jwtUtil.getEmailFromToken(any())).thenThrow(new IllegalArgumentException("Invalid token format"));
+
+    assertThrows(IllegalArgumentException.class, () -> authService.getCurrentUser("bad.token"));
+  }
+
+
+  @Test
+  @DisplayName("ET-49: Should throw when user not found")
+  @Requirement("ET-49")
+  void testUserNotFound() {
+    when(jwtUtil.getEmailFromToken(any())).thenReturn("missing@example.com");
+    when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
+
+    assertThrows(NotFoundException.class, () -> authService.getCurrentUser("valid.token"));
+  }
+
+  @Test
+  @DisplayName("ET-49: Should throw when user is disabled")
+  @Requirement("ET-49")
+  void testDisabledUserInGetCurrentUser() {
+    enabledUser.setEnabled(false);
+    when(jwtUtil.getEmailFromToken(any())).thenReturn("john@example.com");
+    when(userRepository.findByEmail("john@example.com")).thenReturn(Optional.of(enabledUser));
+
+    assertThrows(IllegalArgumentException.class, () -> authService.getCurrentUser("valid.token"));
+  }
+
+
 }
