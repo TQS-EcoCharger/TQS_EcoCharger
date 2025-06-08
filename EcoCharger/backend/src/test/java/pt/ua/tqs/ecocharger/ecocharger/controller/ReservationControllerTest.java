@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ReservationController.class)
 @Import(SecurityDisableConfig.class)
-public class ReservationControllerTest {
+class ReservationControllerTest {
 
   @Autowired private MockMvc mockMvc;
 

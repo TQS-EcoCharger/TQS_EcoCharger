@@ -28,22 +28,13 @@ public class ChargingSessionController {
     this.chargingSessionService = chargingSessionService;
   }
 
-  @Operation(
-      summary = "Validate OTP for charging point",
-      description = "Validates the OTP provided for a charging point before starting a session")
-  @ApiResponse(
-      responseCode = "200",
-      description = "OTP validation result",
-      content =
-          @Content(
-              mediaType = "application/json",
-              schema = @Schema(implementation = OtpValidationResponse.class)))
+  @Operation(summary = "Validate OTP for charging point", description = "Validates the OTP provided for a charging point before starting a session")
+  @ApiResponse(responseCode = "200", description = "OTP validation result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OtpValidationResponse.class)))
   @ApiResponse(responseCode = "400", description = "Invalid OTP")
   @PostMapping("/validate-otp")
   public ResponseEntity<OtpValidationResponse> validateOtp(
       @RequestBody OtpValidationRequestDTO request) {
-    OtpValidationResponse response =
-        chargingSessionService.validateOtp(request.getOtp(), request.getChargingPointId());
+    OtpValidationResponse response = chargingSessionService.validateOtp(request.getOtp(), request.getChargingPointId());
 
     if (!response.isValid()) {
       return ResponseEntity.badRequest().body(response);
@@ -53,29 +44,19 @@ public class ChargingSessionController {
   }
 
   /**
-   * Starts a new charging session after validating OTP and car. If a reservation is present, it is
+   * Starts a new charging session after validating OTP and car. If a reservation
+   * is present, it is
    * used. Otherwise, session proceeds without it.
    */
-  @Operation(
-      summary = "Start a charging session",
-      description = "Starts a charging session given a charging point ID, OTP, and car ID")
-  @ApiResponse(
-      responseCode = "200",
-      description = "Charging session started successfully",
-      content =
-          @Content(
-              mediaType = "application/json",
-              schema = @Schema(implementation = ChargingSession.class)))
+  @Operation(summary = "Start a charging session", description = "Starts a charging session given a charging point ID, OTP, and car ID")
+  @ApiResponse(responseCode = "200", description = "Charging session started successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChargingSession.class)))
   @ApiResponse(responseCode = "400", description = "Invalid input or OTP")
-  @ApiResponse(
-      responseCode = "409",
-      description = "Session conflict or other business rules violation")
+  @ApiResponse(responseCode = "409", description = "Session conflict or other business rules violation")
   @PostMapping
-  public ResponseEntity<?> startCharging(@RequestBody StartChargingRequestDTO request) {
+  public ResponseEntity<Object> startCharging(@RequestBody StartChargingRequestDTO request) {
     try {
-      ChargingSession session =
-          chargingSessionService.startSessionWithOtp(
-              request.getChargingPointId(), request.getOtp(), request.getCarId());
+      ChargingSession session = chargingSessionService.startSessionWithOtp(
+          request.getChargingPointId(), request.getOtp(), request.getCarId());
 
       return ResponseEntity.ok(session);
     } catch (IllegalArgumentException e) {
@@ -85,22 +66,12 @@ public class ChargingSessionController {
     }
   }
 
-  @Operation(
-      summary = "End a charging session",
-      description = "Ends an active charging session by its session ID")
-  @ApiResponse(
-      responseCode = "200",
-      description = "Charging session ended successfully",
-      content =
-          @Content(
-              mediaType = "application/json",
-              schema = @Schema(implementation = ChargingSession.class)))
+  @Operation(summary = "End a charging session", description = "Ends an active charging session by its session ID")
+  @ApiResponse(responseCode = "200", description = "Charging session ended successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChargingSession.class)))
   @ApiResponse(responseCode = "404", description = "Session not found")
-  @ApiResponse(
-      responseCode = "409",
-      description = "Session cannot be ended due to conflict or invalid state")
+  @ApiResponse(responseCode = "409", description = "Session cannot be ended due to conflict or invalid state")
   @PostMapping("/{sessionId}/end")
-  public ResponseEntity<?> endCharging(
+  public ResponseEntity<Object> endCharging(
       @Parameter(description = "ID of the charging session to end") @PathVariable Long sessionId) {
     try {
       ChargingSession endedSession = chargingSessionService.endSession(sessionId);
@@ -112,15 +83,10 @@ public class ChargingSessionController {
     }
   }
 
-  @Operation(
-      summary = "Get all charging sessions for a user",
-      description = "Returns a list of all charging sessions associated with a specific user ID")
-  @ApiResponse(
-      responseCode = "200",
-      description = "List of sessions returned successfully",
-      content = @Content(mediaType = "application/json"))
+  @Operation(summary = "Get all charging sessions for a user", description = "Returns a list of all charging sessions associated with a specific user ID")
+  @ApiResponse(responseCode = "200", description = "List of sessions returned successfully", content = @Content(mediaType = "application/json"))
   @GetMapping("/user/{userId}")
-  public ResponseEntity<?> getChargingSessionsByUser(
+  public ResponseEntity<Object> getChargingSessionsByUser(
       @Parameter(description = "ID of the user") @PathVariable Long userId) {
     try {
       var sessions = chargingSessionService.getSessionsByUser(userId);
@@ -131,15 +97,10 @@ public class ChargingSessionController {
     }
   }
 
-  @Operation(
-      summary = "Get all charging sessions",
-      description = "Returns a list of all charging sessions from all users")
-  @ApiResponse(
-      responseCode = "200",
-      description = "List of all charging sessions returned successfully",
-      content = @Content(mediaType = "application/json"))
+  @Operation(summary = "Get all charging sessions", description = "Returns a list of all charging sessions from all users")
+  @ApiResponse(responseCode = "200", description = "List of all charging sessions returned successfully", content = @Content(mediaType = "application/json"))
   @GetMapping
-  public ResponseEntity<?> getAllChargingSessions() {
+  public ResponseEntity<Object> getAllChargingSessions() {
     try {
       var sessions = chargingSessionService.getAllSessions();
       return ResponseEntity.ok(sessions);

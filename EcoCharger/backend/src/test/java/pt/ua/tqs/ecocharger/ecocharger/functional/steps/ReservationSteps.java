@@ -20,7 +20,6 @@ public class ReservationSteps {
   private WebDriverWait wait;
 
   private static String storedOtpCode;
-  private static String storedChargingPointId;
 
   @Before
   public void setUp() {
