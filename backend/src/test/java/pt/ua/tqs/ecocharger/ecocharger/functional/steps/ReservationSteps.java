@@ -144,7 +144,6 @@ public class ReservationSteps {
 
   @Then("I store the OTP code for later use")
   public void storeOtp() {
-    // takeScreenshot(driver, "screenshots/storeOtpCode.png");
     assertNotNull(storedOtpCode);
   }
 
@@ -181,12 +180,12 @@ public class ReservationSteps {
 
   @Then("I should see the car selection dropdown")
   public void verifyCarDropdown() {
-    try {
       WebElement control =
           wait.until(
-              driver -> {
+              drv -> {
                 try {
-                  WebElement el = driver.findElement(By.cssSelector(".custom-car-select__control"));
+                  WebElement el =
+                      drv.findElement(By.cssSelector(".custom-car-select__control"));
                   return (el.isDisplayed() && el.isEnabled()) ? el : null;
                 } catch (NoSuchElementException | StaleElementReferenceException e) {
                   return null;
@@ -195,11 +194,8 @@ public class ReservationSteps {
 
       assertNotNull(control, "Car dropdown control not visible or enabled");
 
-    } catch (Exception e) {
-      // takeScreenshot(driver, "screenshots/verifyCarDropdown_failed.png");
-      throw e;
-    }
   }
+
 
   @When("I select a vehicle from the list")
   public void selectCar() {
