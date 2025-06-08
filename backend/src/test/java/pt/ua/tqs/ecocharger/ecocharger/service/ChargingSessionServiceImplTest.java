@@ -300,4 +300,24 @@ class ChargingSessionServiceImplTest {
     assertTrue(ex.getMessage().contains("Insufficient balance"));
   }
 
+  @Test
+  @Requirement("ET-42")
+  void testStartSessionWithOtp_expiredOtp_throwsException() {
+    Reservation reservation = new Reservation();
+    reservation.setStartTime(now.minusMinutes(5));
+    reservation.setEndTime(now.plusMinutes(30));
+    reservation.setChargingPoint(new ChargingPoint());
+    reservation.setUser(new User());
+
+    OTPCode otpCode = new OTPCode();
+    otpCode.setCode(otp);
+    otpCode.setExpirationTime(now.minusMinutes(1));
+    when(reservationRepo.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(pointId, now, now))
+        .thenReturn(Optional.of(reservation));
+    when(otpRepo.findByCodeAndReservation(otp, reservation)).thenReturn(Optional.of(otpCode));
+
+    assertThrows(IllegalArgumentException.class, () -> service.startSessionWithOtp(pointId, otp, carId));
+  }
+
+
 }
