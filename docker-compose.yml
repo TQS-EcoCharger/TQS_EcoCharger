@@ -29,7 +29,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     command: npm run dev -- --host
     volumes:
-      - ./frontend:/app
+      - ./EcoCharger/frontend:/app
       - /app/node_modules
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5000 || exit 1"]
