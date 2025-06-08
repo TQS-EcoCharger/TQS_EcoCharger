@@ -73,7 +73,6 @@ public class ReservationSteps {
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
         futureEnd);
-
   }
 
   @When("I set the reservation end time")
