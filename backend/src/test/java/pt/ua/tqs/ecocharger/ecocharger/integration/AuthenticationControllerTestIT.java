@@ -47,7 +47,8 @@ class AuthenticationControllerIT {
           "name": "Test User",
           "userType": "driver"
         }
-        """.formatted(email);
+        """
+            .formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -75,7 +76,8 @@ class AuthenticationControllerIT {
           "name": "Test User",
           "userType": "driver"
         }
-        """.formatted(email);
+        """
+            .formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -91,7 +93,8 @@ class AuthenticationControllerIT {
           "email": "%s",
           "password": "securepass"
         }
-        """.formatted(email);
+        """
+            .formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -118,7 +121,8 @@ class AuthenticationControllerIT {
           "name": "Fail User",
           "userType": "driver"
         }
-        """.formatted(email);
+        """
+            .formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -134,7 +138,8 @@ class AuthenticationControllerIT {
           "email": "%s",
           "password": "wrongpass"
         }
-        """.formatted(email);
+        """
+            .formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -160,7 +165,8 @@ class AuthenticationControllerIT {
           "name": "Token User",
           "userType": "driver"
         }
-        """.formatted(email);
+        """
+            .formatted(email);
 
     String token =
         RestAssuredMockMvc.given()
