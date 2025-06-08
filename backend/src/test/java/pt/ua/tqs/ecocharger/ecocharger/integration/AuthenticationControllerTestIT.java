@@ -10,9 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 
 import static org.hamcrest.Matchers.*;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import pt.ua.tqs.ecocharger.ecocharger.config.SecurityDisableConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -27,17 +29,25 @@ class AuthenticationControllerIT {
     RestAssuredMockMvc.mockMvc(mockMvc);
   }
 
+  private String generateUniqueEmail(String prefix) {
+    return prefix + "_" + System.currentTimeMillis() + "@example.com";
+  }
+
   @Test
+  @Requirement("ET-52")
   @DisplayName("Register user successfully")
   void testRegisterSuccess() {
+    String email = generateUniqueEmail("register");
+
     String requestBody =
         """
         {
-          "email": "testuser@example.com",
+          "email": "%s",
           "password": "securepass",
-          "name": "Test User"
+          "name": "Test User",
+          "userType": "driver"
         }
-        """;
+        """.formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
@@ -52,21 +62,40 @@ class AuthenticationControllerIT {
   }
 
   @Test
+  @Requirement("ET-49")
   @DisplayName("Login with valid credentials")
   void testLoginSuccess() {
-    testRegisterSuccess();
+    String email = generateUniqueEmail("login");
 
-    String requestBody =
+    String registerRequest =
         """
         {
-          "email": "testuser@example.com",
-          "password": "securepass"
+          "email": "%s",
+          "password": "securepass",
+          "name": "Test User",
+          "userType": "driver"
         }
-        """;
+        """.formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
-        .body(requestBody)
+        .body(registerRequest)
+        .when()
+        .post("/api/auth/register")
+        .then()
+        .statusCode(200);
+
+    String loginRequest =
+        """
+        {
+          "email": "%s",
+          "password": "securepass"
+        }
+        """.formatted(email);
+
+    RestAssuredMockMvc.given()
+        .contentType("application/json")
+        .body(loginRequest)
         .when()
         .post("/api/auth/login")
         .then()
@@ -77,18 +106,39 @@ class AuthenticationControllerIT {
 
   @Test
   @DisplayName("Login fails with wrong password")
+  @Requirement("ET-49")
   void testLoginFailure() {
-    String requestBody =
+    String email = generateUniqueEmail("fail");
+
+    String registerRequest =
         """
         {
-          "email": "testuser@example.com",
-          "password": "wrongpass"
+          "email": "%s",
+          "password": "correctpass",
+          "name": "Fail User",
+          "userType": "driver"
         }
-        """;
+        """.formatted(email);
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
-        .body(requestBody)
+        .body(registerRequest)
+        .when()
+        .post("/api/auth/register")
+        .then()
+        .statusCode(200);
+
+    String badLoginRequest =
+        """
+        {
+          "email": "%s",
+          "password": "wrongpass"
+        }
+        """.formatted(email);
+
+    RestAssuredMockMvc.given()
+        .contentType("application/json")
+        .body(badLoginRequest)
         .when()
         .post("/api/auth/login")
         .then()
@@ -98,16 +148,19 @@ class AuthenticationControllerIT {
 
   @Test
   @DisplayName("Fetch current user with valid token")
+  @Requirement("ET-49")
   void testGetCurrentUser() {
-    // First register and login to get token
+    String email = generateUniqueEmail("token");
+
     String registerJson =
         """
         {
-          "email": "tokenuser@example.com",
+          "email": "%s",
           "password": "securepass",
-          "name": "Token User"
+          "name": "Token User",
+          "userType": "driver"
         }
-        """;
+        """.formatted(email);
 
     String token =
         RestAssuredMockMvc.given()
@@ -127,6 +180,6 @@ class AuthenticationControllerIT {
         .get("/api/auth/me")
         .then()
         .statusCode(200)
-        .body("email", equalTo("tokenuser@example.com"));
+        .body("email", equalTo(email));
   }
 }
