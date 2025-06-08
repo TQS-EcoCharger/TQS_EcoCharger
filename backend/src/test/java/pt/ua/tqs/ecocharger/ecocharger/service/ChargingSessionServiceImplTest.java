@@ -270,4 +270,34 @@ class ChargingSessionServiceImplTest {
     assertEquals("Aveiro", dto.getChargingPoint().getChargingStation().getCityName());
     assertEquals("CCS", dto.getChargingPoint().getConnectors().get(0).getConnectorType());
   }
+
+  @Test
+  @Requirement("ET-42")
+  void testEndSession_insufficientBalance_throwsException() {
+    ChargingPoint point = new ChargingPoint();
+    point.setChargingRateKWhPerMinute(1.0);
+    point.setPricePerKWh(1.0);
+    point.setPricePerMinute(1.0);
+
+    Driver driver = new Driver();
+    driver.setBalance(5.0); // too low to cover cost
+
+    Car car = new Car();
+    car.setBatteryCapacity(100.0);
+    car.setBatteryLevel(20.0);
+
+    ChargingSession session = new ChargingSession();
+    session.setId(700L);
+    session.setStartTime(now.minusMinutes(30));
+    session.setInitialBatteryLevel(20.0);
+    session.setChargingPoint(point);
+    session.setUser(driver);
+    session.setCar(car);
+
+    when(sessionRepo.findById(700L)).thenReturn(Optional.of(session));
+
+    Exception ex = assertThrows(IllegalStateException.class, () -> service.endSession(700L));
+    assertTrue(ex.getMessage().contains("Insufficient balance"));
+  }
+
 }
