@@ -1,151 +1,134 @@
-/*
- * package pt.ua.tqs.ecocharger.ecocharger.repository;
- *
- * import org.junit.jupiter.api.BeforeEach;
- * import org.junit.jupiter.api.Test;
- * import org.springframework.beans.factory.annotation.Autowired;
- * import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
- *
- * import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
- * import pt.ua.tqs.ecocharger.ecocharger.models.*;
- *
- * import java.time.LocalDateTime;
- * import java.util.Collections;
- * import java.util.List;
- *
- * import static org.assertj.core.api.Assertions.assertThat;
- *
- * @DataJpaTest
- * public class ReservationRepositoryTest {
- *
- * @Autowired private ReservationRepository reservationRepository;
- *
- * @Autowired private UserRepository userRepository;
- *
- * @Autowired private ChargingStationRepository chargingStationRepository;
- *
- * @Autowired private ChargingPointRepository chargingPointRepository;
- *
- * private User user;
- * private ChargingPoint chargingPoint;
- *
- * @BeforeEach
- * void setup() {
- * // Create and save User
- * user = new User();
- * user.setEmail("test@example.com");
- * user.setPassword("password");
- * user = userRepository.save(user);
- *
- * // Create and save ChargingStation
- * ChargingStation station =
- * new ChargingStation(
- * "Aveiro", "123 Main St", 40.6405, -8.6538, "Main St", "PT", "Portugal",
- * "Electric");
- * station = chargingStationRepository.save(station);
- *
- * // Create and save ChargingPoint
- * chargingPoint = new ChargingPoint(station, true, "Tesla",
- * Collections.emptyList());
- * chargingPoint.setPricePerKWh(0.35);
- * chargingPoint.setPricePerMinute(0.10);
- * chargingPoint = chargingPointRepository.save(chargingPoint);
- * }
- *
- * @Test
- *
- * @Requirement("ET-30")
- * void
- * testExistsByChargingPointIdAndTimeOverlap_shouldReturnTrueWhenOverlapping() {
- * LocalDateTime now = LocalDateTime.now();
- *
- * Reservation reservation =
- * new Reservation(
- * null,
- * user,
- * chargingPoint,
- * now.plusHours(1),
- * now.plusHours(2),
- * ReservationStatus.TO_BE_USED);
- * reservationRepository.save(reservation);
- *
- * boolean exists =
- * reservationRepository.existsByChargingPointIdAndTimeOverlap(
- * chargingPoint.getId(), now.plusMinutes(90), now.plusHours(3));
- *
- * assertThat(exists).isTrue();
- * }
- *
- * @Test
- *
- * @Requirement("ET-30")
- * void
- * testExistsByChargingPointIdAndTimeOverlap_shouldReturnFalseWhenNotOverlapping
- * () {
- * LocalDateTime now = LocalDateTime.now();
- *
- * Reservation reservation =
- * new Reservation(
- * null,
- * user,
- * chargingPoint,
- * now.plusHours(1),
- * now.plusHours(2),
- * ReservationStatus.TO_BE_USED);
- * reservationRepository.save(reservation);
- *
- * boolean exists =
- * reservationRepository.existsByChargingPointIdAndTimeOverlap(
- * chargingPoint.getId(), now.plusHours(2), now.plusHours(3));
- *
- * assertThat(exists).isFalse();
- * }
- *
- * @Test
- *
- * @Requirement("ET-30")
- * void testFindByUserId_shouldReturnReservations() {
- * Reservation reservation =
- * new Reservation(
- * null,
- * user,
- * chargingPoint,
- * LocalDateTime.now(),
- * LocalDateTime.now().plusHours(1),
- * ReservationStatus.TO_BE_USED);
- * reservationRepository.save(reservation);
- *
- * List<Reservation> results = reservationRepository.findByUserId(user.getId());
- *
- * assertThat(results).hasSize(1);
- * assertThat(results.get(0).getUser().getId()).isEqualTo(user.getId());
- * }
- *
- * @Test
- *
- * @Requirement("ET-30")
- * void
- * testFindByChargingPointIdAndEndTimeAfter_shouldReturnFutureReservations() {
- * LocalDateTime now = LocalDateTime.now();
- *
- * Reservation reservation =
- * new Reservation(
- * null,
- * user,
- * chargingPoint,
- * now.plusMinutes(30),
- * now.plusHours(1),
- * ReservationStatus.TO_BE_USED);
- * reservationRepository.save(reservation);
- *
- * List<Reservation> results =
- * reservationRepository.findByChargingPointIdAndEndTimeAfter(chargingPoint.
- * getId(), now);
- *
- * assertThat(results).hasSize(1);
- * assertThat(results.get(0).getChargingPoint().getId()).isEqualTo(chargingPoint
- * .getId());
- * }
- * }
- *
- */
+package pt.ua.tqs.ecocharger.ecocharger.repository;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import pt.ua.tqs.ecocharger.ecocharger.models.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DataJpaTest
+public class ReservationRepositoryTest {
+
+  @Autowired private ReservationRepository reservationRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private ChargingStationRepository stationRepository;
+  @Autowired private ChargingPointRepository pointRepository;
+
+  private User createUser(String email) {
+    User user = new Driver(null, email, "password", "Test User", true);
+    return userRepository.save(user);
+  }
+
+  private ChargingPoint createChargingPoint() {
+    ChargingStation station =
+        new ChargingStation("Aveiro", "Rua X", 40.0, -8.0, "PT", "Portugal");
+    station = stationRepository.save(station);
+
+    ChargingPoint point = new ChargingPoint();
+    point.setChargingStation(station);
+    point.setAvailable(true);
+    point.setBrand("Efacec");
+    point.setChargingRateKWhPerMinute(1.0);
+    point.setPricePerKWh(0.25);
+    point.setPricePerMinute(0.10);
+
+    return pointRepository.save(point);
+  }
+
+  private Reservation createReservation(User user, ChargingPoint point, LocalDateTime start, LocalDateTime end, ReservationStatus status) {
+    Reservation reservation = new Reservation();
+    reservation.setUser(user);
+    reservation.setChargingPoint(point);
+    reservation.setStartTime(start);
+    reservation.setEndTime(end);
+    reservation.setStatus(status);
+    return reservationRepository.save(reservation);
+  }
+
+  @Test
+  @Requirement("ET-30")
+  @DisplayName("Test existsByChargingPointIdAndTimeOverlap - overlap exists")
+  void testExistsByChargingPointIdAndTimeOverlap_true() {
+    User user = createUser("overlap@test.com");
+    ChargingPoint point = createChargingPoint();
+
+    LocalDateTime now = LocalDateTime.now();
+    createReservation(user, point, now.plusMinutes(10), now.plusMinutes(30), ReservationStatus.TO_BE_USED);
+
+    boolean exists = reservationRepository.existsByChargingPointIdAndTimeOverlap(
+        point.getId(), now.plusMinutes(20), now.plusMinutes(40));
+
+    assertThat(exists).isTrue();
+  }
+
+  @Test
+  @Requirement("ET-30")
+  @DisplayName("Test existsByChargingPointIdAndTimeOverlap - no overlap")
+  void testExistsByChargingPointIdAndTimeOverlap_false() {
+    User user = createUser("noverlap@test.com");
+    ChargingPoint point = createChargingPoint();
+
+    LocalDateTime now = LocalDateTime.now();
+    createReservation(user, point, now.plusMinutes(10), now.plusMinutes(20), ReservationStatus.TO_BE_USED);
+
+    boolean exists = reservationRepository.existsByChargingPointIdAndTimeOverlap(
+        point.getId(), now.plusMinutes(21), now.plusMinutes(30));
+
+    assertThat(exists).isFalse();
+  }
+
+  @Test
+  @Requirement("ET-30")
+  @DisplayName("Find reservations by user ID")
+  void testFindByUserId() {
+    User user = createUser("user1@test.com");
+    ChargingPoint point = createChargingPoint();
+
+    createReservation(user, point, LocalDateTime.now(), LocalDateTime.now().plusMinutes(20), ReservationStatus.TO_BE_USED);
+
+    List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
+    assertThat(reservations).hasSize(1);
+    assertThat(reservations.get(0).getUser().getId()).isEqualTo(user.getId());
+  }
+
+  @Test
+  @Requirement("ET-30")
+  @DisplayName("Find future reservations by charging point ID")
+  void testFindByChargingPointIdAndEndTimeAfter() {
+    User user = createUser("future@test.com");
+    ChargingPoint point = createChargingPoint();
+
+    LocalDateTime now = LocalDateTime.now();
+    createReservation(user, point, now.plusMinutes(5), now.plusMinutes(25), ReservationStatus.TO_BE_USED);
+
+    List<Reservation> futureRes = reservationRepository.findByChargingPointIdAndEndTimeAfter(
+        point.getId(), now);
+
+    assertThat(futureRes).isNotEmpty();
+  }
+
+  @Test
+  @Requirement("ET-30")
+  @DisplayName("Find first reservation by point and within interval")
+  void testFindFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter() {
+    User user = createUser("interval@test.com");
+    ChargingPoint point = createChargingPoint();
+
+    LocalDateTime now = LocalDateTime.now();
+    createReservation(user, point, now.plusMinutes(5), now.plusMinutes(30), ReservationStatus.TO_BE_USED);
+
+    Optional<Reservation> res = reservationRepository.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
+        point.getId(), now.plusMinutes(10), now.plusMinutes(20));
+
+    assertThat(res).isPresent();
+    assertThat(res.get().getChargingPoint().getId()).isEqualTo(point.getId());
+  }
+}
