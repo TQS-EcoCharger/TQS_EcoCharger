@@ -57,8 +57,8 @@ jobs:
 
       - name: Write test application.properties
         run: |
-          mkdir -p backend/src/test/resources
-          cat <<EOF > backend/src/test/resources/application.properties
+          mkdir -p EcoCharger/backend/src/test/resources
+          cat <<EOF > EcoCharger/backend/src/test/resources/application.properties
           spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
           spring.datasource.driver-class-name=org.h2.Driver
           spring.datasource.username=sa
@@ -78,8 +78,8 @@ jobs:
 
       - name: Write runtime application.properties
         run: |
-          mkdir -p backend/src/main/resources
-          cat <<EOF > backend/src/main/resources/application.properties
+          mkdir -p EcoCharger/backend/src/main/resources
+          cat <<EOF > EcoCharger/backend/src/main/resources/application.properties
           spring.application.name=ecocharger
           spring.datasource.url=jdbc:postgresql://db:5432/ecocharger
           spring.datasource.username=ecocharger
@@ -115,8 +115,8 @@ jobs:
 
       - name: Write test application.properties
         run: |
-          mkdir -p backend/src/test/resources
-          cat <<EOF > backend/src/test/resources/application.properties
+          mkdir -p EcoCharger/backend/src/test/resources
+          cat <<EOF > EcoCharger/backend/src/test/resources/application.properties
           spring.flyway.enabled=true
           spring.flyway.locations=classpath:db/migration
           spring.flyway.clean-disabled=false
@@ -134,8 +134,8 @@ jobs:
 
       - name: Write it-test application-it.properties
         run: |
-          mkdir -p backend/src/test/resources
-          cat <<EOF > backend/src/test/resources/application-it.properties
+          mkdir -p EcoCharger/backend/src/test/resources
+          cat <<EOF > EcoCharger/backend/src/test/resources/application-it.properties
           spring.jpa.hibernate.ddl-auto=update
           spring.flyway.enabled=true
           spring.flyway.locations=classpath:db/migration
@@ -154,7 +154,7 @@ jobs:
           EOF
           
       - name: Run full verification lifecycle
-        working-directory: ./backend
+        working-directory: ./EcoCharger/backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
@@ -165,7 +165,7 @@ jobs:
           -Dxray.clientSecret=${XRAY_CLIENT_SECRET}
 
       - name: Run SonarCloud analysis
-        working-directory: ./backend
+        working-directory: ./EcoCharger/backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >

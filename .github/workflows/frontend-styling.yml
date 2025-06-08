@@ -24,9 +24,9 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        working-directory: ./frontend
+        working-directory: ./EcoCharger/frontend
         run: npm install
 
       - name: Run ESLint
-        working-directory: ./frontend
+        working-directory: ./EcoCharger/frontend
         run: npm run lint
