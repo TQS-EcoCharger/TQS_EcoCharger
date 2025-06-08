@@ -17,7 +17,7 @@ import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingOperatorRepository;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingOperator;
 
 @ExtendWith(MockitoExtension.class)
- class ChargingOperatorServiceImplTest {
+class ChargingOperatorServiceImplTest {
 
   @Mock private ChargingOperatorRepository chargingOperatorRepository;
 
@@ -26,13 +26,13 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingOperator;
   ChargingOperator chargingOperator;
 
   @BeforeEach
-   void setUp() {
+  void setUp() {
     chargingOperator = new ChargingOperator(1L, "testOperator", "password", "Test Operator", true);
   }
 
   @Test
   @DisplayName("Test getting Charging Operator by ID")
-   void testGetChargingOperatorById() {
+  void testGetChargingOperatorById() {
     when(chargingOperatorRepository.findById(1L)).thenReturn(Optional.of(chargingOperator));
     ChargingOperator result = chargingOperatorService.getChargingOperatorById(1L);
     assertNotEquals(null, result);
@@ -42,7 +42,7 @@ import pt.ua.tqs.ecocharger.ecocharger.models.ChargingOperator;
 
   @Test
   @DisplayName("Test finding out if id exists")
-   void testChargingOperatorExists() {
+  void testChargingOperatorExists() {
     when(chargingOperatorRepository.existsById(1L)).thenReturn(true);
     boolean exists = chargingOperatorService.chargingOperatorExists(1L);
     assertTrue(exists);
