@@ -80,7 +80,7 @@ class ChargingStationControllerTest {
   }
 
   @Test
-  @DisplayName("Return 404 when station not found")
+  @DisplayName("Get all stations")
   @Requirement("ET-18")
   void testGetAllStations() throws Exception {
     ChargingStation mockStation =
@@ -119,5 +119,34 @@ class ChargingStationControllerTest {
     mockMvc.perform(delete("/api/v1/chargingStations/1")).andExpect(status().isNoContent());
 
     Mockito.verify(chargingStationService).deleteStation(1L);
+  }
+
+  @Test
+  @DisplayName("Return 404 when deleting a non-existent station")
+  @Requirement("ET-18")
+  void testDeleteStationNotFound() throws Exception {
+    Mockito.doThrow(
+            new pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException("Station not found"))
+        .when(chargingStationService)
+        .deleteStation(999L);
+
+    mockMvc.perform(delete("/api/v1/chargingStations/999")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  @DisplayName("Return 404 when updating a non-existent station")
+  @Requirement("ET-22")
+  void testUpdateStationNotFound() throws Exception {
+    ChargingStation station = new ChargingStation("City", "Street", 0.0, 0.0, "CC", "Country");
+
+    Mockito.when(chargingStationService.updateStation(eq(999L), any()))
+        .thenThrow(new pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException(""));
+
+    mockMvc
+        .perform(
+            put("/api/v1/chargingStations/999")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(station)))
+        .andExpect(status().isNotFound());
   }
 }
