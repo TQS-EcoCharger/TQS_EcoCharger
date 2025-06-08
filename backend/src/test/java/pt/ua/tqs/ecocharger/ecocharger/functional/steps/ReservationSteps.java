@@ -74,10 +74,6 @@ public class ReservationSteps {
         "window.dispatchEvent(new CustomEvent('set-test-start-time', { detail: arguments[0] }))",
         futureEnd);
 
-    try {
-      Thread.sleep(100);
-    } catch (InterruptedException ignored) {
-    }
   }
 
   @When("I set the reservation end time")
@@ -89,11 +85,6 @@ public class ReservationSteps {
     js.executeScript(
         "window.dispatchEvent(new CustomEvent('set-test-end-time', { detail: arguments[0] }))",
         futureEnd);
-    // takeScreenshot(driver, "screenshots/newreservation.png");
-    try {
-      Thread.sleep(100);
-    } catch (InterruptedException ignored) {
-    }
   }
 
   @Then("I should see the message {string}")

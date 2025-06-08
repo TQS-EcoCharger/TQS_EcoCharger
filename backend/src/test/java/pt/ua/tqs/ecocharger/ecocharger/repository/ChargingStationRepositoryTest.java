@@ -16,7 +16,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class ChargingStationRepositoryTest {
+class ChargingStationRepositoryTest {
 
   @Autowired private ChargingStationRepository chargingStationRepository;
   @Autowired private ChargingPointRepository chargingPointRepository;

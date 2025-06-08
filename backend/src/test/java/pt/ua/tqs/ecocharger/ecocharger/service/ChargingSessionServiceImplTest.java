@@ -59,7 +59,7 @@ class ChargingSessionServiceImplTest {
     when(reservationRepo.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
             eq(pointId), any(), any()))
         .thenReturn(Optional.of(reservation));
-    when(otpRepo.findByCodeAndReservation(eq(otp), eq(reservation)))
+    when(otpRepo.findByCodeAndReservation(otp, reservation))
         .thenReturn(Optional.of(otpCode));
     when(carRepo.findById(carId)).thenReturn(Optional.of(car));
     when(sessionRepo.save(any())).thenReturn(expectedSession);

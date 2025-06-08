@@ -67,9 +67,7 @@ class AdministratorControllerTest {
         .andExpect(jsonPath("$.email").value("tomas@gmail.com"))
         .andExpect(jsonPath("$.name").value("Tomas"))
         .andExpect(jsonPath("$.enabled").value(true))
-        .andExpect(
-            jsonPath("$.password")
-                .value("pass1")); // Se retornar senha (não recomendado em produção)
+        .andExpect(jsonPath("$.password").value("pass1")); // Avoid returning passwords in real apps
   }
 
   @Test
