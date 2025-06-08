@@ -1,0 +1,1 @@
+{"uuid":"7d1c2924-67bb-4ee0-adc6-5c5118ae0922","name":"Registering with short password returns 400 Bad Request and message only","children":["fb9f4879-ee51-472d-bbfa-cd4eb2b49475"],"befores":[],"afters":[],"start":1749179044758,"stop":1749179044768}

@@ -1,0 +1,1 @@
+{"uuid":"ee9db460-a072-4cf9-b4e4-a384ec218743","name":"Register success returns 200 OK and token in JSON","children":["d2da06f6-08cb-4b2d-8e87-97d8a2bbf8b1"],"befores":[],"afters":[],"start":1747994971548,"stop":1747994971558}

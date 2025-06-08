@@ -1,0 +1,1 @@
+{"uuid":"ccfa1cfc-68c3-4b20-9f23-db86e6df4bb0","name":"User details retrieval success returns 200 OK and user details in JSON","children":["266b274b-24c1-4602-916b-634c5bd724f3"],"befores":[],"afters":[],"start":1749178813075,"stop":1749178813141}

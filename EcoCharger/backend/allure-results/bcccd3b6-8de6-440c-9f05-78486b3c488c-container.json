@@ -1,0 +1,1 @@
+{"uuid":"bcccd3b6-8de6-440c-9f05-78486b3c488c","name":"Get current user with invalid token throws 401","children":["08f6d847-954b-473f-991b-df4d8fa353af"],"befores":[],"afters":[],"start":1749319395953,"stop":1749319395965}

@@ -1,0 +1,1 @@
+{"uuid":"61990b27-18e7-4ff4-9abe-5f6cbdf6daa2","name":"Registering with invalid email returns 400 Bad Request and message only","children":["1283e005-7837-41a7-bffe-a6acedc78eec"],"befores":[],"afters":[],"start":1748984590487,"stop":1748984590755}

@@ -1,0 +1,1 @@
+{"uuid":"c2c9be74-2642-4fe4-a9c1-0401ada0905a","name":"Registering with invalid name returns 400 Bad Request and message only","children":["dd1727b9-2d98-4cdc-8d39-bdca4d58bc55"],"befores":[],"afters":[],"start":1748545056501,"stop":1748545056527}

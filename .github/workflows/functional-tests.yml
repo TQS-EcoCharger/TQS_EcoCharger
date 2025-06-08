@@ -32,8 +32,8 @@ jobs:
 
       - name: Write test application.properties
         run: |
-          mkdir -p backend/src/test/resources
-          cat <<EOF > backend/src/test/resources/application.properties
+          mkdir -p EcoCharger/backend/src/test/resources
+          cat <<EOF > EcoCharger/backend/src/test/resources/application.properties
           spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
           spring.datasource.driver-class-name=org.h2.Driver
           spring.datasource.username=sa
@@ -53,8 +53,8 @@ jobs:
 
       - name: Write runtime application.properties
         run: |
-          mkdir -p backend/src/main/resources
-          cat <<EOF > backend/src/main/resources/application.properties
+          mkdir -p EcoCharger/backend/src/main/resources
+          cat <<EOF > EcoCharger/backend/src/main/resources/application.properties
           spring.application.name=ecocharger
           spring.datasource.url=jdbc:postgresql://db:5432/ecocharger
           spring.datasource.username=ecocharger
@@ -91,7 +91,7 @@ jobs:
           chromedriver-version: '124.0.6367.91' 
 
       - name: Build backend
-        working-directory: ./backend
+        working-directory: ./EcoCharger/backend
         run: mvn clean package -DskipTests
 
       - name: Start containers
@@ -110,11 +110,11 @@ jobs:
           done
           
       - name: Run Cucumber functional tests
-        working-directory: ./backend
+        working-directory: ./EcoCharger/backend
         run: mvn test -Pcucumber-tests 
 
       - name: Send Xray report
-        working-directory: ./backend
+        working-directory: ./EcoCharger/backend
         run: |
           mvn \
             -Dxray.clientId=${{ secrets.XRAY_CLIENT_ID }} \

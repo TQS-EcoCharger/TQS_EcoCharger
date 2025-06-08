@@ -1,0 +1,1 @@
+{"uuid":"da7590bf-cfdc-4c9a-baf2-bbbb48d2bdf7","name":"Getting active reservations by charging point ID returns 200 OK with reservations list","children":["e454f5b5-b260-4810-92a7-3e1978efe2cf"],"befores":[],"afters":[],"start":1749120172868,"stop":1749120173042}

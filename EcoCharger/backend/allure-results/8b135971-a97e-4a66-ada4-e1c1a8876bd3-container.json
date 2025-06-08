@@ -1,0 +1,1 @@
+{"uuid":"8b135971-a97e-4a66-ada4-e1c1a8876bd3","name":"Registering with existing email returns 400 Bad Request and message only","children":["497b836b-55f1-46cc-a693-a491a51c32e2"],"befores":[],"afters":[],"start":1748540305984,"stop":1748540305992}
