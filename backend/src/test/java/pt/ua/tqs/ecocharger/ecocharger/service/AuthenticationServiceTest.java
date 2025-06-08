@@ -168,12 +168,14 @@ class AuthenticationServiceTest {
   @DisplayName("ET-49: Should return correct user type as driver")
   @Requirement("ET-49")
   void testUserTypeAsDriver() {
+    enabledUser.setId(0L);
     when(userRepository.findByEmail("john@example.com")).thenReturn(Optional.of(enabledUser));
-    when(jwtUtil.generateToken("john@example.com")).thenReturn("mocked-jwt");
-    when(driverService.driverExists(anyLong())).thenReturn(true);
+    when(driverService.driverExists(0L)).thenReturn(true);
+    when(jwtUtil.generateToken("john@example.com")).thenReturn("driver-jwt");
 
     AuthResultDTO result = authService.authenticate("john@example.com", "123456");
 
+    assertThat(result.isSuccess()).isTrue();
     assertThat(result.getUserType()).isEqualTo("driver");
   }
 
