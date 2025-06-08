@@ -108,6 +108,9 @@ jobs:
           management.endpoint.prometheus.enabled=true
           management.metrics.export.prometheus.enabled=true
           app.base-url=http://localhost:5000
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
+          app.base-url=http://localhost:5000
           EOF
 
       - name: Write test application.properties
@@ -123,6 +126,9 @@ jobs:
           spring.jpa.defer-datasource-initialization=false
           spring.security.enabled=false
           jwt.secret=test-secret-key
+          app.base-url=http://localhost:5000
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
           app.base-url=http://localhost:5000
           EOF
 
@@ -154,7 +160,7 @@ jobs:
           XRAY_CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}
           XRAY_CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
         run: >
-          mvn verify -Punit-tests,xray-unit
+          mvn verify -Punit-tests,integration-tests,xray-unit
           -Dxray.clientId=${XRAY_CLIENT_ID}
           -Dxray.clientSecret=${XRAY_CLIENT_SECRET}
 
@@ -170,3 +176,4 @@ jobs:
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
           -Dsonar.exclusions=**/config/**
+

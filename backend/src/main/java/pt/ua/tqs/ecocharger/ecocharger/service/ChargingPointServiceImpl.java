@@ -61,12 +61,19 @@ public class ChargingPointServiceImpl implements ChargingPointService {
     Optional<ChargingPoint> existingPoint = chargingPointRepository.findById(id);
     if (existingPoint.isPresent()) {
       ChargingPoint updatedPoint = existingPoint.get();
-      updatedPoint.setChargingStation(point.getChargingStation());
+
+      if (point.getChargingStation() != null) {
+        updatedPoint.setChargingStation(point.getChargingStation());
+      }
+
       updatedPoint.setAvailable(point.isAvailable());
       updatedPoint.setBrand(point.getBrand());
-      updatedPoint.setConnectors(point.getConnectors());
+      updatedPoint.getConnectors().clear();
+      updatedPoint.getConnectors().addAll(point.getConnectors());
       updatedPoint.setPricePerKWh(point.getPricePerKWh());
       updatedPoint.setPricePerMinute(point.getPricePerMinute());
+      updatedPoint.setChargingRateKWhPerMinute(point.getChargingRateKWhPerMinute());
+
       return chargingPointRepository.save(updatedPoint);
     } else {
       throw new NotFoundException("Point not found");

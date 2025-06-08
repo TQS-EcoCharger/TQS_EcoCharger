@@ -123,15 +123,18 @@ class ChargingPointControllerIT {
     ChargingPoint point = new ChargingPoint(station, true, "ABB", null);
     point.setChargingRateKWhPerMinute(1.2);
     point = pointRepository.save(point);
-
     String json =
         """
         {
           "available": false,
           "brand": "Efacec",
-          "chargingRateKWhPerMinute": 1.5
+          "chargingRateKWhPerMinute": 1.5,
+          "station": {
+            "id": %d
+          }
         }
-        """;
+        """
+            .formatted(station.getId());
 
     RestAssuredMockMvc.given()
         .contentType("application/json")

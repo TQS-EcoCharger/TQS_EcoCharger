@@ -42,7 +42,7 @@ class AuthenticationControllerTest {
 
   @Test
   @DisplayName("Login success returns 200 OK and token in JSON")
-  @Requirement("ET-52")
+  @Requirement("ET-49")
   void testLoginSuccess() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "123456"))
         .thenReturn(new AuthResultDTO(true, "Login successful", "token123", "administrator"));
@@ -66,7 +66,7 @@ class AuthenticationControllerTest {
 
   @Test
   @DisplayName("Login failure returns 401 Unauthorized and message only")
-  @Requirement("ET-52")
+  @Requirement("ET-49")
   void testLoginFailure() throws Exception {
     Mockito.when(authService.authenticate("john@example.com", "wrongpass"))
         .thenReturn(new AuthResultDTO(false, "Invalid password", null, null));
