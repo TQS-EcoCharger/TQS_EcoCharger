@@ -1,1 +1,0 @@
-{"uuid":"9afbe2b0-1f14-400a-ae31-22aa2198eaed","name":"Registering with missing fields returns 400 Bad Request and error message","children":["a702c0f2-6ad2-428c-8e15-e89b1acdb656"],"befores":[],"afters":[],"start":1749208107925,"stop":1749208108007}
