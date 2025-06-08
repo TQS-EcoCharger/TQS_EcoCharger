@@ -16,10 +16,9 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class ChargingStationRepositoryTest {
+class ChargingStationRepositoryTest {
 
   @Autowired private ChargingStationRepository chargingStationRepository;
-  @Autowired private ChargingPointRepository chargingPointRepository;
   @Autowired private AdministratorRepository administratorRepository;
 
   private ChargingStation createStation(String city) {
@@ -58,7 +57,7 @@ public class ChargingStationRepositoryTest {
     Optional<List<ChargingStation>> found = chargingStationRepository.findByCityName("Porto");
 
     assertThat(found).isPresent();
-    assertThat(found.get().size()).isGreaterThanOrEqualTo(2);
+    assertThat(found.get()).hasSizeGreaterThanOrEqualTo(2);
     assertThat(found.get().get(0).getCityName()).isEqualTo("Porto");
   }
 
@@ -71,7 +70,7 @@ public class ChargingStationRepositoryTest {
 
     List<ChargingStation> stations = chargingStationRepository.findAll();
 
-    assertThat(stations.size()).isGreaterThanOrEqualTo(2);
+    assertThat(stations).hasSizeGreaterThanOrEqualTo(2);
   }
 
   @Test

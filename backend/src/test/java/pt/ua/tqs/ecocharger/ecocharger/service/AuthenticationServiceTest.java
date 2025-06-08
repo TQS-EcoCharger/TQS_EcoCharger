@@ -1,7 +1,6 @@
 package pt.ua.tqs.ecocharger.ecocharger.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +11,6 @@ import pt.ua.tqs.ecocharger.ecocharger.models.User;
 import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.ChargingOperatorService;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.DriverService;
-import pt.ua.tqs.ecocharger.ecocharger.models.User;
-import pt.ua.tqs.ecocharger.ecocharger.repository.UserRepository;
 import pt.ua.tqs.ecocharger.ecocharger.utils.JwtUtil;
 import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;

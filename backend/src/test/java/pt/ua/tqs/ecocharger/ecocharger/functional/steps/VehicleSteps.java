@@ -34,12 +34,6 @@ public class VehicleSteps {
 
   @When("I navigate to the vehicles page")
   public void i_navigate_to_the_vehicles_page() {
-
-    try {
-      Thread.sleep(2000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } // wait for the page to load
     driver.get("http://localhost:5000/vehicles");
     wait.until(ExpectedConditions.urlContains("/vehicles"));
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vehicles-table")));
@@ -144,18 +138,11 @@ public class VehicleSteps {
 
   @Then("the table should have {int} rows")
   public void the_table_should_have_rows(int expectedRowCount) {
-    try {
-      Thread.sleep(2000); // wait for the table to update
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
     List<WebElement> vehicleRows = driver.findElements(By.cssSelector("#vehicles-table-body tr"));
     System.out.println("Vehicle table rows: " + vehicleRows.size());
-    // Debugging: print out the text of each row
     for (WebElement row : vehicleRows) {
       System.out.println(row.getText());
     }
-    // print all the rows for debugging
     assertEquals(
         expectedRowCount,
         vehicleRows.size(),

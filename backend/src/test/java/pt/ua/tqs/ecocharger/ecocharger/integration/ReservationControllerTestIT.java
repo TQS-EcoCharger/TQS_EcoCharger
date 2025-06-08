@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.*;
 @Import({TestContainersConfig.class, SecurityDisableConfig.class})
 @TestPropertySource(locations = "classpath:application-it.properties")
 @ActiveProfiles("test")
-public class ReservationControllerTestIT {
+class ReservationControllerTestIT {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
