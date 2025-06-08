@@ -133,8 +133,8 @@ class ChargingPointControllerIT {
             "id": %d
           }
         }
-        """.formatted(station.getId());
-
+        """
+            .formatted(station.getId());
 
     RestAssuredMockMvc.given()
         .contentType("application/json")
