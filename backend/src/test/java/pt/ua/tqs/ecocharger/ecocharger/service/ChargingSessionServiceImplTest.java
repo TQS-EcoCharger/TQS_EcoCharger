@@ -270,4 +270,54 @@ class ChargingSessionServiceImplTest {
     assertEquals("Aveiro", dto.getChargingPoint().getChargingStation().getCityName());
     assertEquals("CCS", dto.getChargingPoint().getConnectors().get(0).getConnectorType());
   }
+
+  @Test
+  @Requirement("ET-42")
+  void testEndSession_insufficientBalance_throwsException() {
+    ChargingPoint point = new ChargingPoint();
+    point.setChargingRateKWhPerMinute(1.0);
+    point.setPricePerKWh(1.0);
+    point.setPricePerMinute(1.0);
+
+    Driver driver = new Driver();
+    driver.setBalance(5.0); // too low to cover cost
+
+    Car car = new Car();
+    car.setBatteryCapacity(100.0);
+    car.setBatteryLevel(20.0);
+
+    ChargingSession session = new ChargingSession();
+    session.setId(700L);
+    session.setStartTime(now.minusMinutes(30));
+    session.setInitialBatteryLevel(20.0);
+    session.setChargingPoint(point);
+    session.setUser(driver);
+    session.setCar(car);
+
+    when(sessionRepo.findById(700L)).thenReturn(Optional.of(session));
+
+    Exception ex = assertThrows(IllegalStateException.class, () -> service.endSession(700L));
+    assertTrue(ex.getMessage().contains("Insufficient balance"));
+  }
+
+  @Test
+  @Requirement("ET-42")
+  void testStartSessionWithOtp_expiredOtp_throwsException() {
+    Reservation reservation = new Reservation();
+    reservation.setStartTime(now.minusMinutes(5));
+    reservation.setEndTime(now.plusMinutes(30));
+    reservation.setChargingPoint(new ChargingPoint());
+    reservation.setUser(new User());
+
+    OTPCode otpCode = new OTPCode();
+    otpCode.setCode(otp);
+    otpCode.setExpirationTime(now.minusMinutes(1));
+    when(reservationRepo.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
+            pointId, now, now))
+        .thenReturn(Optional.of(reservation));
+    when(otpRepo.findByCodeAndReservation(otp, reservation)).thenReturn(Optional.of(otpCode));
+
+    assertThrows(
+        IllegalArgumentException.class, () -> service.startSessionWithOtp(pointId, otp, carId));
+  }
 }
