@@ -101,25 +101,34 @@
         </build>
         </profile>
         <profile>
-        <id>integration-tests</id>
-        <build>
-            <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                <includes>
-                    <include>**/*IT.java</include>
-                </includes>
-                <excludes>
-                <exclude>*/functional/**</exclude>
-                    <exclude>**/*Test.java</exclude>
-                </excludes>
-                </configuration>
-            </plugin>
-            </plugins>
-        </build>
+            <id>integration-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.2.5</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>*/functional/**</exclude>
+                                <exclude>**/*Test.java</exclude>
+                                <exclude>**/Cucumber*.java</exclude> 
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <configuration>
+                            <skipTests>true</skipTests> 
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
 
 

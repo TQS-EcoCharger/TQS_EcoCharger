@@ -129,6 +129,20 @@ CREATE TABLE IF NOT EXISTS charging_sessions (
     FOREIGN KEY (car_id) REFERENCES car(id)
 );
 
+CREATE TABLE IF NOT EXISTS charging_operator (
+    id BIGINT PRIMARY KEY,
+    FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS charging_operator_stations (
+    operator_id BIGINT NOT NULL,
+    stations_id BIGINT NOT NULL,
+    PRIMARY KEY (operator_id, stations_id),
+    CONSTRAINT fk_operator_user FOREIGN KEY (operator_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_station FOREIGN KEY (stations_id) REFERENCES charging_stations(id) ON DELETE CASCADE
+);
+
 
 -- USERS
 INSERT INTO users (email, password, name, enabled, user_type)
