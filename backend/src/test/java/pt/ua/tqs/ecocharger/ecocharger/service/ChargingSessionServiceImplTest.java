@@ -312,12 +312,12 @@ class ChargingSessionServiceImplTest {
     OTPCode otpCode = new OTPCode();
     otpCode.setCode(otp);
     otpCode.setExpirationTime(now.minusMinutes(1));
-    when(reservationRepo.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(pointId, now, now))
+    when(reservationRepo.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
+            pointId, now, now))
         .thenReturn(Optional.of(reservation));
     when(otpRepo.findByCodeAndReservation(otp, reservation)).thenReturn(Optional.of(otpCode));
 
-    assertThrows(IllegalArgumentException.class, () -> service.startSessionWithOtp(pointId, otp, carId));
+    assertThrows(
+        IllegalArgumentException.class, () -> service.startSessionWithOtp(pointId, otp, carId));
   }
-
-
 }

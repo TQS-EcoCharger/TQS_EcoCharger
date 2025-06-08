@@ -28,8 +28,7 @@ public class ReservationRepositoryTest {
   }
 
   private ChargingPoint createChargingPoint() {
-    ChargingStation station =
-        new ChargingStation("Aveiro", "Rua X", 40.0, -8.0, "PT", "Portugal");
+    ChargingStation station = new ChargingStation("Aveiro", "Rua X", 40.0, -8.0, "PT", "Portugal");
     station = stationRepository.save(station);
 
     ChargingPoint point = new ChargingPoint();
@@ -43,7 +42,12 @@ public class ReservationRepositoryTest {
     return pointRepository.save(point);
   }
 
-  private Reservation createReservation(User user, ChargingPoint point, LocalDateTime start, LocalDateTime end, ReservationStatus status) {
+  private Reservation createReservation(
+      User user,
+      ChargingPoint point,
+      LocalDateTime start,
+      LocalDateTime end,
+      ReservationStatus status) {
     Reservation reservation = new Reservation();
     reservation.setUser(user);
     reservation.setChargingPoint(point);
@@ -61,10 +65,12 @@ public class ReservationRepositoryTest {
     ChargingPoint point = createChargingPoint();
 
     LocalDateTime now = LocalDateTime.now();
-    createReservation(user, point, now.plusMinutes(10), now.plusMinutes(30), ReservationStatus.TO_BE_USED);
+    createReservation(
+        user, point, now.plusMinutes(10), now.plusMinutes(30), ReservationStatus.TO_BE_USED);
 
-    boolean exists = reservationRepository.existsByChargingPointIdAndTimeOverlap(
-        point.getId(), now.plusMinutes(20), now.plusMinutes(40));
+    boolean exists =
+        reservationRepository.existsByChargingPointIdAndTimeOverlap(
+            point.getId(), now.plusMinutes(20), now.plusMinutes(40));
 
     assertThat(exists).isTrue();
   }
@@ -77,10 +83,12 @@ public class ReservationRepositoryTest {
     ChargingPoint point = createChargingPoint();
 
     LocalDateTime now = LocalDateTime.now();
-    createReservation(user, point, now.plusMinutes(10), now.plusMinutes(20), ReservationStatus.TO_BE_USED);
+    createReservation(
+        user, point, now.plusMinutes(10), now.plusMinutes(20), ReservationStatus.TO_BE_USED);
 
-    boolean exists = reservationRepository.existsByChargingPointIdAndTimeOverlap(
-        point.getId(), now.plusMinutes(21), now.plusMinutes(30));
+    boolean exists =
+        reservationRepository.existsByChargingPointIdAndTimeOverlap(
+            point.getId(), now.plusMinutes(21), now.plusMinutes(30));
 
     assertThat(exists).isFalse();
   }
@@ -92,7 +100,12 @@ public class ReservationRepositoryTest {
     User user = createUser("user1@test.com");
     ChargingPoint point = createChargingPoint();
 
-    createReservation(user, point, LocalDateTime.now(), LocalDateTime.now().plusMinutes(20), ReservationStatus.TO_BE_USED);
+    createReservation(
+        user,
+        point,
+        LocalDateTime.now(),
+        LocalDateTime.now().plusMinutes(20),
+        ReservationStatus.TO_BE_USED);
 
     List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
     assertThat(reservations).hasSize(1);
@@ -107,10 +120,11 @@ public class ReservationRepositoryTest {
     ChargingPoint point = createChargingPoint();
 
     LocalDateTime now = LocalDateTime.now();
-    createReservation(user, point, now.plusMinutes(5), now.plusMinutes(25), ReservationStatus.TO_BE_USED);
+    createReservation(
+        user, point, now.plusMinutes(5), now.plusMinutes(25), ReservationStatus.TO_BE_USED);
 
-    List<Reservation> futureRes = reservationRepository.findByChargingPointIdAndEndTimeAfter(
-        point.getId(), now);
+    List<Reservation> futureRes =
+        reservationRepository.findByChargingPointIdAndEndTimeAfter(point.getId(), now);
 
     assertThat(futureRes).isNotEmpty();
   }
@@ -123,10 +137,12 @@ public class ReservationRepositoryTest {
     ChargingPoint point = createChargingPoint();
 
     LocalDateTime now = LocalDateTime.now();
-    createReservation(user, point, now.plusMinutes(5), now.plusMinutes(30), ReservationStatus.TO_BE_USED);
+    createReservation(
+        user, point, now.plusMinutes(5), now.plusMinutes(30), ReservationStatus.TO_BE_USED);
 
-    Optional<Reservation> res = reservationRepository.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
-        point.getId(), now.plusMinutes(10), now.plusMinutes(20));
+    Optional<Reservation> res =
+        reservationRepository.findFirstByChargingPointIdAndStartTimeBeforeAndEndTimeAfter(
+            point.getId(), now.plusMinutes(10), now.plusMinutes(20));
 
     assertThat(res).isPresent();
     assertThat(res.get().getChargingPoint().getId()).isEqualTo(point.getId());
