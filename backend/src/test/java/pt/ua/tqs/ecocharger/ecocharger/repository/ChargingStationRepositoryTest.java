@@ -7,9 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import pt.ua.tqs.ecocharger.ecocharger.models.Administrator;
-import pt.ua.tqs.ecocharger.ecocharger.models.ChargingPoint;
 import pt.ua.tqs.ecocharger.ecocharger.models.ChargingStation;
-import pt.ua.tqs.ecocharger.ecocharger.models.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +23,7 @@ public class ChargingStationRepositoryTest {
   @Autowired private AdministratorRepository administratorRepository;
 
   private ChargingStation createStation(String city) {
-    ChargingStation station =
-        new ChargingStation(city, "Rua X", 40.6, -8.6, "PT", "Portugal");
+    ChargingStation station = new ChargingStation(city, "Rua X", 40.6, -8.6, "PT", "Portugal");
     return chargingStationRepository.save(station);
   }
 
