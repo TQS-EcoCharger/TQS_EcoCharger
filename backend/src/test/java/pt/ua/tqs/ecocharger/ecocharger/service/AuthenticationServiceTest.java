@@ -183,11 +183,11 @@ class AuthenticationServiceTest {
   @DisplayName("ET-49: Should throw for invalid token format")
   @Requirement("ET-49")
   void testInvalidTokenFormat() {
-    when(jwtUtil.getEmailFromToken(any())).thenThrow(new IllegalArgumentException("Invalid token format"));
+    when(jwtUtil.getEmailFromToken(any()))
+        .thenThrow(new IllegalArgumentException("Invalid token format"));
 
     assertThrows(IllegalArgumentException.class, () -> authService.getCurrentUser("bad.token"));
   }
-
 
   @Test
   @DisplayName("ET-49: Should throw when user not found")
@@ -209,6 +209,4 @@ class AuthenticationServiceTest {
 
     assertThrows(IllegalArgumentException.class, () -> authService.getCurrentUser("valid.token"));
   }
-
-
 }
