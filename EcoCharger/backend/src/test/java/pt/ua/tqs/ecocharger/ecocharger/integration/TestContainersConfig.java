@@ -10,12 +10,11 @@ import org.testcontainers.junit.jupiter.Container;
 public class TestContainersConfig {
 
   @Container
-  public static PostgreSQLContainer<?> postgres =
-      new PostgreSQLContainer<>("postgres:latest")
-          .withDatabaseName("testdb")
-          .withUsername("testname")
-          .withPassword("testpassword")
-          .withReuse(true);
+  public static PostgreSQLContainer<Object> postgres = new PostgreSQLContainer<>("postgres:latest")
+      .withDatabaseName("testdb")
+      .withUsername("testname")
+      .withPassword("testpassword")
+      .withReuse(true);
 
   @DynamicPropertySource
   static void overrideProps(DynamicPropertyRegistry registry) {

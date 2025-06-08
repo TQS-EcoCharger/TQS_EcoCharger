@@ -21,7 +21,7 @@ import pt.ua.tqs.ecocharger.ecocharger.dto.ReservationResponseDTO;
 import pt.ua.tqs.ecocharger.ecocharger.models.*;
 import pt.ua.tqs.ecocharger.ecocharger.repository.*;
 
-public class ReservationServiceTest {
+class ReservationServiceTest {
 
   @Mock private ReservationRepository reservationRepository;
 
