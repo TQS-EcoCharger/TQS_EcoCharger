@@ -108,6 +108,9 @@ jobs:
           management.endpoint.prometheus.enabled=true
           management.metrics.export.prometheus.enabled=true
           app.base-url=http://localhost:5000
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
+          app.base-url=http://localhost:5000
           EOF
 
       - name: Write test application.properties
@@ -123,6 +126,9 @@ jobs:
           spring.jpa.defer-datasource-initialization=false
           spring.security.enabled=false
           jwt.secret=test-secret-key
+          app.base-url=http://localhost:5000
+          stripe.secret=${{ secrets.STRIPE_SECRET }}
+          stripe.public=${{ secrets.STRIPE_PUBLIC }}
           app.base-url=http://localhost:5000
           EOF
 
