@@ -45,10 +45,6 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven-surefire-plugin.version}</version>
                         <configuration>
-                            <includes>
-                                <include>**/*IT.java</include>
-                                <include>**/*Test.java</include>
-                            </includes>
                             <excludes>
                                 <exclude>*/functional/**</exclude>
                             </excludes>
