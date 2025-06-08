@@ -13,12 +13,12 @@ class CarTest {
   private static Car car1;
 
   @BeforeAll
-   static void setUp() {
+  static void setUp() {
     car1 = new Car(1L, "Car 1", "Make 1", "Model 1", 2020, "AB-C1-23", 50.0, 40.0, 100.0, 15.0);
   }
 
   @Test
-   void createNewCar() {
+  void createNewCar() {
     Car newCar = new Car();
     assertEquals("", newCar.getName());
     assertEquals("", newCar.getMake());
@@ -45,7 +45,7 @@ class CarTest {
   }
 
   @Test
-   void testCarSetters() {
+  void testCarSetters() {
     assertThrows(IllegalArgumentException.class, () -> car1.setId(-1L));
     car1.setId(10L);
     assertEquals(10L, car1.getId());
