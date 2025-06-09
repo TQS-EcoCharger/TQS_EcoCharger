@@ -29,7 +29,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-EcoCharger/backend/allure-results/
+backend/allure-results/
 ### VS Code ###
 .vscode/
 

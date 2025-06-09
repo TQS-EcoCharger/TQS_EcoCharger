@@ -29,8 +29,8 @@ jobs:
           
       - name: Write runtime application.properties
         run: |
-          mkdir -p EcoCharger/backend/src/main/resources
-          cat <<EOF > EcoCharger/backend/src/main/resources/application.properties
+          mkdir -p backend/src/main/resources
+          cat <<EOF > backend/src/main/resources/application.properties
           spring.application.name=ecocharger
           spring.datasource.url=jdbc:postgresql://db:5432/ecocharger
           spring.datasource.username=ecocharger
@@ -73,7 +73,7 @@ jobs:
 
       - name: Package backend
         run: mvn clean package -DskipTests
-        working-directory: ./EcoCharger/backend
+        working-directory: ./backend
 
       - name: Build and up 
         run: docker compose -f docker-compose.yml up --build -d
