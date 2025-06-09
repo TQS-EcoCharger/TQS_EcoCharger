@@ -44,7 +44,7 @@ Repository for the TQS project EcoCharger
 
 # Changes made since the final presentation
 - Statistics page for admin users and charging station operators
-- Savings done in terms of C02 emissions and money
+- Savings done in terms of CO2 emissions and money
 - Missing functional tests 
 - Reduced technical debt
 - Fix bug on edit a charging point
