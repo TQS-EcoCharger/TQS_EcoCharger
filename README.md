@@ -23,15 +23,19 @@ Repository for the TQS project EcoCharger
 # Structure
 
 ```
-├── frontend/                  -- Frontend code
-├── backend/                   -- Backend code
+├── EcoCharger/                 -- Main project folder
+│   ├── docker-compose.yml      -- Docker compose file
+│   ├──frontend/                -- Frontend source code
+│       ├── Dockerfile          -- Dockerfile for the frontend
+│   ├──backend/                 -- Backend source code
+│       ├── Dockerfile          -- Dockerfile for the backend
 ├── minutes/                    -- Minutes of the meetings
 ├── presentations/              -- Materials used in the presentations
 ├── README.md                   -- Context
 ├── reports/                    -- Project specifications
 ├── resources/                  -- Images and other resources
-├── docker-compose.yml         -- Docker compose file
-├── k6-oss-workshop-main      -- K6 OSS Workshop
+├── docker-compose.yml          -- Docker compose file
+├── k6-oss-workshop-main        -- K6 OSS Workshop
 ├── grafana                     -- Grafana dashboard and datasource
 ```
 
