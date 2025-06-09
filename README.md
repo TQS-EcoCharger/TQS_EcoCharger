@@ -23,17 +23,30 @@ Repository for the TQS project EcoCharger
 # Structure
 
 ```
-├── frontend/                  -- Frontend code
-├── backend/                   -- Backend code
+├── EcoCharger/                 -- Main project folder
+│   ├── docker-compose.yml      -- Docker compose file
+│   ├──frontend/                -- Frontend source code
+│       ├── Dockerfile          -- Dockerfile for the frontend
+│   ├──backend/                 -- Backend source code
+│       ├── Dockerfile          -- Dockerfile for the backend
 ├── minutes/                    -- Minutes of the meetings
 ├── presentations/              -- Materials used in the presentations
 ├── README.md                   -- Context
 ├── reports/                    -- Project specifications
 ├── resources/                  -- Images and other resources
-├── docker-compose.yml         -- Docker compose file
-├── k6-oss-workshop-main      -- K6 OSS Workshop
+├── docker-compose.yml          -- Docker compose file
+├── k6-oss-workshop-main        -- K6 OSS Workshop
 ├── grafana                     -- Grafana dashboard and datasource
 ```
 
 # Architecture
 ![Architecture](resources/architecture.png)
+
+# Changes made since the final presentation
+- Statistics page for admin users and charging station operators
+- Savings done in terms of CO2 emissions and money
+- Missing functional tests 
+- Reduced technical debt
+- Fix bug on edit a charging point
+- Repository structure improvements
+- Added Q&A manual and product specification report
