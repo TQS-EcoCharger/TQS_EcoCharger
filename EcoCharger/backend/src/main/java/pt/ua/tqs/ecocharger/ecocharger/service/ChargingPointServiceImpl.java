@@ -53,7 +53,7 @@ public class ChargingPointServiceImpl implements ChargingPointService {
   public List<ChargingPoint> getAvailablePoints(ChargingStation station) {
     Optional<List<ChargingPoint>> points =
         chargingPointRepository.findAvailablePointsByChargingStation(station);
-    return points.orElseThrow(() -> new RuntimeException("No available points found"));
+    return points.orElseThrow(() -> new NotFoundException("No available points found"));
   }
 
   @Override
@@ -86,7 +86,7 @@ public class ChargingPointServiceImpl implements ChargingPointService {
     if (point.isPresent()) {
       chargingPointRepository.delete(point.get());
     } else {
-      throw new RuntimeException("Point not found");
+      throw new NotFoundException("Point not found");
     }
   }
 
@@ -94,7 +94,7 @@ public class ChargingPointServiceImpl implements ChargingPointService {
   public List<ChargingPoint> getPointsByStationId(Long stationId) {
     Optional<List<ChargingPoint>> points =
         chargingPointRepository.findByChargingStationId(stationId);
-    return points.orElseThrow(() -> new RuntimeException("No points found for this station"));
+    return points.orElseThrow(() -> new NotFoundException("No points found for this station"));
   }
 
   @Override

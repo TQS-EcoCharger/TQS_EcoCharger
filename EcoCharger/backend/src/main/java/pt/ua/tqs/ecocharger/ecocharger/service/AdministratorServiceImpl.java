@@ -13,6 +13,8 @@ import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingPointRepository;
 import pt.ua.tqs.ecocharger.ecocharger.repository.ChargingStationRepository;
 import pt.ua.tqs.ecocharger.ecocharger.service.interfaces.AdministratorService;
 
+import pt.ua.tqs.ecocharger.ecocharger.utils.NotFoundException;
+
 @Service
 public class AdministratorServiceImpl implements AdministratorService {
 
@@ -34,14 +36,14 @@ public class AdministratorServiceImpl implements AdministratorService {
     ChargingStation station =
         chargingStationRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("Charging Station not found"));
+            .orElseThrow(() -> new NotFoundException("Charging Station not found"));
 
     Administrator addedBy = station.getAddedBy();
     if (addedBy != null) {
       Administrator fullAdmin =
           administratorRepository
               .findById(addedBy.getId())
-              .orElseThrow(() -> new RuntimeException("Administrator not found"));
+              .orElseThrow(() -> new NotFoundException("Administrator not found"));
 
       fullAdmin.getAddedStations().remove(station);
       administratorRepository.save(fullAdmin);
@@ -67,7 +69,7 @@ public class AdministratorServiceImpl implements AdministratorService {
       updatedStation.setCountry(station.getCountry());
       return chargingStationRepository.save(updatedStation);
     } else {
-      throw new RuntimeException("Charging Station not found");
+      throw new NotFoundException("Charging Station not found");
     }
   }
 
@@ -75,7 +77,7 @@ public class AdministratorServiceImpl implements AdministratorService {
   public ChargingPoint updateChargingPoint(ChargingPoint point, Long pointId) {
     Optional<ChargingPoint> existingPointOpt = chargingPointRepository.findById(pointId);
     if (existingPointOpt.isEmpty()) {
-      throw new RuntimeException("Charging Point not found");
+      throw new NotFoundException("Charging Point not found");
     }
 
     ChargingPoint existingPoint = existingPointOpt.get();
@@ -99,7 +101,7 @@ public class AdministratorServiceImpl implements AdministratorService {
   public Administrator createAdministrator(String email, String password, String name) {
     Optional<Administrator> existingAdmin = administratorRepository.findByEmail(email);
     if (existingAdmin.isPresent()) {
-      throw new RuntimeException("Administrator with this email already exists");
+      throw new IllegalArgumentException("Administrator with this email already exists");
     }
     Administrator newAdmin = new Administrator();
     newAdmin.setEmail(email);

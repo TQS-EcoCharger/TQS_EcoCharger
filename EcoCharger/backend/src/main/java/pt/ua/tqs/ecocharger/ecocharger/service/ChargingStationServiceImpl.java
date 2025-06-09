@@ -62,7 +62,7 @@ public class ChargingStationServiceImpl implements ChargingStationService {
     if (station.isPresent()) {
       chargingStationRepository.delete(station.get());
     } else {
-      throw new RuntimeException("Station not found");
+      throw new NotFoundException("Station not found");
     }
   }
 
