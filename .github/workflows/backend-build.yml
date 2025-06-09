@@ -5,6 +5,14 @@ on:
   push:
     branches:
       - develop
+    paths-ignore:
+      # will ignore non code changes
+      - ".github/**"
+      - "minutes/**"
+      - "resources/**"
+      - "reports/**"
+      - "**.md"
+      - "**.gitignore"
   pull_request:
     types: [opened, synchronize, reopened]
 
