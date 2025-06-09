@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class OTPServiceImplTest {
+class OTPServiceImplTest {
 
   private OTPCodeRepository otpCodeRepository;
   private ReservationRepository reservationRepository;

@@ -71,7 +71,7 @@ public class ChargingSessionController {
       responseCode = "409",
       description = "Session conflict or other business rules violation")
   @PostMapping
-  public ResponseEntity<?> startCharging(@RequestBody StartChargingRequestDTO request) {
+  public ResponseEntity<Object> startCharging(@RequestBody StartChargingRequestDTO request) {
     try {
       ChargingSession session =
           chargingSessionService.startSessionWithOtp(
@@ -100,7 +100,7 @@ public class ChargingSessionController {
       responseCode = "409",
       description = "Session cannot be ended due to conflict or invalid state")
   @PostMapping("/{sessionId}/end")
-  public ResponseEntity<?> endCharging(
+  public ResponseEntity<Object> endCharging(
       @Parameter(description = "ID of the charging session to end") @PathVariable Long sessionId) {
     try {
       ChargingSession endedSession = chargingSessionService.endSession(sessionId);
@@ -120,7 +120,7 @@ public class ChargingSessionController {
       description = "List of sessions returned successfully",
       content = @Content(mediaType = "application/json"))
   @GetMapping("/user/{userId}")
-  public ResponseEntity<?> getChargingSessionsByUser(
+  public ResponseEntity<Object> getChargingSessionsByUser(
       @Parameter(description = "ID of the user") @PathVariable Long userId) {
     try {
       var sessions = chargingSessionService.getSessionsByUser(userId);
@@ -139,7 +139,7 @@ public class ChargingSessionController {
       description = "List of all charging sessions returned successfully",
       content = @Content(mediaType = "application/json"))
   @GetMapping
-  public ResponseEntity<?> getAllChargingSessions() {
+  public ResponseEntity<Object> getAllChargingSessions() {
     try {
       var sessions = chargingSessionService.getAllSessions();
       return ResponseEntity.ok(sessions);

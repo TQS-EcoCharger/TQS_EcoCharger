@@ -23,7 +23,6 @@ class ChargingSessionRepositoryTest {
   @Autowired private UserRepository userRepository;
 
   private ChargingStation createStation(String suffix) {
-    String randomId = UUID.randomUUID().toString().substring(0, 8);
     ChargingStation station =
         new ChargingStation(
             "Aveiro",
