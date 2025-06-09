@@ -30,7 +30,7 @@ public class ChargingOperator extends User {
       name = "charging_operator_stations",
       joinColumns = @JoinColumn(name = "operator_id"),
       inverseJoinColumns = @JoinColumn(name = "stations_id"))
-  private List<ChargingStation> chargingStations = new ArrayList<ChargingStation>();
+  private List<ChargingStation> chargingStations = new ArrayList<>();
 
   public ChargingOperator(Long id, String email, String password, String name, boolean enabled) {
     super(id, email, password, name, enabled);

@@ -226,7 +226,7 @@ public class Car {
     }
     licensePlate = licensePlate.toUpperCase().replaceAll(" ", "");
     if (!licensePlate.contains("-")) {
-      return licensePlate.replaceAll("(.{2})(.{2})(.{2})", "$1-$2-$3");
+      return licensePlate.replace("(.{2})(.{2})(.{2})", "$1-$2-$3");
     }
     return licensePlate;
   }
