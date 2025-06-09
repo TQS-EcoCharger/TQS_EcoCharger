@@ -41,3 +41,12 @@ Repository for the TQS project EcoCharger
 
 # Architecture
 ![Architecture](resources/architecture.png)
+
+# Changes made since the final presentation
+- Statistics page for admin users and charging station operators
+- Savings done in terms of C02 emissions and money
+- Missing functional tests 
+- Reduced technical debt
+- Fix bug on edit a charging point
+- Repository structure improvements
+- Added Q&A manual and product specification report
