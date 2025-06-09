@@ -1,0 +1,515 @@
+/* ============================================================
+  LAYOUT GERAL
+============================================================ */
+.page {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.wrapper {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  padding: 40px;
+}
+
+
+.mapWrapper {
+  position: relative;
+  width: 60%;
+  height: 83vh;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+
+
+/* ============================================================
+  PAINEL DE DETALHES DA ESTAÇÃO
+============================================================ */
+.stationDetails {
+  width: 30%;
+  height: 80vh;
+  overflow-y: auto;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 15px;
+  border: 5px solid #fdc459;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stationDetails h2 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.stationDetails h3,
+.sectionTitle {
+  font-size: 16px;
+  margin-top: 1rem;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ddd;
+}
+
+.stationDetails p {
+  font-size: 14px;
+  margin: 0.5rem 0;
+}
+
+/* ============================================================
+  BOTÃO DE RESERVA
+============================================================ */
+.reserveBtn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 16px;
+  background-color: #fdc459;
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.reserveBtn:hover {
+  background-color: #e4ac3d;
+}
+
+/* ============================================================
+  BOTÃO DE EDITAR
+============================================================ */
+.editBtn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 16px;
+  background-color: #000000;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editBtn:hover {
+  background-color: #e4ac3d;
+}
+
+/* ============================================================
+  DETALHES DO CARTÃO DE CADA ESTAÇÃO
+============================================================ */
+.cardScrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chargingCard {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.chargingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.connectorList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 10px;
+}
+
+.connectorItem {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 3px solid #ddd;
+  padding-left: 10px;
+  color: #333;
+}
+
+/* ============================================================
+  ÍCONES
+============================================================ */
+.iconSmall {
+  margin-right: 6px;
+  vertical-align: middle;
+  font-size: 16px;
+}
+
+.available {
+  color: green;
+  font-size: 18px;
+}
+
+.unavailable {
+  color: red;
+  font-size: 18px;
+}
+
+.reserveWrapper {
+  position: sticky;
+  bottom: 0;
+  background: #1e1e1e;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #ccc;
+  z-index: 10;
+
+}
+
+.reserveBtn {
+  width: 45%;
+  padding: 16px;
+  background-color: #fdc459;
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-top: 1px solid #ddd;
+  margin-top: 15px;
+  margin-left: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.faicon {
+  margin-right: 0.5vw;
+  color: #000; /* gold color for icon */
+}
+
+
+
+.reserveBtn:hover {
+  background-color: #e4ac3d;
+}
+
+
+/* ============================================================
+  LEAFLET POPUP
+============================================================ */
+.popupContent {
+  font-size: 13px;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+}
+
+.popupContent p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.popupIcon {
+  color: #555;
+  font-size: 14px;
+}
+
+/* ============================================================
+  BOTÃO FIXO: ADICIONAR ESTAÇÃO
+============================================================ */
+.addStationBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #ffc107;
+  color: #000;
+  font-weight: bold;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.addStationBtn:hover {
+  background-color: #e0a800;
+}
+
+.addChargingPointBox {
+  border: 2px dashed #aaa;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 12px 0;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.addChargingPointBox:hover {
+  border-color: #007bff;
+  background-color: #f2f9ff;
+}
+
+.addIcon {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #007bff;
+  display: block;
+  margin-bottom: 8px;
+}
+
+
+/* ============================================================
+  RESPONSIVIDADE
+============================================================ */
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .wrapper {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .stationDetails {
+    width: 100%;
+    height: 40vh;
+    margin-left: 0;
+    margin-top: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .mapWrapper {
+    height: 60vh;
+    margin-right: 0;
+    margin-top: 0;
+  }
+
+  .addStationBtn {
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+
+}
+
+
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal Box */
+.modal {
+  background: #383838;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Fields */
+.modal label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.modal input[type="datetime-local"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+/* Modal Buttons */
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.modalButtons button {
+  flex: 1;
+  margin: 0 0.25rem;
+  padding: 0.6rem 1rem;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modalButtons button:hover {
+  background-color: #a78d45;
+}
+
+/* Message styling */
+.message {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #020202;
+  background-color: #bad49e;
+  text-align: center;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+/* Optional fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.existingReservations {
+  margin-top: 1.5rem;
+  background: #f4cc5d;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #000000;
+}
+
+.reservationList {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 0;
+}
+
+.reservationItem {
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #2d2d2d;
+}
+
+.confirmButton {
+  background-color: #68a375;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.confirmButton:hover {
+  background-color: #218838 !important;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: #c82333 !important;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.otpContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.otpBox {
+  width: 48px;
+  height: 60px;
+  font-size: 32px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.otpBox:focus {
+  border-color: #afaf4c;
+  box-shadow: 0 0 3px #afa04c;
+}
+
+.stationDetails1 {
+  width: 30%;
+  height: 78%;
+  overflow-y: auto;
+  position: relative;
+  margin-left: 10%;
+  margin-top: 7%;
+  background-color: #252525;
+  color: #ffffff;
+  border-radius: 15px;
+  padding: 5px;
+}
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1vh;
+}
+

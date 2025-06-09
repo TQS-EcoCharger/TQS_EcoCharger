@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    build: ./backend
+    build: ./EcoCharger/backend
     ports:
       - "8080:8080"
     env_file: .env
@@ -22,14 +22,14 @@ services:
       - observability
 
   frontend:
-    build: ./frontend
+    build: ./EcoCharger/frontend
     ports:
       - "5000:5000"
     environment:
       - CHOKIDAR_USEPOLLING=true
     command: npm run dev -- --host
     volumes:
-      - ./frontend:/app
+      - ./EcoCharger/frontend:/app
       - /app/node_modules
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5000 || exit 1"]
